@@ -1,5 +1,5 @@
 
-# Arduino SAM Core and platform.
+# Energia TivaC / Stellaris Core and platform.
 # ------------------------------
 #
 # For more info:
