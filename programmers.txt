@@ -1,0 +1,2 @@
+dslite.name=dslite
+dslite.protocol=dslite
