@@ -4,7 +4,7 @@
 #include <lwip/lwipopts.h>
 #include <lwip/err.h>
 #include <netif/tivaif.h>
-#include <arch/lwiplib.h>
+#include <architecture/lwiplib.h>
 #include <MACAddress.h>
 #include "IPAddress.h"
 #include "EthernetClient.h"

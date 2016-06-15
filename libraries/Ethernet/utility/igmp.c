@@ -120,7 +120,7 @@ Steve Reynolds
  * IGMP packet format.
  */
 #ifdef PACK_STRUCT_USE_INCLUDES
-#  include "arch/bpstruct.h"
+#  include "architecture/bpstruct.h"
 #endif
 PACK_STRUCT_BEGIN
 struct igmp_msg {
@@ -131,7 +131,7 @@ struct igmp_msg {
 } PACK_STRUCT_STRUCT;
 PACK_STRUCT_END
 #ifdef PACK_STRUCT_USE_INCLUDES
-#  include "arch/epstruct.h"
+#  include "architecture/epstruct.h"
 #endif
 
 

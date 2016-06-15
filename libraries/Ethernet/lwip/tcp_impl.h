@@ -153,7 +153,7 @@ err_t            tcp_process_refused_data(struct tcp_pcb *pcb);
  * Some fields are converted to host byte order in tcp_input().
  */
 #ifdef PACK_STRUCT_USE_INCLUDES
-#  include "arch/bpstruct.h"
+#  include "architecture/bpstruct.h"
 #endif
 PACK_STRUCT_BEGIN
 struct tcp_hdr {
@@ -168,7 +168,7 @@ struct tcp_hdr {
 } PACK_STRUCT_STRUCT;
 PACK_STRUCT_END
 #ifdef PACK_STRUCT_USE_INCLUDES
-#  include "arch/epstruct.h"
+#  include "architecture/epstruct.h"
 #endif
 
 #define TCPH_HDRLEN(phdr) (ntohs((phdr)->_hdrlen_rsvd_flags) >> 12)

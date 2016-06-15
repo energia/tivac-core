@@ -53,7 +53,7 @@ void setup() {
   if (client.connect(serverName, 80)) {
     Serial.println("connected");
     // Make a HTTP request:
-    client.println("GET /search?q=arduino HTTP/1.0");
+    client.println("GET /search?q=energia HTTP/1.0");
     client.println();
   } 
   else {

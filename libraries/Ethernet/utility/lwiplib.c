@@ -28,7 +28,7 @@
 //
 //*****************************************************************************
 #include <Energia.h>
-#include "arch/lwiplib.h"
+#include "architecture/lwiplib.h"
 //*****************************************************************************
 //
 // Ensure that ICMP checksum offloading is enabled; otherwise the TM4C129

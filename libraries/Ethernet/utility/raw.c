@@ -48,7 +48,7 @@
 #include "lwip/netif.h"
 #include "lwip/raw.h"
 #include "lwip/stats.h"
-#include "arch/perf.h"
+#include "architecture/perf.h"
 
 #include <string.h>
 

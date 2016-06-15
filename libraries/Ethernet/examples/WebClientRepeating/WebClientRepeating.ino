@@ -36,7 +36,7 @@ IPAddress myDns(1,1,1,1);
 // initialize the library instance:
 EthernetClient client;
 
-char server[] = "www.arduino.cc";
+char server[] = "www.energia.nu";
 
 unsigned long lastConnectionTime = 0;          // last time you connected to the server, in milliseconds
 boolean lastConnected = false;                 // state of the connection last time through the main loop
@@ -83,19 +83,15 @@ void loop() {
 
 // this method makes a HTTP connection to the server:
 void httpRequest() {
-    Serial.print("connecting...");
-  // if there's a successful connection:
-  if (client.connect(ip, 80)) {
-    Serial.println("connection success");
+  Serial.println("connecting...");
+  if (client.connect(server, 80)) {
     // send the HTTP PUT request:
-    client.println("GET / HTTP/1.1");
-    client.println("Host: 146.252.242.126");
-    client.println("User-Agent: energia-ethernet");
+    client.println("GET /hello.html HTTP/1.1");
+    client.println("Host: www.energia.nu");
+    client.println("User-Agent: Energia/1.1");
     client.println("Connection: close");
     client.println();
-
-  } 
-  else {
+  } else {
     // if you couldn't make a connection:
     Serial.println("connection failed");
     Serial.println("disconnecting.");

@@ -19,7 +19,6 @@
  modified 23 Feb 2014
  by Craig Hollabaugh
  
-http://arduino.cc/en/Tutorial/PachubeClient
  This code is in the public domain.
  
  */

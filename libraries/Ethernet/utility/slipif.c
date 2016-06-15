@@ -32,7 +32,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF 
  * SUCH DAMAGE. 
  *
- * This file is built upon the file: src/arch/rtxc/netif/sioslip.c
+ * This file is built upon the file: src/architecture/rtxc/netif/sioslip.c
  *
  * Author: Magnus Ivarsson <magnus.ivarsson(at)volvo.com> 
  *         Simon Goldschmidt
