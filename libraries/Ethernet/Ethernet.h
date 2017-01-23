@@ -40,6 +40,8 @@ public:
 
 	/* For Arduino compatibility */
 	int maintain();
+	
+	int setStaticIP(IPAddress local_ip, IPAddress gateway, IPAddress subnet);
 
 	/* IP Address related functions */
 	IPAddress localIP();
