@@ -262,6 +262,22 @@ HardwareSerial::begin(unsigned long baud)
     ROM_UARTFIFOLevelSet(UART_BASE, UART_FIFO_TX1_8, UART_FIFO_RX1_8);
     flushAll();
     ROM_UARTIntDisable(UART_BASE, 0xFFFFFFFF);
+
+    //
+    // Allocate TX & RX buffers
+    // Make sure buffers are ready before interrupts are enabled
+    // so the handlers do not fail because of unitialized pointers
+    //
+    if (txBuffer != (unsigned char *)0xFFFFFFFF)  // Catch attempts to re-init this Serial instance by freeing old buffer first
+        free(txBuffer);
+    if (rxBuffer != (unsigned char *)0xFFFFFFFF)  // Catch attempts to re-init this Serial instance by freeing old buffer first
+        free(rxBuffer);
+    txBuffer = (unsigned char *) malloc(txBufferSize);
+    rxBuffer = (unsigned char *) malloc(rxBufferSize);
+    
+    //
+    // Enable interrupts
+    //
     ROM_UARTIntEnable(UART_BASE, UART_INT_RX | UART_INT_RT);
     ROM_IntEnable(g_ulUARTInt[uartModule]);
 
@@ -270,13 +286,6 @@ HardwareSerial::begin(unsigned long baud)
     //
     ROM_UARTEnable(UART_BASE);
 
-    // Allocate TX & RX buffers
-    if (txBuffer != (unsigned char *)0xFFFFFFFF)  // Catch attempts to re-init this Serial instance by freeing old buffer first
-        free(txBuffer);
-    if (rxBuffer != (unsigned char *)0xFFFFFFFF)  // Catch attempts to re-init this Serial instance by freeing old buffer first
-        free(rxBuffer);
-    txBuffer = (unsigned char *) malloc(txBufferSize);
-    rxBuffer = (unsigned char *) malloc(rxBufferSize);
 
     SysCtlDelay(100);
 }
