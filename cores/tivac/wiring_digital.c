@@ -53,7 +53,7 @@ void pinMode(uint8_t pin, uint8_t mode)
         *cr |= bit;
         *lock = 0;
         ROM_GPIODirModeSet(portBase, bit, GPIO_DIR_MODE_IN);
-        ROM_GPIOPadConfigSet(portBase, bit,
+        GPIOPadConfigSet(portBase, bit,
                      GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPU);
         *cr &= ~bit;
     } else if (mode == INPUT_PULLDOWN) {
@@ -61,7 +61,7 @@ void pinMode(uint8_t pin, uint8_t mode)
         *cr |= bit;
         *lock = 0;
         ROM_GPIODirModeSet(portBase, bit, GPIO_DIR_MODE_IN);
-        ROM_GPIOPadConfigSet(portBase, bit,
+        GPIOPadConfigSet(portBase, bit,
                      GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPD);
         *cr &= ~bit;
     } else {//mode == OUTPUT
