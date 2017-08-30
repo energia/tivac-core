@@ -2,7 +2,7 @@
 //
 // hw_des.h - Macros used when accessing the DES hardware.
 //
-// Copyright (c) 2012-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2012-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Firmware Development Package.
+// This is part of revision 2.1.4.178 of the Tiva Firmware Development Package.
 //
 //*****************************************************************************
 
@@ -45,32 +45,24 @@
 // The following are defines for the DES register offsets.
 //
 //*****************************************************************************
-#define DES_O_KEY3_L            0x00000000  // DES3DES Key 3 LSW for 192-bit
-                                            // key
-#define DES_O_KEY3_H            0x00000004  // DES3DES Key 3 MSW for 192-bit
-                                            // key
-#define DES_O_KEY2_L            0x00000008  // DES3DES Key 2 LSW for 128-bit
-                                            // key
-#define DES_O_KEY2_H            0x0000000C  // DES3DES Key 2 MSW for 128-bit
-                                            // key
-#define DES_O_KEY1_L            0x00000010  // DES3DES Key 1 LSW for 64-bit key
-#define DES_O_KEY1_H            0x00000014  // DES3DES Key 1 MSW for 64-bit key
-#define DES_O_IV_L              0x00000018  // DES3DES Secure Initialization
-                                            // Vector
-#define DES_O_IV_H              0x0000001C  // DES3DES Secure Initialization
-                                            // Vector
-#define DES_O_CTRL              0x00000020  // DES3DES Secure Control
-#define DES_O_LENGTH            0x00000024  // DES3DES Secure Cryptographic
-                                            // Data Length
-#define DES_O_DATA_L            0x00000028  // DES3DES Secure LSW Data R/W
-#define DES_O_DATA_H            0x0000002C  // DES3DES Secure MSW Data R/W
-#define DES_O_REVISION          0x00000030  // DES3DES Secure Revision Number
-#define DES_O_SYSCONFIG         0x00000034  // DES3DES Secure System
-                                            // Configuration
-#define DES_O_SYSSTATUS         0x00000038  // DES3DES Secure System Status
-#define DES_O_IRQSTATUS         0x0000003C  // DES3DES Secure Interrupt Status
-#define DES_O_IRQENABLE         0x00000040  // DES3DES Secure Interrupt Enable
-#define DES_O_DIRTYBITS         0x00000044  // DES3DES Secure Dirty Bits
+#define DES_O_KEY3_L            0x00000000  // DES Key 3 LSW for 192-Bit Key
+#define DES_O_KEY3_H            0x00000004  // DES Key 3 MSW for 192-Bit Key
+#define DES_O_KEY2_L            0x00000008  // DES Key 2 LSW for 128-Bit Key
+#define DES_O_KEY2_H            0x0000000C  // DES Key 2 MSW for 128-Bit Key
+#define DES_O_KEY1_L            0x00000010  // DES Key 1 LSW for 64-Bit Key
+#define DES_O_KEY1_H            0x00000014  // DES Key 1 MSW for 64-Bit Key
+#define DES_O_IV_L              0x00000018  // DES Initialization Vector
+#define DES_O_IV_H              0x0000001C  // DES Initialization Vector
+#define DES_O_CTRL              0x00000020  // DES Control
+#define DES_O_LENGTH            0x00000024  // DES Cryptographic Data Length
+#define DES_O_DATA_L            0x00000028  // DES LSW Data RW
+#define DES_O_DATA_H            0x0000002C  // DES MSW Data RW
+#define DES_O_REVISION          0x00000030  // DES Revision Number
+#define DES_O_SYSCONFIG         0x00000034  // DES System Configuration
+#define DES_O_SYSSTATUS         0x00000038  // DES System Status
+#define DES_O_IRQSTATUS         0x0000003C  // DES Interrupt Status
+#define DES_O_IRQENABLE         0x00000040  // DES Interrupt Enable
+#define DES_O_DIRTYBITS         0x00000044  // DES Dirty Bits
 #define DES_O_DMAIM             0xFFFF8030  // DES DMA Interrupt Mask
 #define DES_O_DMARIS            0xFFFF8034  // DES DMA Raw Interrupt Status
 #define DES_O_DMAMIS            0xFFFF8038  // DES DMA Masked Interrupt Status
@@ -160,10 +152,10 @@
 #define DES_CTRL_DIRECTION      0x00000004  // Select encryption/decryption
                                             // 0x0: decryption is selected0x1:
                                             // Encryption is selected
-#define DES_CTRL_INPUT_READY    0x00000002  // When '1', ready to
-                                            // encrypt/decrypt data
-#define DES_CTRL_OUTPUT_READY   0x00000001  // When '1', Data
-                                            // decrypted/encrypted ready
+#define DES_CTRL_INPUT_READY    0x00000002  // When 1, ready to encrypt/decrypt
+                                            // data
+#define DES_CTRL_OUTPUT_READY   0x00000001  // When 1, Data decrypted/encrypted
+                                            // ready
 #define DES_CTRL_MODE_S         4
 
 //*****************************************************************************
@@ -249,16 +241,13 @@
 //
 //*****************************************************************************
 #define DES_IRQENABLE_M_DATA_OUT                                              \
-                                0x00000004  // If this bit is set to 1 the
-                                            // secure data output interrupt is
-                                            // enabled
-#define DES_IRQENABLE_M_DATA_IN 0x00000002  // If this bit is set to 1 the
-                                            // secure data input interrupt is
-                                            // enabled
+                                0x00000004  // If this bit is set to 1 the data
+                                            // output interrupt is enabled
+#define DES_IRQENABLE_M_DATA_IN 0x00000002  // If this bit is set to 1 the data
+                                            // input interrupt is enabled
 #define DES_IRQENABLE_M_CONTEX_IN                                             \
                                 0x00000001  // If this bit is set to 1 the
-                                            // secure context interrupt is
-                                            // enabled
+                                            // context interrupt is enabled
 
 //*****************************************************************************
 //
@@ -267,10 +256,10 @@
 //
 //*****************************************************************************
 #define DES_DIRTYBITS_S_DIRTY   0x00000002  // This bit is set to 1 by the
-                                            // module if any of the DES_S_*
+                                            // module if any of the DES_*
                                             // registers is written
 #define DES_DIRTYBITS_S_ACCESS  0x00000001  // This bit is set to 1 by the
-                                            // module if any of the DES_S_*
+                                            // module if any of the DES_*
                                             // registers is read
 
 //*****************************************************************************

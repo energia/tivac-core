@@ -2,7 +2,7 @@
 //
 // can.h - Defines and Macros for the CAN controller.
 //
-// Copyright (c) 2006-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2006-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Peripheral Driver Library.
+// This is part of revision 2.1.4.178 of the Tiva Peripheral Driver Library.
 //
 //*****************************************************************************
 
@@ -72,25 +72,23 @@ extern "C"
 //*****************************************************************************
 
 //
-//! This indicates that transmit interrupts should be enabled, or are enabled.
+//! This indicates that transmit interrupts are enabled.
 //
 #define MSG_OBJ_TX_INT_ENABLE   0x00000001
 
 //
-//! This indicates that receive interrupts should be enabled, or are
-//! enabled.
+//! This indicates that receive interrupts are enabled.
 //
 #define MSG_OBJ_RX_INT_ENABLE   0x00000002
 
 //
-//! This indicates that a message object will use or is using an extended
-//! identifier.
+//! This indicates that a message object is using an extended identifier.
 //
 #define MSG_OBJ_EXTENDED_ID     0x00000004
 
 //
-//! This indicates that a message object will use or is using filtering
-//! based on the object's message identifier.
+//! This indicates that a message object is using filtering based on the
+//! object's message identifier.
 //
 #define MSG_OBJ_USE_ID_FILTER   0x00000008
 
@@ -106,14 +104,14 @@ extern "C"
 #define MSG_OBJ_DATA_LOST       0x00000100
 
 //
-//! This indicates that a message object will use or is using filtering
+//! This indicates that a message object uses or is using filtering
 //! based on the direction of the transfer.  If the direction filtering is
 //! used, then ID filtering must also be enabled.
 //
 #define MSG_OBJ_USE_DIR_FILTER  (0x00000010 | MSG_OBJ_USE_ID_FILTER)
 
 //
-//! This indicates that a message object will use or is using message
+//! This indicates that a message object uses or is using message
 //! identifier filtering based on the extended identifier.  If the extended
 //! identifier filtering is used, then ID filtering must also be enabled.
 //
@@ -286,15 +284,15 @@ tCANStsReg;
 
 //
 //! This flag is used to allow a CAN controller to generate any CAN
-//! interrupts.  If this is not set, then no interrupts will be generated
+//! interrupts.  If this is not set, then no interrupts are generated
 //! by the CAN controller.
 //
 #define CAN_INT_MASTER          0x00000002
 
 //*****************************************************************************
 //
-//! This definition is used to determine the type of message object that will
-//! be set up via a call to the CANMessageSet() API.
+//! This definition is used to determine the type of message object that is
+//! set up via a call to the CANMessageSet() API.
 //
 //*****************************************************************************
 typedef enum

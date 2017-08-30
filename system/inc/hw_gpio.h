@@ -2,7 +2,7 @@
 //
 // hw_gpio.h - Defines and Macros for GPIO hardware.
 //
-// Copyright (c) 2005-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2005-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Firmware Development Package.
+// This is part of revision 2.1.4.178 of the Tiva Firmware Development Package.
 //
 //*****************************************************************************
 
@@ -82,7 +82,8 @@
 // The following are defines for the bit fields in the GPIO_O_IM register.
 //
 //*****************************************************************************
-#define GPIO_IM_DMAIME          0x00000100  // GPIO uDMA Interrupt Mask Enable
+#define GPIO_IM_DMAIME          0x00000100  // GPIO uDMA Done Interrupt Mask
+                                            // Enable
 #define GPIO_IM_GPIO_M          0x000000FF  // GPIO Interrupt Mask Enable
 #define GPIO_IM_GPIO_S          0
 
@@ -91,7 +92,8 @@
 // The following are defines for the bit fields in the GPIO_O_RIS register.
 //
 //*****************************************************************************
-#define GPIO_RIS_DMARIS         0x00000100  // GPIO uDMA Interrupt Raw Status
+#define GPIO_RIS_DMARIS         0x00000100  // GPIO uDMA Done Interrupt Raw
+                                            // Status
 #define GPIO_RIS_GPIO_M         0x000000FF  // GPIO Interrupt Raw Status
 #define GPIO_RIS_GPIO_S         0
 
@@ -100,7 +102,7 @@
 // The following are defines for the bit fields in the GPIO_O_MIS register.
 //
 //*****************************************************************************
-#define GPIO_MIS_DMAMIS         0x00000100  // GPIO uDMA Masked Interrupt
+#define GPIO_MIS_DMAMIS         0x00000100  // GPIO uDMA Done Masked Interrupt
                                             // Status
 #define GPIO_MIS_GPIO_M         0x000000FF  // GPIO Masked Interrupt Status
 #define GPIO_MIS_GPIO_S         0
@@ -166,7 +168,7 @@
 // register.
 //
 //*****************************************************************************
-#define GPIO_WAKESTAT_STAT4     0x00000010  // P[4] Wake State
+#define GPIO_WAKESTAT_STAT4     0x00000010  // P[4] Wake Status
 
 //*****************************************************************************
 //

@@ -2,7 +2,7 @@
 //
 // eeprom.h - Prototypes for the EEPROM driver.
 //
-// Copyright (c) 2010-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2010-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Peripheral Driver Library.
+// This is part of revision 2.1.4.178 of the Tiva Peripheral Driver Library.
 //
 //*****************************************************************************
 
@@ -74,15 +74,6 @@ extern "C"
 //
 //! This value may be returned from a call to EEPROMInit().  It indicates that
 //! a previous data or protection write operation was interrupted by a reset
-//! event.  The EEPROM peripheral has recovered its state but the last write
-//! operation may have been lost.  The application must check the validity of
-//! data it has written and retry any writes as required.
-//
-#define EEPROM_INIT_RETRY   1
-
-//
-//! This value may be returned from a call to EEPROMInit().  It indicates that
-//! a previous data or protection write operation was interrupted by a reset
 //! event and that the EEPROM peripheral was unable to clean up after the
 //! problem.  This situation may be resolved with another reset or may be fatal
 //! depending upon the cause of the problem.  For example, if the voltage to
@@ -97,14 +88,6 @@ extern "C"
 // together into the final return code.
 //
 //*****************************************************************************
-
-//
-//! This return code bit indicates that the EEPROM programming state machine
-//! failed to write a value due to the voltage level dropping below that
-//! required for EEPROM programming.  The operation may be retried once the
-//! voltage stabilizes.
-//
-#define EEPROM_RC_INVPL             0x00000100
 
 //
 //! This return code bit indicates that an attempt was made to read from
@@ -266,6 +249,28 @@ extern void EEPROMIntEnable(uint32_t ui32IntFlags);
 extern void EEPROMIntDisable(uint32_t ui32IntFlags);
 extern uint32_t EEPROMIntStatus(bool bMasked);
 extern void EEPROMIntClear(uint32_t ui32IntFlags);
+
+#ifndef DEPRECATED
+//*****************************************************************************
+//
+// The following definitions appeared in previous revisions of this file
+// but have been deprecated and should not be used by applications.
+//
+//*****************************************************************************
+
+//
+// This value used to be one of those which could be returned from a call to
+// EEPROMInit().  It transpires that it is was incorrect and has been removed
+// after EEPROMInit() was reworked for TivaWare 2.1.
+//
+#define EEPROM_INIT_RETRY   1
+
+//
+// This return code is not available from any Tiva part and has been removed.
+//
+#define EEPROM_RC_INVPL             0x00000100
+
+#endif
 
 //*****************************************************************************
 //

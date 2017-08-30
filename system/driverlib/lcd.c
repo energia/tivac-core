@@ -2,7 +2,7 @@
 //
 // lcd.c - Defines and Macros for the LCD Controller module.
 //
-// Copyright (c) 2012-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2012-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Peripheral Driver Library.
+// This is part of revision 2.1.4.178 of the Tiva Peripheral Driver Library.
 //
 //*****************************************************************************
 
@@ -58,12 +58,16 @@
 
 //*****************************************************************************
 //
-// These are currently missing from hw_lcd.h.  Remove them once you start
-// seeing build warnings :-)
+// These are currently missing from hw_lcd.h and included here as a stopgap
+// until the hardware header is updated.
 //
 //*****************************************************************************
-#define LCD_RASTRTIM0_MSBPPL_S   (3)
-#define LCD_RASTRTIM2_MSBLPP_S   (26)
+#ifndef LCD_RASTRTIM0_MSBPPL_S
+#define LCD_RASTRTIM0_MSBPPL_S   3
+#endif
+#ifndef LCD_RASTRTIM2_MSBLPP_S
+#define LCD_RASTRTIM2_MSBLPP_S   26
+#endif
 
 //*****************************************************************************
 //
@@ -81,7 +85,7 @@
 //! LCD Interface Display Driver mode for character panels connected via
 //! an asynchronous interface (CS, WE, OE, ALE, data) and \b LCD_MODE_RASTER
 //! is used to communicate with panels via a synchronous video interface using
-//! data and sync signals.  Additionally, \b LIDD_MODE_AUTO_UFLOW_RESTART may
+//! data and sync signals.  Additionally, \b LCD_MODE_AUTO_UFLOW_RESTART may
 //! be ORed with either of these modes to indicate that the hardware should
 //! restart automatically if a data underflow occurs.
 //!
@@ -164,7 +168,7 @@ LCDModeSet(uint32_t ui32Base, uint8_t ui8Mode, uint32_t ui32PixClk,
 //! - \b LCD_CLOCK_MAIN causes the entire LCD controller module to be reset.
 //! - \b LCD_CLOCK_DMA causes the DMA controller submodule to be reset.
 //! - \b LCD_CLOCK_LIDD causes the LIDD submodule to be reset.
-//! - \b LCD_CLOCK_CORE causes the code module, including the raster logic to
+//! - \b LCD_CLOCK_CORE causes the core module, including the raster logic to
 //! be reset.
 //!
 //! In all cases, LCD controller register values are preserved across these
@@ -340,7 +344,7 @@ LCDIDDTimingSet(uint32_t ui32Base, uint32_t ui32CS,
 
 //*****************************************************************************
 //
-//! Disables DMA operation when the LCD controller is in LIDD mode.
+//! Disables internal DMA operation when the LCD controller is in LIDD mode.
 //!
 //! \param ui32Base specifies the LCD controller module base address.
 //!
@@ -376,9 +380,9 @@ LCDIDDDMADisable(uint32_t ui32Base)
 //!
 //! \param ui32Base specifies the LCD controller module base address.
 //! \param ui32CS specifies the chip select to use. Valid values are 0 and 1.
-//! \param ui16Cmd is the 16 bit command word to write.
+//! \param ui16Cmd is the 16-bit command word to write.
 //!
-//! This function writes a 16 bit command word to the display when the LCD
+//! This function writes a 16-bit command word to the display when the LCD
 //! controller is in LIDD mode.  A command write occurs with the ALE signal
 //! active.
 //!
@@ -421,9 +425,9 @@ LCDIDDCommandWrite(uint32_t ui32Base, uint32_t ui32CS, uint16_t ui16Cmd)
 //!
 //! \param ui32Base specifies the LCD controller module base address.
 //! \param ui32CS specifies the chip select to use. Valid values are 0 and 1.
-//! \param ui16Data is the 16 bit data word to write.
+//! \param ui16Data is the 16-bit data word to write.
 //!
-//! This function writes a 16 bit data word to the display when the LCD
+//! This function writes a 16-bit data word to the display when the LCD
 //! controller is in LIDD mode.  A data write occurs with the ALE signal
 //! inactive.
 //!
@@ -470,11 +474,11 @@ LCDIDDDataWrite(uint32_t ui32Base, uint32_t ui32CS, uint16_t ui16Data)
 //! \param ui16Addr is the address of the display register to write.
 //! \param ui16Data is the data to write.
 //!
-//! This function writes a 16 bit data word to a register in the display when
+//! This function writes a 16-bit data word to a register in the display when
 //! the LCD controller is in LIDD mode and configured to use either the
 //! Motorola (\b LIDD_CONFIG_SYNC_MPU68 or \b LIDD_CONFIG_ASYNC_MPU68) or
 //! Intel (\b LIDD_CONFIG_SYNC_MPU80 or \b LIDD_CONFIG_ASYNC_MPU80) modes
-//! which employ an external address latch.
+//! that employ an external address latch.
 //!
 //! When configured in Hitachi mode (\b LIDD_CONFIG_ASYNC_HITACHI), this
 //! function should not be used.  In this case the functions
@@ -533,7 +537,7 @@ LCDIDDIndexedWrite(uint32_t ui32Base, uint32_t ui32CS, uint16_t ui16Addr,
 //! \param ui32Base specifies the LCD controller module base address.
 //! \param ui32CS specifies the chip select to use. Valid values are 0 and 1.
 //!
-//! This function reads the 16 bit status word from the display when the LCD
+//! This function reads the 16-bit status word from the display when the LCD
 //! controller is in LIDD mode.  A status read occurs with the ALE signal
 //! active.  If the interface is configured in Hitachi mode (\b
 //! LIDD_CONFIG_ASYNC_HITACHI), this operation corresponds to a command mode
@@ -580,7 +584,7 @@ LCDIDDStatusRead(uint32_t ui32Base, uint32_t ui32CS)
 //! \param ui32Base specifies the LCD controller module base address.
 //! \param ui32CS specifies the chip select to use. Valid values are 0 and 1.
 //!
-//! This function reads the 16 bit data word from the display when the LCD
+//! This function reads the 16-bit data word from the display when the LCD
 //! controller is in LIDD mode.  A data read occurs with the ALE signal
 //! inactive.
 //!
@@ -625,14 +629,14 @@ LCDIDDDataRead(uint32_t ui32Base, uint32_t ui32CS)
 //! \param ui32CS specifies the chip select to use. Valid values are 0 and 1.
 //! \param ui16Addr is the address of the display register to read.
 //!
-//! This function reads 16 bit word from a register in the display when
+//! This function reads a 16-bit word from a register in the display when
 //! the LCD controller is in LIDD mode and configured to use either the
 //! Motorola (\b LIDD_CONFIG_SYNC_MPU68 or \b LIDD_CONFIG_ASYNC_MPU68) or
 //! Intel (\b LIDD_CONFIG_SYNC_MPU80 or \b LIDD_CONFIG_ASYNC_MPU80) modes
-//! which employ an external address latch.
+//! that employ an external address latch.
 //!
 //! When configured in Hitachi mode (\b LIDD_CONFIG_ASYNC_HITACHI), this
-//! function should not be used.  In this case the functions
+//! function should not be used.  In this case, the functions
 //! LCDIDDStatusRead() and LCDIDDDataRead() may be used to read status
 //! and data bytes from the panel.
 //!
@@ -778,8 +782,8 @@ LCDIDDDMAWrite(uint32_t ui32Base, uint32_t ui32CS, const uint32_t *pui32Data,
 //! This function configures the basic operating mode of the raster interface
 //! and specifies the type of panel that the controller is to drive.
 //!
-//! The \e ui32Config parameter must defined one of the following to select
-//! the required target panel type and output pixel format:
+//! The \e ui32Config parameter must be defined as one of the following to
+//! select the required target panel type and output pixel format:
 //!
 //! - \b RASTER_FMT_ACTIVE_24BPP_PACKED selects an active matrix display
 //! and uses a packed 24-bit per pixel packet frame buffer where 4 pixels
@@ -801,9 +805,9 @@ LCDIDDDMAWrite(uint32_t ui32Base, uint32_t ui32CS, const uint32_t *pui32Data,
 //! defined by the value passed in the \e ui32Type parameter to
 //! LCDRasterPaletteSet().
 //! - \b RASTER_FMT_PASSIVE_MONO_4PIX selects a monochrome, passive matrix
-//! display which outputs 4 pixels on each pixel clock.
+//! display that outputs 4 pixels on each pixel clock.
 //! - \b RASTER_FMT_PASSIVE_MONO_8PIX selects a monochrome, passive matrix
-//! display which outputs 8 pixels on each pixel clock.
+//! display that outputs 8 pixels on each pixel clock.
 //! - \b RASTER_FMT_PASSIVE_COLOR_12BIT selects a passive matrix display
 //! and uses a 12bpp frame buffer.  The palette is bypassed and 12-bit pixel
 //! data is sent to the grayscaler for the display.
@@ -812,17 +816,13 @@ LCDIDDDMAWrite(uint32_t ui32Base, uint32_t ui32CS, const uint32_t *pui32Data,
 //! most significant bits of each color component are sent to the grayscaler
 //! for the display.
 //!
-//! TODO: Awaiting clarification of how RASTER_FMT_PASSIVE_MONO_4PIX and
-//! RASTER_FMT_PASSIVE_MONO_8PIX are used.  This is not clear from the current
-//! LCD controller specification.
-//!
 //! Additionally, the following flags may be ORed into \e ui32Config:
 //!
 //! - \b RASTER_ACTVID_DURING_BLANK sets Actvid to toggle during vertical
 //! blanking.
-//! - \b RASTER_NIBBLE_MODE_ENABLED enables nibble mode.  This works with
-//! \b RASTER_READ_ORDER_REVERSED to determine how 1, 2 and 4bpp pixels are
-//! extracted from words read from the frame buffer.  If specified, words
+//! - \b RASTER_NIBBLE_MODE_ENABLED enables nibble mode.  This parameter works
+//! with \b RASTER_READ_ORDER_REVERSED to determine how 1, 2 and 4bpp pixels
+//! are extracted from words read from the frame buffer.  If specified, words
 //! read from the frame buffer are byte swapped prior to individual pixels
 //! being parsed from them.
 //! - \b RASTER_LOAD_DATA_ONLY tells the controller to read only pixel data
@@ -837,7 +837,7 @@ LCDIDDDMAWrite(uint32_t ui32Base, uint32_t ui32CS, const uint32_t *pui32Data,
 //! the least significant bits.
 //!
 //! If the LCD controller's raster engine is enabled when this function is
-//! called, it is disabled as a side effect of the call.
+//! called, it is disabled as a result of the call.
 //!
 //! \return None.
 //
@@ -1039,7 +1039,7 @@ LCDRasterEnable(uint32_t ui32Base)
 //! This function may be used to query whether or not the raster output is
 //! currently enabled.
 //!
-//! \return Returns \e true if the raster is enabled or \e false if it is
+//! \return Returns \b true if the raster is enabled or \b false if it is
 //! disabled.
 //
 //*****************************************************************************
@@ -1068,9 +1068,9 @@ LCDRasterEnabled(uint32_t ui32Base)
 //! the attached display.
 //!
 //! \note Once disabled, the raster engine continues to scan data until the
-//! end of the current frame. If the display is to be re-enabled, this must not
-//! be done until after the final \b LCD_INT_RASTER_FRAME_DONE has been
-//! received, indicating that the raster engine has stopped.
+//! end of the current frame. If the display is to be re-enabled, wait until
+//! after the final \b LCD_INT_RASTER_FRAME_DONE has been received, indicating
+//! that the raster engine has stopped.
 //!
 //! \return None.
 //
@@ -1105,12 +1105,12 @@ LCDRasterDisable(uint32_t ui32Base)
 //! \param ui32DefaultPixel is the 24-bit RGB color to show in the portion of
 //! the display not configured to show image data.
 //!
-//! The LCD controller provides a feature which allows a portion of the display
+//! The LCD controller provides a feature that allows a portion of the display
 //! to be filled with a default color rather than image data from the frame
-//! buffer. This may be used to reduce SRAM bandwidth requirements since
-//! no data is fetched for lines containing the default color.  This feature
-//! is only available when the LCD controller is in raster mode and configured
-//! to drive an active matrix display.
+//! buffer. This feature reduces SRAM bandwidth requirements because no data
+//! is fetched for lines containing the default color.  This feature is only
+//! available when the LCD controller is in raster mode and configured to drive
+//! an active matrix display.
 //!
 //! The subpanel area containing image data from the frame buffer may be
 //! positioned either at the top or bottom of the display as controlled by
@@ -1119,7 +1119,7 @@ LCDRasterDisable(uint32_t ui32Base)
 //!
 //! When a subpanel is configured, the application must also reconfigure the
 //! frame buffer to ensure that it contains the correct number of lines for
-//! the subpanel size in use.  This can be achieved by calling
+//! the subpanel size in use.  This configuration can be achieved by calling
 //! LCDRasterFrameBufferSet() with the \e ui32NumBytes parameter set
 //! appropriately to describe the required number of active video lines in
 //! the subpanel area.
@@ -1231,7 +1231,7 @@ LCDRasterSubPanelDisable(uint32_t ui32Base)
 
 //*****************************************************************************
 //
-//! Configures the LCD controller DMA engine.
+//! Configures the LCD controller's internal DMA engine.
 //!
 //! \param ui32Base is the base address of the controller.
 //! \param ui32Config provides flags defining the desired DMA parameters.
@@ -1242,20 +1242,9 @@ LCDRasterSubPanelDisable(uint32_t ui32Base)
 //! from SRAM to the display panel when in raster mode.
 //!
 //! The \e ui32Config parameter is a logical OR of various flags. It must
-//! contain one value from each of the following groups.  The first group
-//! sets the DMA engine's bus priority with higher numbers representing higher
-//! priorities:
+//! contain one value from each of the following groups.
 //!
-//! - \b LCD_DMA_PRIORITY_0
-//! - \b LCD_DMA_PRIORITY_1
-//! - \b LCD_DMA_PRIORITY_2
-//! - \b LCD_DMA_PRIORITY_3
-//! - \b LCD_DMA_PRIORITY_4
-//! - \b LCD_DMA_PRIORITY_5
-//! - \b LCD_DMA_PRIORITY_6
-//! - \b LCD_DMA_PRIORITY_7
-//!
-//! The second group of flags set the number of words that have to be in the
+//! The first group of flags set the number of words that have to be in the
 //! FIFO before it signals that it is ready:
 //!
 //! - \b LCD_DMA_FIFORDY_8_WORDS
@@ -1266,7 +1255,7 @@ LCDRasterSubPanelDisable(uint32_t ui32Base)
 //! - \b LCD_DMA_FIFORDY_256_WORDS
 //! - \b LCD_DMA_FIFORDY_512_WORDS
 //!
-//! The third group of flags set the number of 32-bit words in each DMA burst
+//! The second group of flags set the number of 32-bit words in each DMA burst
 //! transfer:
 //!
 //! - \b LCD_DMA_BURST_1
@@ -1275,7 +1264,7 @@ LCDRasterSubPanelDisable(uint32_t ui32Base)
 //! - \b LCD_DMA_BURST_8
 //! - \b LCD_DMA_BURST_16
 //!
-//! The final group of flags set internal byte lane controls and allows byte
+//! The final group of flags set internal byte lane controls and allow byte
 //! swapping within the DMA engine.  The label represents the output byte order
 //! for an input 32-bit word ordered ``0123''.
 //!
@@ -1287,15 +1276,15 @@ LCDRasterSubPanelDisable(uint32_t ui32Base)
 //! Additionally, \b LCD_DMA_PING_PONG may be specified.  This flag configures
 //! the controller to operate in double-buffered mode.  When data is scanned
 //! out from the first frame buffer, the DMA engine immediately moves to
-//! the second frame buffer and scan from there before moving back to the
+//! the second frame buffer and scans from there before moving back to the
 //! first.  If this flag is clear, the DMA engine uses a single frame buffer,
 //! restarting the scan from the beginning of the buffer each time it completes
 //! a frame.
 //!
-//! \note DMA burst sizes \b LCD_DMA_BURST_1 and \b LCD_DMA_BURST_2 are only
-//! supported when the source data is in external, EPI-connected memory.  If
-//! used when the source is internal SRAM, the DMA operation does not complete
-//! correctly.
+//! \note DMA burst size \b LCD_DMA_BURST_16 should be set when using frame
+//! buffers in external, EPI-connected memory.  Using a smaller burst size in
+//! this case is likely to result in occasional FIFO underflows and associated
+//! display glitches.
 //!
 //! \return None.
 //
@@ -1307,9 +1296,9 @@ LCDDMAConfigSet(uint32_t ui32Base, uint32_t ui32Config)
     // Sanity check parameters.
     //
     ASSERT(ui32Base == LCD0_BASE);
-    ASSERT(!(ui32Config & ~(LCD_DMACTL_DMAMSTRP_M | LCD_DMACTL_FIFORDY_M |
-                            LCD_DMACTL_BURSTSZ_M | LCD_DMACTL_BYTESWAP |
-                            LCD_DMACTL_BIGDEND | LCD_DMACTL_FMODE)));
+    ASSERT(!(ui32Config & ~(LCD_DMACTL_FIFORDY_M | LCD_DMACTL_BURSTSZ_M |
+                            LCD_DMACTL_BYTESWAP | LCD_DMACTL_BIGDEND |
+                            LCD_DMACTL_FMODE)));
 
     //
     // Write the DMA control register.
@@ -1326,7 +1315,7 @@ LCDDMAConfigSet(uint32_t ui32Base, uint32_t ui32Config)
 //! buffer and also the format of the source color values passed.
 //! \param pui32Addr points to the start of the frame buffer into which the
 //! palette information is to be written.
-//! \param pui32SrcColors points to the first color value which is to be
+//! \param pui32SrcColors points to the first color value that is to be
 //! written into the frame buffer palette.
 //! \param ui32Start specifies the index of the first color in the palette
 //! to update.
@@ -1341,18 +1330,18 @@ LCDDMAConfigSet(uint32_t ui32Base, uint32_t ui32Config)
 //! used by the LCD controller.
 //!
 //! \e ui32Type must be set to one of the following values to indicate the
-//! type of frame buffer whose palette is being initialized:
+//! type of frame buffer for which the palette is being initialized:
 //!
-//! - \b LCD_PALETTE_TYPE_1BPP configures this as a 1 bit per pixel
+//! - \b LCD_PALETTE_TYPE_1BPP indicates a 1 bit per pixel
 //! (monochrome) frame buffer.  This format requires a 2 entry palette.
-//! - \b LCD_PALETTE_TYPE_2BPP configures this as a 2 bit per pixel frame
+//! - \b LCD_PALETTE_TYPE_2BPP indicates a 2 bit per pixel frame
 //! buffer. This format requires a 4 entry palette.
-//! - \b LCD_PALETTE_TYPE_4BPP configures this as a 4 bit per pixel frame
+//! - \b LCD_PALETTE_TYPE_4BPP indicates a 4 bit per pixel frame
 //! buffer. This format requires a 4 entry palette.
-//! - \b LCD_PALETTE_TYPE_8BPP configures this as an 8 bit per pixel frame
+//! - \b LCD_PALETTE_TYPE_8BPP indicates an 8 bit per pixel frame
 //! buffer. This format requires a 256 entry palette.
-//! - \b LCD_PALETTE_TYPE_DIRECT configures this as a direct color (12, 16 or
-//! 24 bit per pixel).  The color palette is not used in these modes but the
+//! - \b LCD_PALETTE_TYPE_DIRECT indicates a direct color (12, 16 or
+//! 24 bit per pixel).  The color palette is not used in these modes, but the
 //! frame buffer type must still be initialized to ensure that the hardware
 //! uses the correct pixel type.  When this value is used, the format of the
 //! pixels in the frame buffer is defined by the \e ui32Config parameter
@@ -1367,7 +1356,7 @@ LCDDMAConfigSet(uint32_t ui32Base, uint32_t ui32Config)
 //!
 //! If \b LCD_PALETTE_SRC_24BIT is not present, it is assumed that the
 //! \e pui32SrcColors array contains 12-bit colors in the format required by
-//! the LCD controller with 2 colors stored in each 32-bit word.  In this case
+//! the LCD controller with 2 colors stored in each 32-bit word.  In this case,
 //! the values are copied directly into the frame buffer palette without any
 //! reformatting.
 //!
@@ -1390,7 +1379,7 @@ LCDRasterPaletteSet(uint32_t ui32Base, uint32_t ui32Type, uint32_t *pui32Addr,
     ASSERT(ui32Start < 256);
     ASSERT((ui32Start + ui32Count) <= 256);
     ASSERT(pui32Addr);
-    ASSERT(pui32SrcColors);
+    ASSERT((pui32SrcColors) || (ui32Count == 0));
     ASSERT(!(ui32Type & ~(LCD_PALETTE_SRC_24BIT | LCD_PALETTE_TYPE_DIRECT |
                           LCD_PALETTE_TYPE_8BPP | LCD_PALETTE_TYPE_4BPP |
                           LCD_PALETTE_TYPE_2BPP | LCD_PALETTE_TYPE_1BPP)));
@@ -1458,7 +1447,7 @@ LCDRasterPaletteSet(uint32_t ui32Base, uint32_t ui32Type, uint32_t *pui32Addr,
 //! is set to operate in ping-pong mode (by specifying the \b LCD_DMA_PING_PONG
 //! configuration flag on a call to LCDDMAConfigSet()).
 //!
-//! The format of the frame buffer depends upon the image type in use and
+//! The format of the frame buffer depends on the image type in use and
 //! the current raster configuration settings.  If \b RASTER_LOAD_DATA_ONLY
 //! was specified in a previous call to LCDRasterConfigSet(), the frame buffer
 //! contains only packed pixel data in the required bit depth and format.
@@ -1466,7 +1455,7 @@ LCDRasterPaletteSet(uint32_t ui32Base, uint32_t ui32Type, uint32_t *pui32Addr,
 //! 32-bit words followed by the packed pixel data.  The palette size is 8
 //! words (16 16-bit entries) for all pixel formats other than 8bpp which
 //! uses a palette of 128 words (256 16-bit entries).  Note that the 8 word
-//! palette is still present even for 12, 16 and 24-bit formats which do not
+//! palette is still present even for 12, 16 and 24-bit formats, which do not
 //! use the lookup table.
 //!
 //! The frame buffer size, specified using the \e ui32NumBytes parameter, must
@@ -1531,26 +1520,22 @@ LCDRasterFrameBufferSet(uint32_t ui32Base, uint8_t ui8Buffer,
 //!
 //! The \e ui32IntFlags parameter is the logical OR of any of the following:
 //!
-//! - \b LCD_INT_DMA_DONE - This interrupt indicates that a LIDD DMA
-//! transfer is complete.
-//! - \b LCD_INT_RASTER_FRAME_DONE - This interrupt indicates that a
-//! raster-mode frame is complete.
-//! - \b LCD_INT_SYNC_LOST - This interrupt indicates that frame
-//! synchronization was lost.
-//! - \b LCD_INT_AC_BIAS_CNT - This interrupt is valid for passive matrix
-//! panels only and indicates that that AC bias transition counter has
-//! decremented to zero. The counter, set by a call to
-//! LCDRasterACBiasIntCountSet(), is reloaded but remains disabled until this
-//! interrupt is cleared.
-//! - \b LCD_INT_UNDERFLOW - This interrupt indicates that a data underflow
-//! occurred. The internal FIFO was empty when the output logic attempted to
-//! read data to send to the display.
-//! - \b LCD_INT_PAL_LOAD - This interrupt indicates that the color palette
-//! has been loaded.
-//! - \b LCD_INT_EOF0 - This interrupt indicates that the raw End-of-Frame 0
-//! has been signaled.
-//! - \b LCD_INT_EOF1 - This interrupt indicates that the raw End-of-Frame 1
-//! has been signaled.
+//! - \b LCD_INT_DMA_DONE - indicates that a LIDD DMA transfer is complete.
+//! - \b LCD_INT_RASTER_FRAME_DONE - indicates that a raster-mode frame is
+//! complete.
+//! - \b LCD_INT_SYNC_LOST - indicates that frame synchronization was lost.
+//! - \b LCD_INT_AC_BIAS_CNT - indicates that that AC bias transition counter
+//! has decremented to zero and is is valid for passive matrix panels only.
+//! The counter, set by a call to LCDRasterACBiasIntCountSet(), is reloaded
+//! but remains disabled until this interrupt is cleared.
+//! - \b LCD_INT_UNDERFLOW - indicates that a data underflow occurred. The
+//! internal FIFO was empty when the output logic attempted to read data to
+//! send to the display.
+//! - \b LCD_INT_PAL_LOAD - indicates that the color palette has been loaded.
+//! - \b LCD_INT_EOF0 - indicates that the raw End-of-Frame 0 has been
+//! signaled.
+//! - \b LCD_INT_EOF2 - indicates that the raw End-of-Frame 1 has been
+//! signaled.
 //!
 //! \return None.
 //
@@ -1585,26 +1570,22 @@ LCDIntEnable(uint32_t ui32Base, uint32_t ui32IntFlags)
 //!
 //! The \e ui32IntFlags parameter is the logical OR of any of the following:
 //!
-//! - \b LCD_INT_DMA_DONE - This interrupt indicates that a LIDD DMA
-//! transfer is complete.
-//! - \b LCD_INT_RASTER_FRAME_DONE - This interrupt indicates that a
-//! raster-mode frame is complete.
-//! - \b LCD_INT_SYNC_LOST - This interrupt indicates that frame
-//! synchronization was lost.
-//! - \b LCD_INT_AC_BIAS_CNT - This interrupt is valid for passive matrix
-//! panels only and indicates that that AC bias transition counter has
-//! decremented to zero. The counter, set by a call to
-//! LCDRasterACBiasIntCountSet(), is reloaded but remains disabled until this
-//! interrupt is cleared.
-//! - \b LCD_INT_UNDERFLOW - This interrupt indicates that a data underflow
-//! occurred. The internal FIFO was empty when the output logic attempted to
-//! read data to send to the display.
-//! - \b LCD_INT_PAL_LOAD - This interrupt indicates that the color palette
-//! has been loaded.
-//! - \b LCD_INT_EOF0 - This interrupt indicates that the raw End-of-Frame 0
-//! has been signaled.
-//! - \b LCD_INT_EOF2 - This interrupt indicates that the raw End-of-Frame 1
-//! has been signaled.
+//! - \b LCD_INT_DMA_DONE - indicates that a LIDD DMA transfer is complete.
+//! - \b LCD_INT_RASTER_FRAME_DONE - indicates that a raster-mode frame is
+//! complete.
+//! - \b LCD_INT_SYNC_LOST - indicates that frame synchronization was lost.
+//! - \b LCD_INT_AC_BIAS_CNT - indicates that that AC bias transition counter
+//! has decremented to zero and is is valid for passive matrix panels only.
+//! The counter, set by a call to LCDRasterACBiasIntCountSet(), is reloaded
+//! but remains disabled until this interrupt is cleared.
+//! - \b LCD_INT_UNDERFLOW - indicates that a data underflow occurred. The
+//! internal FIFO was empty when the output logic attempted to read data to
+//! send to the display.
+//! - \b LCD_INT_PAL_LOAD - indicates that the color palette has been loaded.
+//! - \b LCD_INT_EOF0 - indicates that the raw End-of-Frame 0 has been
+//! signaled.
+//! - \b LCD_INT_EOF2 - indicates that the raw End-of-Frame 1 has been
+//! signaled.
 //!
 //! \return None.
 //
@@ -1640,26 +1621,22 @@ LCDIntDisable(uint32_t ui32Base, uint32_t ui32IntFlags)
 //! \return Returns the current interrupt status as the logical OR of any of
 //! the following:
 //!
-//! - \b LCD_INT_DMA_DONE - This interrupt indicates that a LIDD DMA
-//! transfer is complete.
-//! - \b LCD_INT_RASTER_FRAME_DONE - This interrupt indicates that a
-//! raster-mode frame is complete.
-//! - \b LCD_INT_SYNC_LOST - This interrupt indicates that frame
-//! synchronization was lost.
-//! - \b LCD_INT_AC_BIAS_CNT - This interrupt is valid for passive matrix
-//! panels only and indicates that that AC bias transition counter has
-//! decremented to zero. The counter, set by a call to
-//! LCDRasterACBiasIntCountSet(), is reloaded but remains disabled until this
-//! interrupt is cleared.
-//! - \b LCD_INT_UNDERFLOW - This interrupt indicates that a data underflow
-//! occurred. The internal FIFO was empty when the output logic attempted to
-//! read data to send to the display.
-//! - \b LCD_INT_PAL_LOAD - This interrupt indicates that the color palette
-//! has been loaded.
-//! - \b LCD_INT_EOF0 - This interrupt indicates that the raw End-of-Frame 0
-//! has been signaled.
-//! - \b LCD_INT_EOF2 - This interrupt indicates that the raw End-of-Frame 1
-//! has been signaled.
+//! - \b LCD_INT_DMA_DONE - indicates that a LIDD DMA transfer is complete.
+//! - \b LCD_INT_RASTER_FRAME_DONE - indicates that a raster-mode frame is
+//! complete.
+//! - \b LCD_INT_SYNC_LOST - indicates that frame synchronization was lost.
+//! - \b LCD_INT_AC_BIAS_CNT - indicates that that AC bias transition counter
+//! has decremented to zero and is is valid for passive matrix panels only.
+//! The counter, set by a call to LCDRasterACBiasIntCountSet(), is reloaded
+//! but remains disabled until this interrupt is cleared.
+//! - \b LCD_INT_UNDERFLOW - indicates that a data underflow occurred. The
+//! internal FIFO was empty when the output logic attempted to read data to
+//! send to the display.
+//! - \b LCD_INT_PAL_LOAD - indicates that the color palette has been loaded.
+//! - \b LCD_INT_EOF0 - indicates that the raw End-of-Frame 0 has been
+//! signaled.
+//! - \b LCD_INT_EOF2 - indicates that the raw End-of-Frame 1 has been
+//! signaled.
 //
 //*****************************************************************************
 uint32_t
@@ -1699,26 +1676,22 @@ LCDIntStatus(uint32_t ui32Base, bool bMasked)
 //!
 //! The \e ui32IntFlags parameter is the logical OR of any of the following:
 //!
-//! - \b LCD_INT_DMA_DONE - This interrupt indicates that a LIDD DMA
-//! transfer is complete.
-//! - \b LCD_INT_RASTER_FRAME_DONE - This interrupt indicates that a
-//! raster-mode frame is complete.
-//! - \b LCD_INT_SYNC_LOST - This interrupt indicates that frame
-//! synchronization was lost.
-//! - \b LCD_INT_AC_BIAS_CNT - This interrupt is valid for passive matrix
-//! panels only and indicates that that AC bias transition counter has
-//! decremented to zero. The counter, set by a call to
-//! LCDRasterACBiasIntCountSet(), is reloaded but remains disabled until this
-//! interrupt is cleared.
-//! - \b LCD_INT_UNDERFLOW - This interrupt indicates that a data underflow
-//! occurred. The internal FIFO was empty when the output logic attempted to
-//! read data to send to the display.
-//! - \b LCD_INT_PAL_LOAD - This interrupt indicates that the color palette
-//! has been loaded.
-//! - \b LCD_INT_EOF0 - This interrupt indicates that the raw End-of-Frame 0
-//! has been signaled.
-//! - \b LCD_INT_EOF2 - This interrupt indicates that the raw End-of-Frame 1
-//! has been signaled.
+//! - \b LCD_INT_DMA_DONE - indicates that a LIDD DMA transfer is complete.
+//! - \b LCD_INT_RASTER_FRAME_DONE - indicates that a raster-mode frame is
+//! complete.
+//! - \b LCD_INT_SYNC_LOST - indicates that frame synchronization was lost.
+//! - \b LCD_INT_AC_BIAS_CNT - indicates that that AC bias transition counter
+//! has decremented to zero and is is valid for passive matrix panels only.
+//! The counter, set by a call to LCDRasterACBiasIntCountSet(), is reloaded
+//! but remains disabled until this interrupt is cleared.
+//! - \b LCD_INT_UNDERFLOW - indicates that a data underflow occurred. The
+//! internal FIFO was empty when the output logic attempted to read data to
+//! send to the display.
+//! - \b LCD_INT_PAL_LOAD - indicates that the color palette has been loaded.
+//! - \b LCD_INT_EOF0 - indicates that the raw End-of-Frame 0 has been
+//! signaled.
+//! - \b LCD_INT_EOF2 - indicates that the raw End-of-Frame 1 has been
+//! signaled.
 //!
 //! \note Because there is a write buffer in the Cortex-M processor, it may
 //! take several clock cycles before the interrupt source is actually cleared.
@@ -1779,12 +1752,12 @@ LCDIntRegister(uint32_t ui32Base, void (*pfnHandler)(void))
     //
     // Register the interrupt handler.
     //
-    IntRegister(INT_LCD0_SNOWFLAKE, pfnHandler);
+    IntRegister(INT_LCD0_TM4C129, pfnHandler);
 
     //
     // Enable the interrupt in the interrupt controller.
     //
-    IntEnable(INT_LCD0_SNOWFLAKE);
+    IntEnable(INT_LCD0_TM4C129);
 }
 
 //*****************************************************************************
@@ -1816,12 +1789,12 @@ LCDIntUnregister(uint32_t ui32Base)
     //
     // Disable the interrupt in the interrupt controller.
     //
-    IntDisable(INT_LCD0_SNOWFLAKE);
+    IntDisable(INT_LCD0_TM4C129);
 
     //
     // Unregister the interrupt handler.
     //
-    IntUnregister(INT_LCD0_SNOWFLAKE);
+    IntUnregister(INT_LCD0_TM4C129);
 }
 
 //*****************************************************************************

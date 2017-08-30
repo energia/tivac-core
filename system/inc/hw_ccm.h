@@ -2,7 +2,7 @@
 //
 // hw_ccm.h - Macros used when accessing the CCM hardware.
 //
-// Copyright (c) 2012-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2012-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Firmware Development Package.
+// This is part of revision 2.1.4.178 of the Tiva Firmware Development Package.
 //
 //*****************************************************************************
 
@@ -56,8 +56,8 @@
 //
 //*****************************************************************************
 #define CCM_CRCCTRL_INIT_M      0x00006000  // CRC Initialization
-#define CCM_CRCCTRL_INIT_SEED   0x00000000  // Use the EC_S_CRC_SEED register
-                                            // context as the starting value
+#define CCM_CRCCTRL_INIT_SEED   0x00000000  // Use the CRCSEED register context
+                                            // as the starting value
 #define CCM_CRCCTRL_INIT_0      0x00004000  // Initialize to all '0s'
 #define CCM_CRCCTRL_INIT_1      0x00006000  // Initialize to all '1s'
 #define CCM_CRCCTRL_SIZE        0x00001000  // Input Data Size

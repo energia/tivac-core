@@ -2,7 +2,7 @@
 //
 // hw_timer.h - Defines and macros used when accessing the timer.
 //
-// Copyright (c) 2005-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2005-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Firmware Development Package.
+// This is part of revision 2.1.4.178 of the Tiva Firmware Development Package.
 //
 //*****************************************************************************
 
@@ -82,12 +82,16 @@
 //
 //*****************************************************************************
 #define TIMER_CFG_M             0x00000007  // GPTM Configuration
-#define TIMER_CFG_32_BIT_TIMER  0x00000000  // 32-bit timer configuration
-#define TIMER_CFG_32_BIT_RTC    0x00000001  // 32-bit real-time clock (RTC)
-                                            // counter configuration
-#define TIMER_CFG_16_BIT        0x00000004  // 16-bit timer configuration. The
-                                            // function is controlled by bits
-                                            // 1:0 of GPTMTAMR and GPTMTBMR
+#define TIMER_CFG_32_BIT_TIMER  0x00000000  // For a 16/32-bit timer, this
+                                            // value selects the 32-bit timer
+                                            // configuration
+#define TIMER_CFG_32_BIT_RTC    0x00000001  // For a 16/32-bit timer, this
+                                            // value selects the 32-bit
+                                            // real-time clock (RTC) counter
+                                            // configuration
+#define TIMER_CFG_16_BIT        0x00000004  // For a 16/32-bit timer, this
+                                            // value selects the 16-bit timer
+                                            // configuration
 
 //*****************************************************************************
 //
@@ -111,7 +115,8 @@
 #define TIMER_TAMR_TCACT_CLRSETTO                                             \
                                 0x0000E000  // Clear CCP immediately and set on
                                             // Time-Out
-#define TIMER_TAMR_TACINTD      0x00001000  // One-shot/Periodic Interrupt Mode
+#define TIMER_TAMR_TACINTD      0x00001000  // One-shot/Periodic Interrupt
+                                            // Disable
 #define TIMER_TAMR_TAPLO        0x00000800  // GPTM Timer A PWM Legacy
                                             // Operation
 #define TIMER_TAMR_TAMRSU       0x00000400  // GPTM Timer A Match Register
@@ -154,7 +159,8 @@
 #define TIMER_TBMR_TCACT_CLRSETTO                                             \
                                 0x0000E000  // Clear CCP immediately and set on
                                             // Time-Out
-#define TIMER_TBMR_TBCINTD      0x00001000  // One-Shot/Periodic Interrupt Mode
+#define TIMER_TBMR_TBCINTD      0x00001000  // One-Shot/Periodic Interrupt
+                                            // Disable
 #define TIMER_TBMR_TBPLO        0x00000800  // GPTM Timer B PWM Legacy
                                             // Operation
 #define TIMER_TBMR_TBMRSU       0x00000400  // GPTM Timer B Match Register
@@ -301,92 +307,68 @@
 #define TIMER_SYNC_SYNCT6_TATB  0x00003000  // A timeout event for both Timer A
                                             // and Timer B of GPTM6 is
                                             // triggered
-#define TIMER_SYNC_SYNCT5_M     0x00000C00  // Synchronize GPTM 16/32-Bit Timer
-                                            // 5
-#define TIMER_SYNC_SYNCT5_NONE  0x00000000  // GPTM 16/32-Bit Timer 5 is not
-                                            // affected
+#define TIMER_SYNC_SYNCT5_M     0x00000C00  // Synchronize GPTM Timer 5
+#define TIMER_SYNC_SYNCT5_NONE  0x00000000  // GPTM5 is not affected
 #define TIMER_SYNC_SYNCT5_TA    0x00000400  // A timeout event for Timer A of
-                                            // GPTM 16/32-Bit Timer 5 is
-                                            // triggered
+                                            // GPTM5 is triggered
 #define TIMER_SYNC_SYNCT5_TB    0x00000800  // A timeout event for Timer B of
-                                            // GPTM 16/32-Bit Timer 5 is
-                                            // triggered
+                                            // GPTM5 is triggered
 #define TIMER_SYNC_SYNCT5_TATB  0x00000C00  // A timeout event for both Timer A
-                                            // and Timer B of GPTM 16/32-Bit
-                                            // Timer 5 is triggered
-#define TIMER_SYNC_SYNCT4_M     0x00000300  // Synchronize GPTM 16/32-Bit Timer
-                                            // 4
-#define TIMER_SYNC_SYNCT4_NONE  0x00000000  // GPTM 16/32-Bit Timer 4 is not
-                                            // affected
+                                            // and Timer B of GPTM5 is
+                                            // triggered
+#define TIMER_SYNC_SYNCT4_M     0x00000300  // Synchronize GPTM Timer 4
+#define TIMER_SYNC_SYNCT4_NONE  0x00000000  // GPTM4 is not affected
 #define TIMER_SYNC_SYNCT4_TA    0x00000100  // A timeout event for Timer A of
-                                            // GPTM 16/32-Bit Timer 4 is
-                                            // triggered
+                                            // GPTM4 is triggered
 #define TIMER_SYNC_SYNCT4_TB    0x00000200  // A timeout event for Timer B of
-                                            // GPTM 16/32-Bit Timer 4 is
-                                            // triggered
+                                            // GPTM4 is triggered
 #define TIMER_SYNC_SYNCT4_TATB  0x00000300  // A timeout event for both Timer A
-                                            // and Timer B of GPTM 16/32-Bit
-                                            // Timer 4 is triggered
-#define TIMER_SYNC_SYNCT3_M     0x000000C0  // Synchronize GPTM 16/32-Bit Timer
-                                            // 3
-#define TIMER_SYNC_SYNCT3_NONE  0x00000000  // GPTM 16/32-Bit Timer 3 is not
-                                            // affected
+                                            // and Timer B of GPTM4 is
+                                            // triggered
+#define TIMER_SYNC_SYNCT3_M     0x000000C0  // Synchronize GPTM Timer 3
+#define TIMER_SYNC_SYNCT3_NONE  0x00000000  // GPTM3 is not affected
 #define TIMER_SYNC_SYNCT3_TA    0x00000040  // A timeout event for Timer A of
-                                            // GPTM 16/32-Bit Timer 3 is
-                                            // triggered
+                                            // GPTM3 is triggered
 #define TIMER_SYNC_SYNCT3_TB    0x00000080  // A timeout event for Timer B of
-                                            // GPTM 16/32-Bit Timer 3 is
-                                            // triggered
+                                            // GPTM3 is triggered
 #define TIMER_SYNC_SYNCT3_TATB  0x000000C0  // A timeout event for both Timer A
-                                            // and Timer B of GPTM 16/32-Bit
-                                            // Timer 3 is triggered
-#define TIMER_SYNC_SYNCT2_M     0x00000030  // Synchronize GPTM 16/32-Bit Timer
-                                            // 2
-#define TIMER_SYNC_SYNCT2_NONE  0x00000000  // GPTM 16/32-Bit Timer 2 is not
-                                            // affected
+                                            // and Timer B of GPTM3 is
+                                            // triggered
+#define TIMER_SYNC_SYNCT2_M     0x00000030  // Synchronize GPTM Timer 2
+#define TIMER_SYNC_SYNCT2_NONE  0x00000000  // GPTM2 is not affected
 #define TIMER_SYNC_SYNCT2_TA    0x00000010  // A timeout event for Timer A of
-                                            // GPTM 16/32-Bit Timer 2 is
-                                            // triggered
+                                            // GPTM2 is triggered
 #define TIMER_SYNC_SYNCT2_TB    0x00000020  // A timeout event for Timer B of
-                                            // GPTM 16/32-Bit Timer 2 is
-                                            // triggered
+                                            // GPTM2 is triggered
 #define TIMER_SYNC_SYNCT2_TATB  0x00000030  // A timeout event for both Timer A
-                                            // and Timer B of GPTM 16/32-Bit
-                                            // Timer 2 is triggered
-#define TIMER_SYNC_SYNCT1_M     0x0000000C  // Synchronize GPTM 16/32-Bit Timer
-                                            // 1
-#define TIMER_SYNC_SYNCT1_NONE  0x00000000  // GPTM 16/32-Bit Timer 1 is not
-                                            // affected
+                                            // and Timer B of GPTM2 is
+                                            // triggered
+#define TIMER_SYNC_SYNCT1_M     0x0000000C  // Synchronize GPTM Timer 1
+#define TIMER_SYNC_SYNCT1_NONE  0x00000000  // GPTM1 is not affected
 #define TIMER_SYNC_SYNCT1_TA    0x00000004  // A timeout event for Timer A of
-                                            // GPTM 16/32-Bit Timer 1 is
-                                            // triggered
+                                            // GPTM1 is triggered
 #define TIMER_SYNC_SYNCT1_TB    0x00000008  // A timeout event for Timer B of
-                                            // GPTM 16/32-Bit Timer 1 is
-                                            // triggered
+                                            // GPTM1 is triggered
 #define TIMER_SYNC_SYNCT1_TATB  0x0000000C  // A timeout event for both Timer A
-                                            // and Timer B of GPTM 16/32-Bit
-                                            // Timer 1 is triggered
-#define TIMER_SYNC_SYNCT0_M     0x00000003  // Synchronize GPTM 16/32-Bit Timer
-                                            // 0
-#define TIMER_SYNC_SYNCT0_NONE  0x00000000  // GPTM 16/32-Bit Timer 0 is not
-                                            // affected
+                                            // and Timer B of GPTM1 is
+                                            // triggered
+#define TIMER_SYNC_SYNCT0_M     0x00000003  // Synchronize GPTM Timer 0
+#define TIMER_SYNC_SYNCT0_NONE  0x00000000  // GPTM0 is not affected
 #define TIMER_SYNC_SYNCT0_TA    0x00000001  // A timeout event for Timer A of
-                                            // GPTM 16/32-Bit Timer 0 is
-                                            // triggered
+                                            // GPTM0 is triggered
 #define TIMER_SYNC_SYNCT0_TB    0x00000002  // A timeout event for Timer B of
-                                            // GPTM 16/32-Bit Timer 0 is
-                                            // triggered
+                                            // GPTM0 is triggered
 #define TIMER_SYNC_SYNCT0_TATB  0x00000003  // A timeout event for both Timer A
-                                            // and Timer B of GPTM 16/32-Bit
-                                            // Timer 0 is triggered
+                                            // and Timer B of GPTM0 is
+                                            // triggered
 
 //*****************************************************************************
 //
 // The following are defines for the bit fields in the TIMER_O_IMR register.
 //
 //*****************************************************************************
-#define TIMER_IMR_WUEIM         0x00010000  // GPTM Write Update Error
-                                            // Interrupt Mask
+#define TIMER_IMR_WUEIM         0x00010000  // 32/64-Bit Wide GPTM Write Update
+                                            // Error Interrupt Mask
 #define TIMER_IMR_DMABIM        0x00002000  // GPTM Timer B DMA Done Interrupt
                                             // Mask
 #define TIMER_IMR_TBMIM         0x00000800  // GPTM Timer B Match Interrupt
@@ -414,8 +396,8 @@
 // The following are defines for the bit fields in the TIMER_O_RIS register.
 //
 //*****************************************************************************
-#define TIMER_RIS_WUERIS        0x00010000  // GPTM Write Update Error Raw
-                                            // Interrupt
+#define TIMER_RIS_WUERIS        0x00010000  // 32/64-Bit Wide GPTM Write Update
+                                            // Error Raw Interrupt Status
 #define TIMER_RIS_DMABRIS       0x00002000  // GPTM Timer B DMA Done Raw
                                             // Interrupt Status
 #define TIMER_RIS_TBMRIS        0x00000800  // GPTM Timer B Match Raw Interrupt
@@ -441,8 +423,8 @@
 // The following are defines for the bit fields in the TIMER_O_MIS register.
 //
 //*****************************************************************************
-#define TIMER_MIS_WUEMIS        0x00010000  // GPTM Write Update Error Masked
-                                            // Interrupt
+#define TIMER_MIS_WUEMIS        0x00010000  // 32/64-Bit Wide GPTM Write Update
+                                            // Error Masked Interrupt Status
 #define TIMER_MIS_DMABMIS       0x00002000  // GPTM Timer B DMA Done Masked
                                             // Interrupt
 #define TIMER_MIS_TBMMIS        0x00000800  // GPTM Timer B Match Masked
@@ -470,7 +452,7 @@
 // The following are defines for the bit fields in the TIMER_O_ICR register.
 //
 //*****************************************************************************
-#define TIMER_ICR_WUECINT       0x00010000  // 32/64-Bit GPTM Write Update
+#define TIMER_ICR_WUECINT       0x00010000  // 32/64-Bit Wide GPTM Write Update
                                             // Error Interrupt Clear
 #define TIMER_ICR_DMABINT       0x00002000  // GPTM Timer B DMA Done Interrupt
                                             // Clear
@@ -649,22 +631,23 @@
 // The following are defines for the bit fields in the TIMER_O_DMAEV register.
 //
 //*****************************************************************************
-#define TIMER_DMAEV_TBMDMAEN    0x00000800  // GPTM Timer B Mode Match DMA
+#define TIMER_DMAEV_TBMDMAEN    0x00000800  // GPTM B Mode Match Event DMA
                                             // Trigger Enable
-#define TIMER_DMAEV_CBEDMAEN    0x00000400  // GPTM Capture B Event DMA Trigger
+#define TIMER_DMAEV_CBEDMAEN    0x00000400  // GPTM B Capture Event DMA Trigger
                                             // Enable
-#define TIMER_DMAEV_CBMDMAEN    0x00000200  // GPTM Capture B Match DMA Trigger
-                                            // Enable
-#define TIMER_DMAEV_TBTODMAEN   0x00000100  // GPTM Timer B Time-Out DMA
+#define TIMER_DMAEV_CBMDMAEN    0x00000200  // GPTM B Capture Match Event DMA
                                             // Trigger Enable
-#define TIMER_DMAEV_TAMDMAEN    0x00000010  // GPTM Timer A Mode Match DMA
+#define TIMER_DMAEV_TBTODMAEN   0x00000100  // GPTM B Time-Out Event DMA
                                             // Trigger Enable
-#define TIMER_DMAEV_RTCDMAEN    0x00000008  // GPTM RTC DMA Trigger Enable
-#define TIMER_DMAEV_CAEDMAEN    0x00000004  // GPTM Capture A Event DMA Trigger
+#define TIMER_DMAEV_TAMDMAEN    0x00000010  // GPTM A Mode Match Event DMA
+                                            // Trigger Enable
+#define TIMER_DMAEV_RTCDMAEN    0x00000008  // GPTM A RTC Match Event DMA
+                                            // Trigger Enable
+#define TIMER_DMAEV_CAEDMAEN    0x00000004  // GPTM A Capture Event DMA Trigger
                                             // Enable
-#define TIMER_DMAEV_CAMDMAEN    0x00000002  // GPTM Capture A Match DMA Trigger
-                                            // Enable
-#define TIMER_DMAEV_TATODMAEN   0x00000001  // GPTM Timer A Time-Out DMA
+#define TIMER_DMAEV_CAMDMAEN    0x00000002  // GPTM A Capture Match Event DMA
+                                            // Trigger Enable
+#define TIMER_DMAEV_TATODMAEN   0x00000001  // GPTM A Time-Out Event DMA
                                             // Trigger Enable
 
 //*****************************************************************************
@@ -672,22 +655,23 @@
 // The following are defines for the bit fields in the TIMER_O_ADCEV register.
 //
 //*****************************************************************************
-#define TIMER_ADCEV_TBMADCEN    0x00000800  // GPTM Timer B Mode Match ADC
+#define TIMER_ADCEV_TBMADCEN    0x00000800  // GPTM B Mode Match Event ADC
                                             // Trigger Enable
-#define TIMER_ADCEV_CBEADCEN    0x00000400  // GPTM Capture B Event ADC Trigger
+#define TIMER_ADCEV_CBEADCEN    0x00000400  // GPTM B Capture Event ADC Trigger
                                             // Enable
-#define TIMER_ADCEV_CBMADCEN    0x00000200  // GPTM Capture B Match ADC Trigger
-                                            // Enable
-#define TIMER_ADCEV_TBTOADCEN   0x00000100  // GPTM Timer B Time-Out ADC
+#define TIMER_ADCEV_CBMADCEN    0x00000200  // GPTM B Capture Match Event ADC
                                             // Trigger Enable
-#define TIMER_ADCEV_TAMADCEN    0x00000010  // GPTM Timer A Mode Match ADC
+#define TIMER_ADCEV_TBTOADCEN   0x00000100  // GPTM B Time-Out Event ADC
                                             // Trigger Enable
-#define TIMER_ADCEV_RTCADCEN    0x00000008  // GPTM RTC ADC Trigger Enable
-#define TIMER_ADCEV_CAEADCEN    0x00000004  // GPTM Capture A Event ADC Trigger
+#define TIMER_ADCEV_TAMADCEN    0x00000010  // GPTM A Mode Match Event ADC
+                                            // Trigger Enable
+#define TIMER_ADCEV_RTCADCEN    0x00000008  // GPTM RTC Match Event ADC Trigger
                                             // Enable
-#define TIMER_ADCEV_CAMADCEN    0x00000002  // GPTM Capture A Match ADC Trigger
+#define TIMER_ADCEV_CAEADCEN    0x00000004  // GPTM A Capture Event ADC Trigger
                                             // Enable
-#define TIMER_ADCEV_TATOADCEN   0x00000001  // GPTM Timer A Time-Out ADC
+#define TIMER_ADCEV_CAMADCEN    0x00000002  // GPTM A Capture Match Event ADC
+                                            // Trigger Enable
+#define TIMER_ADCEV_TATOADCEN   0x00000001  // GPTM A Time-Out Event ADC
                                             // Trigger Enable
 
 //*****************************************************************************

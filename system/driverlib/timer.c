@@ -2,7 +2,7 @@
 //
 // timer.c - Driver for the timer module.
 //
-// Copyright (c) 2005-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2005-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Peripheral Driver Library.
+// This is part of revision 2.1.4.178 of the Tiva Peripheral Driver Library.
 //
 //*****************************************************************************
 
@@ -61,7 +61,7 @@
 // configuration and control options.
 //
 //*****************************************************************************
-#define NEW_TIMER_CONFIGURATION CLASS_IS_SNOWFLAKE
+#define NEW_TIMER_CONFIGURATION CLASS_IS_TM4C129
 
 //*****************************************************************************
 //
@@ -70,32 +70,32 @@
 //*****************************************************************************
 static const uint32_t g_ppui32TimerIntMap[][2] =
 {
-    { TIMER0_BASE, INT_TIMER0A_BLIZZARD },
-    { TIMER1_BASE, INT_TIMER1A_BLIZZARD },
-    { TIMER2_BASE, INT_TIMER2A_BLIZZARD },
-    { TIMER3_BASE, INT_TIMER3A_BLIZZARD },
-    { TIMER4_BASE, INT_TIMER4A_BLIZZARD },
-    { TIMER5_BASE, INT_TIMER5A_BLIZZARD },
-    { WTIMER0_BASE, INT_WTIMER0A_BLIZZARD },
-    { WTIMER1_BASE, INT_WTIMER1A_BLIZZARD },
-    { WTIMER2_BASE, INT_WTIMER2A_BLIZZARD },
-    { WTIMER3_BASE, INT_WTIMER3A_BLIZZARD },
-    { WTIMER4_BASE, INT_WTIMER4A_BLIZZARD },
-    { WTIMER5_BASE, INT_WTIMER5A_BLIZZARD },
+    { TIMER0_BASE, INT_TIMER0A_TM4C123 },
+    { TIMER1_BASE, INT_TIMER1A_TM4C123 },
+    { TIMER2_BASE, INT_TIMER2A_TM4C123 },
+    { TIMER3_BASE, INT_TIMER3A_TM4C123 },
+    { TIMER4_BASE, INT_TIMER4A_TM4C123 },
+    { TIMER5_BASE, INT_TIMER5A_TM4C123 },
+    { WTIMER0_BASE, INT_WTIMER0A_TM4C123 },
+    { WTIMER1_BASE, INT_WTIMER1A_TM4C123 },
+    { WTIMER2_BASE, INT_WTIMER2A_TM4C123 },
+    { WTIMER3_BASE, INT_WTIMER3A_TM4C123 },
+    { WTIMER4_BASE, INT_WTIMER4A_TM4C123 },
+    { WTIMER5_BASE, INT_WTIMER5A_TM4C123 },
 };
 static const uint_fast8_t g_ui8TimerIntMapRows =
     sizeof(g_ppui32TimerIntMap) / sizeof(g_ppui32TimerIntMap[0]);
 
 static const uint32_t g_ppui32TimerIntMapSnowflake[][2] =
 {
-    { TIMER0_BASE, INT_TIMER0A_SNOWFLAKE },
-    { TIMER1_BASE, INT_TIMER1A_SNOWFLAKE },
-    { TIMER2_BASE, INT_TIMER2A_SNOWFLAKE },
-    { TIMER3_BASE, INT_TIMER3A_SNOWFLAKE },
-    { TIMER4_BASE, INT_TIMER4A_SNOWFLAKE },
-    { TIMER5_BASE, INT_TIMER5A_SNOWFLAKE },
-    { TIMER6_BASE, INT_TIMER6A_SNOWFLAKE },
-    { TIMER7_BASE, INT_TIMER7A_SNOWFLAKE },
+    { TIMER0_BASE, INT_TIMER0A_TM4C129 },
+    { TIMER1_BASE, INT_TIMER1A_TM4C129 },
+    { TIMER2_BASE, INT_TIMER2A_TM4C129 },
+    { TIMER3_BASE, INT_TIMER3A_TM4C129 },
+    { TIMER4_BASE, INT_TIMER4A_TM4C129 },
+    { TIMER5_BASE, INT_TIMER5A_TM4C129 },
+    { TIMER6_BASE, INT_TIMER6A_TM4C129 },
+    { TIMER7_BASE, INT_TIMER7A_TM4C129 },
 };
 static const uint_fast8_t g_ui8TimerIntMapRowsSnowflake =
     sizeof(g_ppui32TimerIntMapSnowflake) /
@@ -121,6 +121,7 @@ _TimerBaseValid(uint32_t ui32Base)
     return((ui32Base == TIMER0_BASE) || (ui32Base == TIMER1_BASE) ||
            (ui32Base == TIMER2_BASE) || (ui32Base == TIMER3_BASE) ||
            (ui32Base == TIMER4_BASE) || (ui32Base == TIMER5_BASE) ||
+           (ui32Base == TIMER6_BASE) || (ui32Base == TIMER7_BASE) ||
            (ui32Base == WTIMER0_BASE) || (ui32Base == WTIMER1_BASE) ||
            (ui32Base == WTIMER2_BASE) || (ui32Base == WTIMER3_BASE) ||
            (ui32Base == WTIMER4_BASE) || (ui32Base == WTIMER5_BASE));
@@ -155,7 +156,7 @@ _TimerIntNumberGet(uint32_t ui32Base, uint32_t ui32Timer)
     ppui32SSIIntMap = g_ppui32TimerIntMap;
     ui8Rows = g_ui8TimerIntMapRows;
 
-    if(CLASS_IS_SNOWFLAKE)
+    if(CLASS_IS_TM4C129)
     {
         ppui32SSIIntMap = g_ppui32TimerIntMapSnowflake;
         ui8Rows = g_ui8TimerIntMapRowsSnowflake;
@@ -362,7 +363,9 @@ TimerConfigure(uint32_t ui32Base, uint32_t ui32Config)
              ((ui32Config & 0x000000ff) == TIMER_CFG_A_PERIODIC) ||
              ((ui32Config & 0x000000ff) == TIMER_CFG_A_PERIODIC_UP) ||
              ((ui32Config & 0x000000ff) == TIMER_CFG_A_CAP_COUNT) ||
+             ((ui32Config & 0x000000ff) == TIMER_CFG_A_CAP_COUNT_UP) ||
              ((ui32Config & 0x000000ff) == TIMER_CFG_A_CAP_TIME) ||
+             ((ui32Config & 0x000000ff) == TIMER_CFG_A_CAP_TIME_UP) ||
              ((ui32Config & 0x000000ff) == TIMER_CFG_A_PWM)) &&
             (((ui32Config & 0x0000ff00) == TIMER_CFG_B_ONE_SHOT) ||
              ((ui32Config & 0x0000ff00) == TIMER_CFG_B_ONE_SHOT_UP) ||
@@ -400,9 +403,9 @@ TimerConfigure(uint32_t ui32Base, uint32_t ui32Config)
     }
     else
     {
-        HWREG(ui32Base + TIMER_O_TAMR) = ((ui32Config & 255) |
+        HWREG(ui32Base + TIMER_O_TAMR) = ((ui32Config & 0xff) |
                                           TIMER_TAMR_TAPWMIE);
-        HWREG(ui32Base + TIMER_O_TBMR) = (((ui32Config >> 8) & 255) |
+        HWREG(ui32Base + TIMER_O_TBMR) = (((ui32Config >> 8) & 0xff) |
                                           TIMER_TBMR_TBPWMIE);
     }
 }
@@ -647,7 +650,7 @@ TimerControlWaitOnTrigger(uint32_t ui32Base, uint32_t ui32Timer,
 
 //*****************************************************************************
 //
-//! Enable RTC counting.
+//! Enables RTC counting.
 //!
 //! \param ui32Base is the base address of the timer module.
 //!
@@ -673,7 +676,7 @@ TimerRTCEnable(uint32_t ui32Base)
 
 //*****************************************************************************
 //
-//! Disable RTC counting.
+//! Disables RTC counting.
 //!
 //! \param ui32Base is the base address of the timer module.
 //!
@@ -764,7 +767,7 @@ TimerClockSourceGet(uint32_t ui32Base)
 
 //*****************************************************************************
 //
-//! Set the timer prescale value.
+//! Sets the timer prescale value.
 //!
 //! \param ui32Base is the base address of the timer module.
 //! \param ui32Timer specifies the timer(s) to adjust; must be one of
@@ -816,7 +819,7 @@ TimerPrescaleSet(uint32_t ui32Base, uint32_t ui32Timer, uint32_t ui32Value)
 
 //*****************************************************************************
 //
-//! Get the timer prescale value.
+//! Gets the timer prescale value.
 //!
 //! \param ui32Base is the base address of the timer module.
 //! \param ui32Timer specifies the timer; must be one of \b TIMER_A or
@@ -854,7 +857,7 @@ TimerPrescaleGet(uint32_t ui32Base, uint32_t ui32Timer)
 
 //*****************************************************************************
 //
-//! Set the timer prescale match value.
+//! Sets the timer prescale match value.
 //!
 //! \param ui32Base is the base address of the timer module.
 //! \param ui32Timer specifies the timer(s) to adjust; must be one of
@@ -908,7 +911,7 @@ TimerPrescaleMatchSet(uint32_t ui32Base, uint32_t ui32Timer,
 
 //*****************************************************************************
 //
-//! Get the timer prescale match value.
+//! Gets the timer prescale match value.
 //!
 //! \param ui32Base is the base address of the timer module.
 //! \param ui32Timer specifies the timer; must be one of \b TIMER_A or
@@ -1447,8 +1450,8 @@ TimerIntUnregister(uint32_t ui32Base, uint32_t ui32Timer)
 //! The \e ui32IntFlags parameter must be the logical OR of any combination of
 //! the following:
 //!
-//! - \b TIMER_TIMB_DMA - Timer B DMA complete
-//! - \b TIMER_TIMA_DMA - Timer A DMA complete
+//! - \b TIMER_TIMB_DMA - Timer B uDMA complete
+//! - \b TIMER_TIMA_DMA - Timer A uDMA complete
 //! - \b TIMER_CAPB_EVENT  - Capture B event interrupt
 //! - \b TIMER_CAPB_MATCH  - Capture B match interrupt
 //! - \b TIMER_TIMB_TIMEOUT  - Timer B timeout interrupt
@@ -1736,32 +1739,32 @@ TimerADCEventGet(uint32_t ui32Base)
 
 //*****************************************************************************
 //
-//! Enables the events that can trigger a DMA request.
+//! Enables the events that can trigger a uDMA request.
 //!
 //! \param ui32Base is the base address of the timer module.
-//! \param ui32DMAEvent is a bit mask of the events that can trigger DMA.
+//! \param ui32DMAEvent is a bit mask of the events that can trigger uDMA.
 //!
-//! This function enables the timer events that can trigger the start of a DMA
-//! sequence.  The DMA trigger events are specified in the \e ui32DMAEvent
+//! This function enables the timer events that can trigger the start of a uDMA
+//! sequence.  The uDMA trigger events are specified in the \e ui32DMAEvent
 //! parameter by passing in the logical OR of the following values:
 //!
-//! - \b TIMER_DMA_MODEMATCH_B - The mode match DMA trigger for timer B is
+//! - \b TIMER_DMA_MODEMATCH_B - The mode match uDMA trigger for timer B is
 //!   enabled.
-//! - \b TIMER_DMA_CAPEVENT_B - The capture event DMA trigger for timer B is
+//! - \b TIMER_DMA_CAPEVENT_B - The capture event uDMA trigger for timer B is
 //!   enabled.
-//! - \b TIMER_DMA_CAPMATCH_B - The capture match DMA trigger for timer B is
+//! - \b TIMER_DMA_CAPMATCH_B - The capture match uDMA trigger for timer B is
 //!   enabled.
-//! - \b TIMER_DMA_TIMEOUT_B - The timeout DMA trigger for timer B is enabled.
-//! - \b TIMER_DMA_MODEMATCH_A - The mode match DMA trigger for timer A is
+//! - \b TIMER_DMA_TIMEOUT_B - The timeout uDMA trigger for timer B is enabled.
+//! - \b TIMER_DMA_MODEMATCH_A - The mode match uDMA trigger for timer A is
 //!   enabled.
-//! - \b TIMER_DMA_RTC_A - The RTC DMA trigger for timer A is enabled.
-//! - \b TIMER_DMA_CAPEVENT_A - The capture event DMA trigger for timer A is
+//! - \b TIMER_DMA_RTC_A - The RTC uDMA trigger for timer A is enabled.
+//! - \b TIMER_DMA_CAPEVENT_A - The capture event uDMA trigger for timer A is
 //!   enabled.
-//! - \b TIMER_DMA_CAPMATCH_A - The capture match DMA trigger for timer A is
+//! - \b TIMER_DMA_CAPMATCH_A - The capture match uDMA trigger for timer A is
 //!   enabled.
-//! - \b TIMER_DMA_TIMEOUT_A - The timeout DMA trigger for timer A is enabled.
+//! - \b TIMER_DMA_TIMEOUT_A - The timeout uDMA trigger for timer A is enabled.
 //!
-//! \note The ability to specify DMA event triggers varies with the Tiva
+//! \note The ability to specify uDMA event triggers varies with the Tiva
 //! part in use.  Please consult the data sheet for the part you are
 //! using to determine whether this support is available.
 //!
@@ -1777,38 +1780,38 @@ TimerDMAEventSet(uint32_t ui32Base, uint32_t ui32DMAEvent)
     ASSERT(_TimerBaseValid(ui32Base));
 
     //
-    // Set the DMA triggers.
+    // Set the uDMA triggers.
     //
     HWREG(ui32Base + TIMER_O_DMAEV) = ui32DMAEvent;
 }
 
 //*****************************************************************************
 //
-//! Returns the events that can trigger a DMA request.
+//! Returns the events that can trigger a uDMA request.
 //!
 //! \param ui32Base is the base address of the timer module.
 //!
-//! This function returns the timer events that can trigger the start of a DMA
-//! sequence.  The DMA trigger events are the logical OR of the following
+//! This function returns the timer events that can trigger the start of a uDMA
+//! sequence.  The uDMA trigger events are the logical OR of the following
 //! values:
 //!
-//! - \b TIMER_DMA_MODEMATCH_B - Enables the mode match DMA trigger for timer
+//! - \b TIMER_DMA_MODEMATCH_B - Enables the mode match uDMA trigger for timer
 //!   B.
-//! - \b TIMER_DMA_CAPEVENT_B - Enables the capture event DMA trigger for
+//! - \b TIMER_DMA_CAPEVENT_B - Enables the capture event uDMA trigger for
 //!   timer B.
-//! - \b TIMER_DMA_CAPMATCH_B - Enables the capture match DMA trigger for
+//! - \b TIMER_DMA_CAPMATCH_B - Enables the capture match uDMA trigger for
 //!   timer B.
-//! - \b TIMER_DMA_TIMEOUT_B - Enables the timeout DMA trigger for timer B.
-//! - \b TIMER_DMA_MODEMATCH_A - Enables the mode match DMA trigger for timer
+//! - \b TIMER_DMA_TIMEOUT_B - Enables the timeout uDMA trigger for timer B.
+//! - \b TIMER_DMA_MODEMATCH_A - Enables the mode match uDMA trigger for timer
 //!   A.
-//! - \b TIMER_DMA_RTC_A - Enables the RTC DMA trigger for timer A.
-//! - \b TIMER_DMA_CAPEVENT_A - Enables the capture event DMA trigger for
+//! - \b TIMER_DMA_RTC_A - Enables the RTC uDMA trigger for timer A.
+//! - \b TIMER_DMA_CAPEVENT_A - Enables the capture event uDMA trigger for
 //!   timer A.
-//! - \b TIMER_DMA_CAPMATCH_A - Enables the capture match DMA trigger for
+//! - \b TIMER_DMA_CAPMATCH_A - Enables the capture match uDMA trigger for
 //!   timer A.
-//! - \b TIMER_DMA_TIMEOUT_A - Enables the timeout DMA trigger for timer A.
+//! - \b TIMER_DMA_TIMEOUT_A - Enables the timeout uDMA trigger for timer A.
 //!
-//! \note The ability to specify DMA event triggers varies with the Tiva
+//! \note The ability to specify uDMA event triggers varies with the Tiva
 //! part in use.  Please consult the data sheet for the part you are
 //! using to determine whether this support is available.
 //!
@@ -1824,9 +1827,67 @@ TimerDMAEventGet(uint32_t ui32Base)
     ASSERT(_TimerBaseValid(ui32Base));
 
     //
-    // Return the current DMA triggers.
+    // Return the current uDMA triggers.
     //
     return(HWREG(ui32Base + TIMER_O_DMAEV));
+}
+
+//*****************************************************************************
+//
+//! This function configures the update of timer load and match settings.
+//!
+//! \param ui32Base is the base address of the timer module.
+//! \param ui32Timer specifies the timer(s); must be one of \b TIMER_A,
+//! \b TIMER_B, or \b TIMER_BOTH.
+//! \param ui32Config is a combination of the updates methods for the timers
+//! specified in the \e ui32Timer parameter.
+//!
+//! This function configures how the timer updates the timer load and match
+//! values for the timers.  The \e ui32Timer values can be \b TIMER_A,
+//! \b TIMER_B, or \b TIMER_BOTH to apply the settings in \e ui32Config to
+//! either timer or both timers.  If the timer is not split then the \b TIMER_A
+//! should be used.  The \e ui32Config values affects when the TimerLoadSet()
+//! and TimerLoadSet64() values take effect.
+//!
+//! - \b TIMER_UP_LOAD_IMMEDIATE is the default mode that causes the
+//! TimerLoadSet() or TimerLoadSet64() to update the timer counter immediately.
+//! - \b TIMER_UP_LOAD_TIMEOUT causes the TimerLoadSet() or TimerLoadSet64() to
+//! update the timer when it counts down to zero.
+//!
+//! Similarly the \e ui32Config value affects when the TimerMatchSet() and
+//! TimerMatchSet64() values take effect.
+//!
+//! - \b TIMER_UP_MATCH_IMMEDIATE is the default mode that causes the
+//! TimerMatchSet() or TimerMatchSet64() to update the timer match value
+//! immediately.
+//! - \b TIMER_UP_MATCH_TIMEOUT causes the TimerMatchSet() or TimerMatchSet64()
+//! to update the timer match value when it counts down to zero.
+//!
+//! \note These settings have no effect if the timer is not in count down mode
+//! and are mostly useful when operating in PWM mode to allow for synchronous
+//! update of timer match and load values.
+//!
+//! \return None.
+//
+//*****************************************************************************
+void
+TimerUpdateMode(uint32_t ui32Base, uint32_t ui32Timer, uint32_t ui32Config)
+{
+    uint32_t ui32Value;
+
+    if((ui32Timer & TIMER_A) == TIMER_A)
+    {
+        ui32Value = HWREG(ui32Base + TIMER_O_TAMR) & ~(0x00000500);
+        ui32Value |= ui32Config;
+        HWREG(ui32Base + TIMER_O_TAMR) = ui32Value;
+    }
+
+    if((ui32Timer & TIMER_B) == TIMER_B)
+    {
+        ui32Value = HWREG(ui32Base + TIMER_O_TBMR) & ~(0x00000500);
+        ui32Value |= ui32Config;
+        HWREG(ui32Base + TIMER_O_TBMR) = ui32Value;
+    }
 }
 
 //*****************************************************************************

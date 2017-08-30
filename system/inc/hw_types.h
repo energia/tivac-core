@@ -2,7 +2,7 @@
 //
 // hw_types.h - Common types and macros.
 //
-// Copyright (c) 2005-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2005-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Firmware Development Package.
+// This is part of revision 2.1.4.178 of the Tiva Firmware Development Package.
 //
 //*****************************************************************************
 
@@ -72,9 +72,9 @@
 // It is expected that these macros will be used inside of a standard 'C'
 // conditional block of code, e.g.
 //
-//     if(CLASS_IS_BLIZZARD)
+//     if(CLASS_IS_TM4C123)
 //     {
-//         do some Blizzard-class specific code here.
+//         do some TM4C123-class specific code here.
 //     }
 //
 // By default, these macros will be defined as run-time checks of the
@@ -89,16 +89,16 @@
 // of limiting the Driverlib binary to a specific Tiva silicon revision.
 //
 //*****************************************************************************
-#ifndef CLASS_IS_BLIZZARD
-#define CLASS_IS_BLIZZARD                                                    \
+#ifndef CLASS_IS_TM4C123
+#define CLASS_IS_TM4C123                                                     \
         ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) == \
-         (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_BLIZZARD))
+         (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_TM4C123))
 #endif
 
-#ifndef CLASS_IS_SNOWFLAKE
-#define CLASS_IS_SNOWFLAKE                                                   \
+#ifndef CLASS_IS_TM4C129
+#define CLASS_IS_TM4C129                                                     \
         ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) == \
-         (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_SNOWFLAKE))
+         (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_TM4C129))
 #endif
 
 #ifndef REVISION_IS_A0
@@ -129,6 +129,19 @@
 #define REVISION_IS_B1                                                     \
         ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) == \
          (SYSCTL_DID0_MAJ_REVB | SYSCTL_DID0_MIN_1))
+#endif
+
+//*****************************************************************************
+//
+// For TivaWare 2.1, we removed all references to Tiva IC codenames from the
+// source.  To ensure that existing customer code doesn't break as a result
+// of this change, make sure that the old definitions are still available at
+// least for the time being.
+//
+//*****************************************************************************
+#ifndef DEPRECATED
+#define CLASS_IS_BLIZZARD CLASS_IS_TM4C123
+#define CLASS_IS_SNOWFLAKE CLASS_IS_TM4C123
 #endif
 
 #endif // __HW_TYPES_H__

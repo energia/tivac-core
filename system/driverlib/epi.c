@@ -2,7 +2,7 @@
 //
 // epi.c - Driver for the EPI module.
 //
-// Copyright (c) 2008-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2008-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Peripheral Driver Library.
+// This is part of revision 2.1.4.178 of the Tiva Peripheral Driver Library.
 //
 //*****************************************************************************
 
@@ -173,7 +173,7 @@ extern void EPIWorkaroundHWordWrite(uint16_t *pui16Addr, uint16_t ui16Value);
 //! \return The 16-bit word stored at address \e pui16Addr.
 //
 //*****************************************************************************
-extern uint16_t EPIWorkaroundHwordRead(uint16_t *pui16Addr);
+extern uint16_t EPIWorkaroundHWordRead(uint16_t *pui16Addr);
 
 //*****************************************************************************
 //
@@ -243,7 +243,7 @@ extern uint8_t EPIWorkaroundByteRead(uint8_t *pui8Addr);
 //! - \b EPI_MODE_DISABLE - disable the EPI module
 //!
 //! Selection of any of the above modes enables the EPI module, except
-//! for \b EPI_MODE_DISABLE which should be used to disable the module.
+//! for \b EPI_MODE_DISABLE, which is used to disable the module.
 //!
 //! \return None.
 //
@@ -376,6 +376,10 @@ EPIDividerCSSet(uint32_t ui32Base, uint32_t ui32CS,
 //! A non-zero transmit count in combination with a FIFO threshold trigger
 //! asserts an EPI uDMA transmit.
 //!
+//! Note that, although the EPI peripheral can handle counts of up to 65535,
+//! a single uDMA transfer has a maximum length of 1024 units so \e ui32Count
+//! should be set to values less than or equal to 1024.
+//!
 //! \note The availability of the EPI DMA TX count varies based on the
 //! Tiva part in use.  Please consult the data sheet to determine if this
 //! feature is available.
@@ -390,12 +394,12 @@ EPIDMATxCount(uint32_t ui32Base, uint32_t ui32Count)
     // Check the arguments.
     //
     ASSERT(ui32Base == EPI0_BASE);
-    ASSERT(ui32Count < 0x00ff);
+    ASSERT(ui32Count <= 1024);
 
     //
     // Assign the DMA TX count value provided.
     //
-    HWREG(ui32Base + EPI_O_DMATXCNT) = ui32Count & 0x00ff;
+    HWREG(ui32Base + EPI_O_DMATXCNT) = ui32Count & 0xffff;
 }
 
 //*****************************************************************************
@@ -501,14 +505,12 @@ EPIConfigSDRAMSet(uint32_t ui32Base, uint32_t ui32Config,
 //! - \b EPI_HB8_WORD_ACCESS - use Word Access mode to route bytes to the
 //!   correct byte lanes allowing data to be stored in bits [31:8].  If absent,
 //!   all data transfers use bits [7:0].
-//!   \note \b EPI_HB8_WORD_ACCESS is not available on all parts.  Please
-//!   consult the data sheet to determine if this feature is available.
 //!
 //! - \b EPI_HB8_CLOCK_GATE_IDLE sets the EPI clock to be held low when no data
 //!   is available to read or write
 //! - \b EPI_HB8_CLOCK_INVERT inverts the EPI clock
 //! - \b EPI_HB8_IN_READY_EN sets EPIS032 as a ready/stall signal, active high
-//! - \b EPI_HB8_IN_READY_EN_INVERTEsets EPIS032 as ready/stall signal, active
+//! - \b EPI_HB8_IN_READY_EN_INVERT sets EPIS032 as ready/stall signal, active
 //!   low
 //! - \b EPI_HB8_ALE_HIGH sets the address latch active high (default)
 //! - \b EPI_HB8_ALE_LOW sets address latch active low
@@ -519,34 +521,36 @@ EPIConfigSDRAMSet(uint32_t ui32Base, uint32_t ui32Config,
 //!   the baud rate resulting from the divider in the lower 16 bits of the
 //!   parameter passed to EPIDividerSet().
 //!
-//! In addition, some parts support a CS2n and CS3n for a total of 4 chip
+//! In addition, some parts support CS2n and CS3n for a total of 4 chip
 //! selects.  If \b EPI_HB8_CSBAUD is configured, EPIDividerCSSet() should be
 //! used to to configure the divider for CS2n and CS3n.  They both also use the
 //! lower 16 bits passed to EPIDividerSet() if this option is absent.
 //!
 //! The use of \b EPI_HB8_CSBAUD also allows for unique chip select
-//! configurations.  The CS0n, CS1n, CS2n, and CS3n can each be configured by
+//! configurations.  CS0n, CS1n, CS2n, and CS3n can each be configured by
 //! calling EPIConfigHB8CSSet() if \b EPI_HB8_CSBAUD is used.  Otherwise, the
 //! configuration provided in \e ui32Config is used for all chip selects
 //! enabled.
 //!
 //! - Chip select configuration, select one of:
-//!   - \b EPI_HB8_CSCFG_CS sets EPIS030 to operate as a chip select signal
+//!   - \b EPI_HB8_CSCFG_CS sets EPIS030 to operate as a chip select signal.
 //!   - \b EPI_HB8_CSCFG_ALE sets EPIS030 to operate as an address latch
-//!     (ALE)
+//!     (ALE).
 //!   - \b EPI_HB8_CSCFG_DUAL_CS sets EPIS030 to operate as CS0n and EPIS027
 //!     as CS1n with the asserted chip select determined from the most
-//!     significant address bit for the respective external address map
+//!     significant address bit for the respective external address map.
 //!   - \b EPI_HB8_CSCFG_ALE_DUAL_CS sets EPIS030 as an address latch (ALE),
 //!     EPIS027 as CS0n and EPIS026 as CS1n with the asserted chip select
 //!     determined from the most significant address bit for the respective
-//!     external address map
+//!     external address map.
 //!   - \b EPI_HB8_CSCFG_ALE_SINGLE_CS sets EPIS030 to operate as an address
-//!     latch (ALE) and EPIS027 is used as a chip select
+//!     latch (ALE) and EPIS027 is used as a chip select.
 //!   - \b EPI_HB8_CSCFG_QUAD_CS sets EPIS030 as CS0n, EPIS027 as CS1n,
-//!     EPIS034 as CS2n and EPIS033 as CS3n
+//!     EPIS034 as CS2n and EPIS033 as CS3n.
 //!   - \b EPI_HB8_CSCFG_ALE_QUAD_CS sets EPIS030 as an address latch (ALE),
-//!     EPIS026 as CS0n, EPIS027 as CS1n, EPIS034 as CS2n and EPIS033 as CS3n
+//!     EPIS026 as CS0n, EPIS027 as CS1n, EPIS034 as CS2n and EPIS033 as CS3n.
+//!   \note Dual or quad chip select configurations cannot be used with
+//!         EPI_HB8_MODE_SRAM.
 //!
 //! The parameter \e ui32MaxWait is used if the FIFO mode is chosen.  If a
 //! FIFO is used aint32_t with RXFULL or TXEMPTY ready signals, then this
@@ -660,13 +664,13 @@ EPIConfigHB8Set(uint32_t ui32Base, uint32_t ui32Config,
 //!   use the baud rate resulting from the divider in the lower 16 bits of the
 //!   parameter passed to EPIDividerSet().
 //!
-//! In addition, some parts support a CS2n and CS3n for a total of 4 chip
+//! In addition, some parts support CS2n and CS3n for a total of 4 chip
 //! selects.  If \b EPI_HB16_CSBAUD is configured, EPIDividerCSSet() should be
 //! used to to configure the divider for CS2n and CS3n.  They both also use the
 //! lower 16 bits passed to EPIDividerSet() if this option is absent.
 //!
-//! The use of \b EPI_HB16_CSBAUD also allows for unqiue chip select
-//! configurations.  The CS0n, CS1n, CS2n, and CS3n can each be configured by
+//! The use of \b EPI_HB16_CSBAUD also allows for unique chip select
+//! configurations.  CS0n, CS1n, CS2n, and CS3n can each be configured by
 //! calling EPIConfigHB16CSSet() if \b EPI_HB16_CSBAUD is used.  Otherwise, the
 //! configuration provided in \e ui32Config is used for all chip selects.
 //!
@@ -688,11 +692,8 @@ EPIConfigHB8Set(uint32_t ui32Base, uint32_t ui32Config,
 //!     - \b EPI_HB16_CSCFG_ALE_QUAD_CS sets EPIS030 as an  address latch
 //!       (ALE), EPIS026 as CS0n, EPIS027 as CS1n, EPIS034 as CS2n and EPIS033
 //!       as CS3n.
-//!
-//! \note The availability of \b EPI_HB16_CSCFG_ALE_SINGLE_CS,
-//! \b EPI_HB16_CSCFG_QUAD_CS, and \b EPI_HB16_CSFCG_ALE_QUAD_CS functionality
-//! varies based on the Tiva part in use.  Please consult the data sheet
-//! to determine if these! features are available.
+//!   \note Dual or quad chip select configurations cannot be used with
+//!         EPI_HB16_MODE_SRAM.
 //!
 //! The parameter \e ui32MaxWait is used if the FIFO mode is chosen.  If a
 //! FIFO is used along with RXFULL or TXEMPTY ready signals, then this
@@ -844,7 +845,7 @@ EPIConfigHB8CSSet(uint32_t ui32Base, uint32_t ui32CS, uint32_t ui32Config)
 //!     - \b EPI_HB16_MODE_SRAM same as \b EPI_HB8_MODE_ADDEMUX, but uses
 //!       address switch for multiple reads instead of OEn strobing, D[15:0].
 //!     - \b EPI_HB16_MODE_FIFO adds XFIFO with sense of XFIFO full and XFIFO
-//!       empty, D[15:0].  This is only available on CS0n and CS1n.
+//!       empty, D[15:0].  This feature is only available on CS0n and CS1n.
 //! - \b EPI_HB16_WRHIGH sets active high write strobe, otherwise it is
 //!   active low.
 //! - \b EPI_HB16_RDHIGH sets active high read strobe, otherwise it is
@@ -1167,7 +1168,7 @@ EPIPSRAMConfigRegRead(uint32_t ui32Base, uint32_t ui32CS)
 //! to the provided storage if the PSRAM read configuration register enable
 //! is no longer asserted.  Otherwise the provided storage is not modified.
 //!
-//! The Host-bus 16 interface mode should be setup and EPISRAMConfigRegRead()
+//! The Host-bus 16 interface mode should be set up and EPIPSRAMConfigRegRead()
 //! should be called prior to calling this function.
 //!
 //! The \e ui32Base parameter is the base address for the EPI hardware module.
@@ -1239,7 +1240,7 @@ EPIPSRAMConfigRegGetNonBlocking(uint32_t ui32Base, uint32_t ui32CS,
 //! is read once the EPI PSRAM configuration register read enable signal is
 //! de-asserted.
 //!
-//! The Host-bus 16 interface mode should be setup and EPISRAMConfigRegRead()
+//! The Host-bus 16 interface mode should be set up and EPIPSRAMConfigRegRead()
 //! should be called prior to calling this function.
 //!
 //! The \e ui32Base parameter is the base address for the EPI hardware module.
@@ -1298,8 +1299,7 @@ EPIPSRAMConfigRegGet(uint32_t ui32Base, uint32_t ui32CS)
 //! \param ui32Config is the interface configuration.
 //! \param ui32FrameCount is the frame size in clocks, if the frame signal
 //! is used (0-15).
-//! \param ui32MaxWait is the maximum number of external clocks to wait
-//! when the external clock enable is holding off the transaction (0-255).
+//! \param ui32MaxWait is currently not used.
 //!
 //! This function is used to configure the interface when used in
 //! general-purpose operation as chosen with the function EPIModeSet().  The
@@ -1308,17 +1308,10 @@ EPIPSRAMConfigRegGet(uint32_t ui32Base, uint32_t ui32CS)
 //! - \b EPI_GPMODE_CLKPIN interface clock as output on a pin.
 //! - \b EPI_GPMODE_CLKGATE clock is stopped when there is no transaction,
 //!   otherwise it is free-running.
-//! - \b EPI_GPMODE_RDYEN the external peripheral drives an iRDY signal into
-//!   pin EPI0S27.  If absent, the peripheral is assumed to be ready at all
-//!   times.  This flag may only be used with a free-running clock
-//!   (\b EPI_GPMODE_CLKGATE is absent).
-//! - \b EPI_GPMODE_FRAMEPIN framing signal is emitted on a pin.
 //! - \b EPI_GPMODE_FRAME50 framing signal is 50/50 duty cycle, otherwise it
 //!   is a pulse.
 //! - \b EPI_GPMODE_WRITE2CYCLE a two-cycle write is used, otherwise a
 //!   single-cycle write is used.
-//! - \b EPI_GPMODE_READ2CYCLE a two-cycle read is used, otherwise a
-//!   single-cycle read is used.
 //! - Address bus size, select one of:
 //!     - \b EPI_GPMODE_ASIZE_NONE sets no address bus.
 //!     - \b EPI_GPMODE_ASIZE_4 sets an address bus size of 4 bits.
@@ -1329,26 +1322,11 @@ EPIPSRAMConfigRegGet(uint32_t ui32Base, uint32_t ui32CS)
 //!     - \b EPI_GPMODE_DSIZE_16 sets a data bus size of 16 bits.
 //!     - \b EPI_GPMODE_DSIZE_24 sets a data bus size of 24 bits.
 //!     - \b EPI_GPMODE_DSIZE_32 sets a data bus size of 32 bits.
-//! - \b EPI_GPMODE_WORD_ACCESS - use Word Access mode to route bytes to the
-//!   correct byte lanes allowing data to be stored in the upper bits of the
-//!   word when necessary.
-//!
-//! \note \b EPI_GPMODE_WORD_ACCESS is not available on all parts.  Please
-//! consult the data sheet to determine if this feature is available.
 //!
 //! The parameter \e ui32FrameCount is the number of clocks used to form the
 //! framing signal, if the framing signal is used.  The behavior depends on
-//! whether the frame signal is a pulse or a 50/50 duty cycle.  This value
-//! is not used if the framing signal is not enabled with the option
-//! \b EPI_GPMODE_FRAMEPIN.
+//! whether the frame signal is a pulse or a 50/50 duty cycle.
 //!
-//! The parameter \e ui32MaxWait is used if the external clock enable is turned
-//! on with the \b EPI_GPMODE_CLKENA option is used.  In the case that
-//! external clock enable is used, this parameter determines the maximum
-//! number of clocks to wait when the external clock enable signal is holding
-//! off a transaction.  A value of 0 means to wait forever.  If a non-zero
-//! value is used and exceeded, an interrupt occurs and the transaction
-//! aborted.
 //!
 //! \return None.
 //
@@ -1369,12 +1347,6 @@ EPIConfigGPModeSet(uint32_t ui32Base, uint32_t ui32Config,
     //
     ui32Config &= ~EPI_GPCFG_FRMCNT_M;
     ui32Config |= ui32FrameCount << EPI_GPCFG_FRMCNT_S;
-
-    //
-    // Fill in the max wait field of the configuration word.
-    //
-    ui32Config &= ~EPI_GPCFG_MAXWAIT_M;
-    ui32Config |= ui32MaxWait << EPI_GPCFG_MAXWAIT_S;
 
     //
     // Write the non-moded configuration register.
@@ -1464,7 +1436,7 @@ EPIAddressMapSet(uint32_t ui32Base, uint32_t ui32Map)
 //! \param ui32Address is the starting address to read.
 //!
 //! This function is used to configure a non-blocking read channel for a
-//! transaction.  Two channels are available which can be used in a ping-pong
+//! transaction.  Two channels are available that can be used in a ping-pong
 //! method for continuous reading.  It is not necessary to use both channels
 //! to perform a non-blocking read.
 //!
@@ -1664,8 +1636,8 @@ EPINonBlockingReadAvail(uint32_t ui32Base)
 //!
 //! \param ui32Base is the EPI module base address.
 //! \param ui32Count is the maximum count of items to read.
-//! \param pui32Buf is the caller supplied buffer where the read data should
-//! be stored.
+//! \param pui32Buf is the caller supplied buffer where the read data is
+//! stored.
 //!
 //! This function reads 32-bit data items from the read FIFO and stores
 //! the values in a caller-supplied buffer.  The function reads and stores
@@ -1719,8 +1691,8 @@ EPINonBlockingReadGet32(uint32_t ui32Base, uint32_t ui32Count,
 //!
 //! \param ui32Base is the EPI module base address.
 //! \param ui32Count is the maximum count of items to read.
-//! \param pui16Buf is the caller-supplied buffer where the read data should
-//! be stored.
+//! \param pui16Buf is the caller-supplied buffer where the read data is
+//! stored.
 //!
 //! This function reads 16-bit data items from the read FIFO and stores
 //! the values in a caller-supplied buffer.  The function reads and stores
@@ -1774,8 +1746,8 @@ EPINonBlockingReadGet16(uint32_t ui32Base, uint32_t ui32Count,
 //!
 //! \param ui32Base is the EPI module base address.
 //! \param ui32Count is the maximum count of items to read.
-//! \param pui8Buf is the caller-supplied buffer where the read data should
-//! be stored.
+//! \param pui8Buf is the caller-supplied buffer where the read data is
+//! stored.
 //!
 //! This function reads 8-bit data items from the read FIFO and stores
 //! the values in a caller-supplied buffer.  The function reads and stores
@@ -1842,7 +1814,7 @@ EPINonBlockingReadGet8(uint32_t ui32Base, uint32_t ui32Count,
 //!     - \b EPI_FIFO_CONFIG_TX_EMPTY sets the FIFO TX trigger level to empty.
 //!     - \b EPI_FIFO_CONFIG_TX_1_4 sets the FIFO TX trigger level to 1/4.
 //!     - \b EPI_FIFO_CONFIG_TX_1_2 sets the FIFO TX trigger level to 1/2.
-//!     -\b EPI_FIFO_CONFIG_TX_3_4 sets the FIFO TX trigger level to 3/4.
+//!     - \b EPI_FIFO_CONFIG_TX_3_4 sets the FIFO TX trigger level to 3/4.
 //! - FIFO RX trigger level, select one of:
 //!     - \b EPI_FIFO_CONFIG_RX_1_8 sets the FIFO RX trigger level to 1/8.
 //!     - \b EPI_FIFO_CONFIG_RX_1_4 sets the FIFO RX trigger level to 1/4.
@@ -1944,7 +1916,7 @@ EPIIntEnable(uint32_t ui32Base, uint32_t ui32IntFlags)
 //!
 //! - \b EPI_INT_TXREQ interrupt when transmit FIFO is below the trigger level.
 //! - \b EPI_INT_RXREQ interrupt when read FIFO is above the trigger level.
-//! - \b EPI_INT_ERR interrupt when an error condition occurrs.
+//! - \b EPI_INT_ERR interrupt when an error condition occurs.
 //! - \b EPI_INT_DMA_TX_DONE interrupt when the transmit DMA completes.
 //! - \b EPI_INT_DMA_RX_DONE interrupt when the read DMA completes.
 //!
@@ -1982,7 +1954,7 @@ EPIIntDisable(uint32_t ui32Base, uint32_t ui32IntFlags)
 //!
 //! - \b EPI_INT_TXREQ interrupt when transmit FIFO is below the trigger level.
 //! - \b EPI_INT_RXREQ interrupt when read FIFO is above the trigger level.
-//! - \b EPI_INT_ERR interrupt when an error condition occurrs.
+//! - \b EPI_INT_ERR interrupt when an error condition occurs.
 //! - \b EPI_INT_DMA_TX_DONE interrupt when the transmit DMA completes.
 //! - \b EPI_INT_DMA_RX_DONE interrupt when the read DMA completes.
 //
@@ -2109,9 +2081,9 @@ _EPIIntNumberGet(uint32_t ui32Base)
     //
     ui32Int = 0;
 
-    if(CLASS_IS_SNOWFLAKE)
+    if(CLASS_IS_TM4C129)
     {
-        ui32Int = INT_EPI0_SNOWFLAKE;
+        ui32Int = INT_EPI0_TM4C129;
     }
 
     return(ui32Int);
@@ -2166,7 +2138,7 @@ EPIIntRegister(uint32_t ui32Base, void (*pfnHandler)(void))
 
 //*****************************************************************************
 //
-//! Unregisters an interrupt handler for the EPI module.
+//! Removes a registered interrupt handler for the EPI module.
 //!
 //! \param ui32Base is the EPI module base address.
 //!

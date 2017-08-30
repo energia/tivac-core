@@ -2,7 +2,7 @@
 //
 // hw_hibernate.h - Defines and Macros for the Hibernation module.
 //
-// Copyright (c) 2007-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2007-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Firmware Development Package.
+// This is part of revision 2.1.4.178 of the Tiva Firmware Development Package.
 //
 //*****************************************************************************
 
@@ -68,8 +68,7 @@
 #define HIB_LOCK                0x400FC360  // Hibernation Lock
 #define HIB_TPCTL               0x400FC400  // HIB Tamper Control
 #define HIB_TPSTAT              0x400FC404  // HIB Tamper Status
-#define HIB_TPIO                0x400FC410  // HIB Tamper I/O Control and
-                                            // Status
+#define HIB_TPIO                0x400FC410  // HIB Tamper I/O Control
 #define HIB_TPLOG0              0x400FC4E0  // HIB Tamper Log 0
 #define HIB_TPLOG1              0x400FC4E4  // HIB Tamper Log 1
 #define HIB_TPLOG2              0x400FC4E8  // HIB Tamper Log 2
@@ -127,7 +126,7 @@
 #define HIB_CTL_VDD3ON          0x00000100  // VDD Powered
 #define HIB_CTL_VABORT          0x00000080  // Power Cut Abort Enable
 #define HIB_CTL_CLK32EN         0x00000040  // Clocking Enable
-#define HIB_CTL_PINWEN          0x00000010  // External WAKE Pin Enable
+#define HIB_CTL_PINWEN          0x00000010  // External Wake Pin Enable
 #define HIB_CTL_RTCWEN          0x00000008  // RTC Wake-up Enable
 #define HIB_CTL_HIBREQ          0x00000002  // Hibernation Request
 #define HIB_CTL_RTCEN           0x00000001  // RTC Timer Enable
@@ -154,9 +153,10 @@
 //
 //*****************************************************************************
 #define HIB_RIS_VDDFAIL         0x00000080  // VDD Fail Raw Interrupt Status
-#define HIB_RIS_RSTWK           0x00000040  // Reset Pad I/O Wake-Up Interrupt
-                                            // Mask
-#define HIB_RIS_PADIOWK         0x00000020  // Pad I/O Wake-Up Interrupt Mask
+#define HIB_RIS_RSTWK           0x00000040  // Reset Pad I/O Wake-Up Raw
+                                            // Interrupt Status
+#define HIB_RIS_PADIOWK         0x00000020  // Pad I/O Wake-Up Raw Interrupt
+                                            // Status
 #define HIB_RIS_WC              0x00000010  // Write Complete/Capable Raw
                                             // Interrupt Status
 #define HIB_RIS_EXTW            0x00000008  // External Wake-Up Raw Interrupt
@@ -190,14 +190,13 @@
 //*****************************************************************************
 #define HIB_IC_VDDFAIL          0x00000080  // VDD Fail Interrupt Clear
 #define HIB_IC_RSTWK            0x00000040  // Reset Pad I/O Wake-Up Interrupt
-                                            // Mask
-#define HIB_IC_PADIOWK          0x00000020  // Pad I/O Wake-Up Interrupt Mask
-#define HIB_IC_WC               0x00000010  // Write Complete/Capable Masked
-                                            // Interrupt Clear
-#define HIB_IC_EXTW             0x00000008  // External Wake-Up Masked
-                                            // Interrupt Clear
-#define HIB_IC_LOWBAT           0x00000004  // Low Battery Voltage Masked
-                                            // Interrupt Clear
+                                            // Clear
+#define HIB_IC_PADIOWK          0x00000020  // Pad I/O Wake-Up Interrupt Clear
+#define HIB_IC_WC               0x00000010  // Write Complete/Capable Interrupt
+                                            // Clear
+#define HIB_IC_EXTW             0x00000008  // External Wake-Up Interrupt Clear
+#define HIB_IC_LOWBAT           0x00000004  // Low Battery Voltage Interrupt
+                                            // Clear
 #define HIB_IC_RTCALT0          0x00000001  // RTC Alert0 Masked Interrupt
                                             // Clear
 
@@ -327,7 +326,7 @@
 // The following are defines for the bit fields in the HIB_LOCK register.
 //
 //*****************************************************************************
-#define HIB_LOCK_HIBLOCK_M      0xFFFFFFFF  // Hibernate Lock
+#define HIB_LOCK_HIBLOCK_M      0xFFFFFFFF  // HIbernate Lock
 #define HIB_LOCK_HIBLOCK_KEY    0xA3359554  // Hibernate Lock Key
 #define HIB_LOCK_HIBLOCK_S      0
 
@@ -360,7 +359,7 @@
                                 0x00000000  // Tamper disabled
 #define HIB_TPSTAT_STATE_CONFIGED                                             \
                                 0x00000004  // Tamper configured
-#define HIB_TPSTAT_STATE_ERROR  0x00000008  // Tamper event occurred
+#define HIB_TPSTAT_STATE_ERROR  0x00000008  // Tamper pin event occurred
 #define HIB_TPSTAT_XOSCST       0x00000002  // External Oscillator Status
 #define HIB_TPSTAT_XOSCFAIL     0x00000001  // External Oscillator Failure
 
@@ -369,26 +368,26 @@
 // The following are defines for the bit fields in the HIB_TPIO register.
 //
 //*****************************************************************************
-#define HIB_TPIO_GFLTR3         0x08000000  // TPIO3 Glitch Filtering
-#define HIB_TPIO_PUEN3          0x04000000  // TPIO3 Internal Weak Pull-up
+#define HIB_TPIO_GFLTR3         0x08000000  // TMPR3 Glitch Filtering
+#define HIB_TPIO_PUEN3          0x04000000  // TMPR3 Internal Weak Pull-up
                                             // Enable
-#define HIB_TPIO_LEV3           0x02000000  // TPIO3 Trigger Level
-#define HIB_TPIO_EN3            0x01000000  // TPIO3 Enable
-#define HIB_TPIO_GFLTR2         0x00080000  // TPIO2 Glitch Filtering
-#define HIB_TPIO_PUEN2          0x00040000  // TPIO2 Internal Weak Pull-up
+#define HIB_TPIO_LEV3           0x02000000  // TMPR3 Trigger Level
+#define HIB_TPIO_EN3            0x01000000  // TMPR3 Enable
+#define HIB_TPIO_GFLTR2         0x00080000  // TMPR2 Glitch Filtering
+#define HIB_TPIO_PUEN2          0x00040000  // TMPR2 Internal Weak Pull-up
                                             // Enable
-#define HIB_TPIO_LEV2           0x00020000  // TPIO2 Trigger Level
-#define HIB_TPIO_EN2            0x00010000  // TPIO2 Enable
-#define HIB_TPIO_GFLTR1         0x00000800  // TPIO1 Glitch Filtering
-#define HIB_TPIO_PUEN1          0x00000400  // TPIO1 Internal Weak Pull-up
+#define HIB_TPIO_LEV2           0x00020000  // TMPR2 Trigger Level
+#define HIB_TPIO_EN2            0x00010000  // TMPR2 Enable
+#define HIB_TPIO_GFLTR1         0x00000800  // TMPR1 Glitch Filtering
+#define HIB_TPIO_PUEN1          0x00000400  // TMPR1 Internal Weak Pull-up
                                             // Enable
-#define HIB_TPIO_LEV1           0x00000200  // TPIO1 Trigger Level
-#define HIB_TPIO_EN1            0x00000100  // TPIO1Enable
-#define HIB_TPIO_GFLTR0         0x00000008  // TPIO0 Glitch Filtering
-#define HIB_TPIO_PUEN0          0x00000004  // TPIO0 Internal Weak Pull-up
+#define HIB_TPIO_LEV1           0x00000200  // TMPR1 Trigger Level
+#define HIB_TPIO_EN1            0x00000100  // TMPR1Enable
+#define HIB_TPIO_GFLTR0         0x00000008  // TMPR0 Glitch Filtering
+#define HIB_TPIO_PUEN0          0x00000004  // TMPR0 Internal Weak Pull-up
                                             // Enable
-#define HIB_TPIO_LEV0           0x00000002  // TPIO0 Trigger Level
-#define HIB_TPIO_EN0            0x00000001  // TPIO0 Enable
+#define HIB_TPIO_LEV0           0x00000002  // TMPR0 Trigger Level
+#define HIB_TPIO_EN0            0x00000001  // TMPR0 Enable
 
 //*****************************************************************************
 //
@@ -404,10 +403,10 @@
 //
 //*****************************************************************************
 #define HIB_TPLOG1_XOSC         0x00010000  // Status of external 32
-#define HIB_TPLOG1_TRIG3        0x00000008  // Status of TPIO[3] Trigger
-#define HIB_TPLOG1_TRIG2        0x00000004  // Status of TPIO[2] Trigger
-#define HIB_TPLOG1_TRIG1        0x00000002  // Status of TPIO[1] Trigger
-#define HIB_TPLOG1_TRIG0        0x00000001  // Status of TPIO[0] Trigger
+#define HIB_TPLOG1_TRIG3        0x00000008  // Status of TMPR[3] Trigger
+#define HIB_TPLOG1_TRIG2        0x00000004  // Status of TMPR[2] Trigger
+#define HIB_TPLOG1_TRIG1        0x00000002  // Status of TMPR[1] Trigger
+#define HIB_TPLOG1_TRIG0        0x00000001  // Status of TMPR[0] Trigger
 
 //*****************************************************************************
 //
@@ -423,10 +422,10 @@
 //
 //*****************************************************************************
 #define HIB_TPLOG3_XOSC         0x00010000  // Status of external 32
-#define HIB_TPLOG3_TRIG3        0x00000008  // Status of TPIO[3] Trigger
-#define HIB_TPLOG3_TRIG2        0x00000004  // Status of TPIO[2] Trigger
-#define HIB_TPLOG3_TRIG1        0x00000002  // Status of TPIO[1] Trigger
-#define HIB_TPLOG3_TRIG0        0x00000001  // Status of TPIO[0] Trigger
+#define HIB_TPLOG3_TRIG3        0x00000008  // Status of TMPR[3] Trigger
+#define HIB_TPLOG3_TRIG2        0x00000004  // Status of TMPR[2] Trigger
+#define HIB_TPLOG3_TRIG1        0x00000002  // Status of TMPR[1] Trigger
+#define HIB_TPLOG3_TRIG0        0x00000001  // Status of TMPR[0] Trigger
 
 //*****************************************************************************
 //
@@ -442,10 +441,10 @@
 //
 //*****************************************************************************
 #define HIB_TPLOG5_XOSC         0x00010000  // Status of external 32
-#define HIB_TPLOG5_TRIG3        0x00000008  // Status of TPIO[3] Trigger
-#define HIB_TPLOG5_TRIG2        0x00000004  // Status of TPIO[2] Trigger
-#define HIB_TPLOG5_TRIG1        0x00000002  // Status of TPIO[1] Trigger
-#define HIB_TPLOG5_TRIG0        0x00000001  // Status of TPIO[0] Trigger
+#define HIB_TPLOG5_TRIG3        0x00000008  // Status of TMPR[3] Trigger
+#define HIB_TPLOG5_TRIG2        0x00000004  // Status of TMPR[2] Trigger
+#define HIB_TPLOG5_TRIG1        0x00000002  // Status of TMPR[1] Trigger
+#define HIB_TPLOG5_TRIG0        0x00000001  // Status of TMPR[0] Trigger
 
 //*****************************************************************************
 //
@@ -461,10 +460,10 @@
 //
 //*****************************************************************************
 #define HIB_TPLOG7_XOSC         0x00010000  // Status of external 32
-#define HIB_TPLOG7_TRIG3        0x00000008  // Status of TPIO[3] Trigger
-#define HIB_TPLOG7_TRIG2        0x00000004  // Status of TPIO[2] Trigger
-#define HIB_TPLOG7_TRIG1        0x00000002  // Status of TPIO[1] Trigger
-#define HIB_TPLOG7_TRIG0        0x00000001  // Status of TPIO[0] Trigger
+#define HIB_TPLOG7_TRIG3        0x00000008  // Status of TMPR[3] Trigger
+#define HIB_TPLOG7_TRIG2        0x00000004  // Status of TMPR[2] Trigger
+#define HIB_TPLOG7_TRIG1        0x00000002  // Status of TMPR[1] Trigger
+#define HIB_TPLOG7_TRIG0        0x00000001  // Status of TMPR[0] Trigger
 
 //*****************************************************************************
 //
@@ -479,6 +478,6 @@
 // The following are defines for the bit fields in the HIB_CC register.
 //
 //*****************************************************************************
-#define HIB_CC_SYSCLKEN         0x00000001  // System Clock Enable
+#define HIB_CC_SYSCLKEN         0x00000001  // RTCOSC to System Clock Enable
 
 #endif // __HW_HIBERNATE_H__

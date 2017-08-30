@@ -2,7 +2,7 @@
 //
 // hw_shamd5.h - Macros used when accessing the SHA/MD5 hardware.
 //
-// Copyright (c) 2012-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2012-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Firmware Development Package.
+// This is part of revision 2.1.4.178 of the Tiva Firmware Development Package.
 //
 //*****************************************************************************
 
@@ -45,46 +45,46 @@
 // The following are defines for the SHA/MD5 register offsets.
 //
 //*****************************************************************************
-#define SHAMD5_O_ODIGEST_A      0x00000000  // SHA Secure Outer Digest A
-#define SHAMD5_O_ODIGEST_B      0x00000004  // SHA Secure Outer Digest B
-#define SHAMD5_O_ODIGEST_C      0x00000008  // SHA Secure Outer Digest C
-#define SHAMD5_O_ODIGEST_D      0x0000000C  // SHA Secure Outer Digest D
-#define SHAMD5_O_ODIGEST_E      0x00000010  // SHA Secure Outer Digest E
-#define SHAMD5_O_ODIGEST_F      0x00000014  // SHA Secure Outer Digest F
-#define SHAMD5_O_ODIGEST_G      0x00000018  // SHA Secure Outer Digest G
-#define SHAMD5_O_ODIGEST_H      0x0000001C  // SHA Secure Outer Digest H
-#define SHAMD5_O_IDIGEST_A      0x00000020  // SHA Secure Inner Digest A
-#define SHAMD5_O_IDIGEST_B      0x00000024  // SHA Secure Inner Digest B
-#define SHAMD5_O_IDIGEST_C      0x00000028  // SHA Secure Inner Digest C
-#define SHAMD5_O_IDIGEST_D      0x0000002C  // SHA Secure Inner Digest D
-#define SHAMD5_O_IDIGEST_E      0x00000030  // SHA Secure Inner Digest E
-#define SHAMD5_O_IDIGEST_F      0x00000034  // SHA Secure Inner Digest F
-#define SHAMD5_O_IDIGEST_G      0x00000038  // SHA Secure Inner Digest G
-#define SHAMD5_O_IDIGEST_H      0x0000003C  // SHA Secure Inner Digest H
-#define SHAMD5_O_DIGEST_COUNT   0x00000040  // SHA Secure Digest Count
-#define SHAMD5_O_MODE           0x00000044  // SHA Secure Mode
-#define SHAMD5_O_LENGTH         0x00000048  // SHA Secure Mode
-#define SHAMD5_O_DATA_0_IN      0x00000080  // SHA Secure Data 0 Input
-#define SHAMD5_O_DATA_1_IN      0x00000084  // SHA Secure Data 1 Input
-#define SHAMD5_O_DATA_2_IN      0x00000088  // SHA Secure Data 2 Input
-#define SHAMD5_O_DATA_3_IN      0x0000008C  // SHA Secure Data 3 Input
-#define SHAMD5_O_DATA_4_IN      0x00000090  // SHA Secure Data 4 Input
-#define SHAMD5_O_DATA_5_IN      0x00000094  // SHA Secure Data 5 Input
-#define SHAMD5_O_DATA_6_IN      0x00000098  // SHA Secure Data 6 Input
-#define SHAMD5_O_DATA_7_IN      0x0000009C  // SHA Secure Data 7 Input
-#define SHAMD5_O_DATA_8_IN      0x000000A0  // SHA Secure Data 8 Input
-#define SHAMD5_O_DATA_9_IN      0x000000A4  // SHA Secure Data 9 Input
-#define SHAMD5_O_DATA_10_IN     0x000000A8  // SHA Secure Data 10 Input
-#define SHAMD5_O_DATA_11_IN     0x000000AC  // SHA Secure Data 11 Input
-#define SHAMD5_O_DATA_12_IN     0x000000B0  // SHA Secure Data 12 Input
-#define SHAMD5_O_DATA_13_IN     0x000000B4  // SHA Secure Data 13 Input
-#define SHAMD5_O_DATA_14_IN     0x000000B8  // SHA Secure Data 14 Input
-#define SHAMD5_O_DATA_15_IN     0x000000BC  // SHA Secure Data 15 Input
-#define SHAMD5_O_REVISION       0x00000100  // SHA Secure Revision
-#define SHAMD5_O_SYSCONFIG      0x00000110  // SHA Secure System Configuration
-#define SHAMD5_O_SYSSTATUS      0x00000114  // SHA Secure System Status
-#define SHAMD5_O_IRQSTATUS      0x00000118  // SHA Secure Interrupt Status
-#define SHAMD5_O_IRQENABLE      0x0000011C  // SHA Secure Interrupt Enable
+#define SHAMD5_O_ODIGEST_A      0x00000000  // SHA Outer Digest A
+#define SHAMD5_O_ODIGEST_B      0x00000004  // SHA Outer Digest B
+#define SHAMD5_O_ODIGEST_C      0x00000008  // SHA Outer Digest C
+#define SHAMD5_O_ODIGEST_D      0x0000000C  // SHA Outer Digest D
+#define SHAMD5_O_ODIGEST_E      0x00000010  // SHA Outer Digest E
+#define SHAMD5_O_ODIGEST_F      0x00000014  // SHA Outer Digest F
+#define SHAMD5_O_ODIGEST_G      0x00000018  // SHA Outer Digest G
+#define SHAMD5_O_ODIGEST_H      0x0000001C  // SHA Outer Digest H
+#define SHAMD5_O_IDIGEST_A      0x00000020  // SHA Inner Digest A
+#define SHAMD5_O_IDIGEST_B      0x00000024  // SHA Inner Digest B
+#define SHAMD5_O_IDIGEST_C      0x00000028  // SHA Inner Digest C
+#define SHAMD5_O_IDIGEST_D      0x0000002C  // SHA Inner Digest D
+#define SHAMD5_O_IDIGEST_E      0x00000030  // SHA Inner Digest E
+#define SHAMD5_O_IDIGEST_F      0x00000034  // SHA Inner Digest F
+#define SHAMD5_O_IDIGEST_G      0x00000038  // SHA Inner Digest G
+#define SHAMD5_O_IDIGEST_H      0x0000003C  // SHA Inner Digest H
+#define SHAMD5_O_DIGEST_COUNT   0x00000040  // SHA Digest Count
+#define SHAMD5_O_MODE           0x00000044  // SHA Mode
+#define SHAMD5_O_LENGTH         0x00000048  // SHA Length
+#define SHAMD5_O_DATA_0_IN      0x00000080  // SHA Data 0 Input
+#define SHAMD5_O_DATA_1_IN      0x00000084  // SHA Data 1 Input
+#define SHAMD5_O_DATA_2_IN      0x00000088  // SHA Data 2 Input
+#define SHAMD5_O_DATA_3_IN      0x0000008C  // SHA Data 3 Input
+#define SHAMD5_O_DATA_4_IN      0x00000090  // SHA Data 4 Input
+#define SHAMD5_O_DATA_5_IN      0x00000094  // SHA Data 5 Input
+#define SHAMD5_O_DATA_6_IN      0x00000098  // SHA Data 6 Input
+#define SHAMD5_O_DATA_7_IN      0x0000009C  // SHA Data 7 Input
+#define SHAMD5_O_DATA_8_IN      0x000000A0  // SHA Data 8 Input
+#define SHAMD5_O_DATA_9_IN      0x000000A4  // SHA Data 9 Input
+#define SHAMD5_O_DATA_10_IN     0x000000A8  // SHA Data 10 Input
+#define SHAMD5_O_DATA_11_IN     0x000000AC  // SHA Data 11 Input
+#define SHAMD5_O_DATA_12_IN     0x000000B0  // SHA Data 12 Input
+#define SHAMD5_O_DATA_13_IN     0x000000B4  // SHA Data 13 Input
+#define SHAMD5_O_DATA_14_IN     0x000000B8  // SHA Data 14 Input
+#define SHAMD5_O_DATA_15_IN     0x000000BC  // SHA Data 15 Input
+#define SHAMD5_O_REVISION       0x00000100  // SHA Revision
+#define SHAMD5_O_SYSCONFIG      0x00000110  // SHA System Configuration
+#define SHAMD5_O_SYSSTATUS      0x00000114  // SHA System Status
+#define SHAMD5_O_IRQSTATUS      0x00000118  // SHA Interrupt Status
+#define SHAMD5_O_IRQENABLE      0x0000011C  // SHA Interrupt Enable
 #define SHAMD5_O_DMAIM          0xFFFFC010  // SHA DMA Interrupt Mask
 #define SHAMD5_O_DMARIS         0xFFFFC014  // SHA DMA Raw Interrupt Status
 #define SHAMD5_O_DMAMIS         0xFFFFC018  // SHA DMA Masked Interrupt Status
@@ -240,7 +240,7 @@
 // register.
 //
 //*****************************************************************************
-#define SHAMD5_DIGEST_COUNT_M   0xFFFFFFFF  // Data
+#define SHAMD5_DIGEST_COUNT_M   0xFFFFFFFF  // Digest Count
 #define SHAMD5_DIGEST_COUNT_S   0
 
 //*****************************************************************************
@@ -249,21 +249,14 @@
 //
 //*****************************************************************************
 #define SHAMD5_MODE_HMAC_OUTER_HASH                                           \
-                                0x00000080  // The HMAC Outer Hash is performed
-                                            // on the hash digest when the
-                                            // inner hash has finished (block
-                                            // length exhausted and final hash
-                                            // performed if close_hash is 1)
+                                0x00000080  // HMAC Outer Hash Processing
+                                            // Enable
 #define SHAMD5_MODE_HMAC_KEY_PROC                                             \
-                                0x00000020  // Performs HMAC key processing on
-                                            // the 512 bit HMAC key loaded into
-                                            // the SHA_S_IDIGEST_{A to H} and
-                                            // SHA_S_ODIGEST_{A to H} register
-                                            // block
+                                0x00000020  // HMAC Key Processing Enable
 #define SHAMD5_MODE_CLOSE_HASH  0x00000010  // Performs the padding, the
                                             // Hash/HMAC will be 'closed' at
                                             // the end of the block, as per
-                                            // MD5/SHA-1/SHA-2 specification (i
+                                            // MD5/SHA-1/SHA-2 specification
 #define SHAMD5_MODE_ALGO_CONSTANT                                             \
                                 0x00000008  // The initial digest register will
                                             // be overwritten with the
@@ -283,7 +276,8 @@
 // register.
 //
 //*****************************************************************************
-#define SHAMD5_LENGTH_M         0xFFFFFFFF  // Data
+#define SHAMD5_LENGTH_M         0xFFFFFFFF  // Block Length/Remaining Byte
+                                            // Count
 #define SHAMD5_LENGTH_S         0
 
 //*****************************************************************************
@@ -458,8 +452,7 @@
 //
 //*****************************************************************************
 #define SHAMD5_SYSCONFIG_SADVANCED                                            \
-                                0x00000080  // Secure World Advanced Mode
-                                            // Enable
+                                0x00000080  // Advanced Mode Enable
 #define SHAMD5_SYSCONFIG_SIDLE_M                                              \
                                 0x00000030  // Sidle mode
 #define SHAMD5_SYSCONFIG_SIDLE_FORCE                                          \
@@ -485,19 +478,11 @@
 //
 //*****************************************************************************
 #define SHAMD5_IRQSTATUS_CONTEXT_READY                                        \
-                                0x00000008  // Indicates that the HIB1 context
-                                            // input registers are available
-                                            // for a new context for the next
-                                            // packet to be processed
+                                0x00000008  // Context Ready Status
 #define SHAMD5_IRQSTATUS_INPUT_READY                                          \
-                                0x00000002  // Indicates that the HIB1 data
-                                            // FIFO is ready to receive the
-                                            // next 64 byte data block
+                                0x00000002  // Input Ready Status
 #define SHAMD5_IRQSTATUS_OUTPUT_READY                                         \
-                                0x00000001  // Indicates that a (partial)
-                                            // result or saved context is
-                                            // available from the HIB1 context
-                                            // output registers
+                                0x00000001  // Output Ready Status
 
 //*****************************************************************************
 //

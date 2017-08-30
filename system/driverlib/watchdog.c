@@ -2,7 +2,7 @@
 //
 // watchdog.c - Driver for the Watchdog Timer Module.
 //
-// Copyright (c) 2005-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2005-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Peripheral Driver Library.
+// This is part of revision 2.1.4.178 of the Tiva Peripheral Driver Library.
 //
 //*****************************************************************************
 
@@ -169,8 +169,7 @@ WatchdogResetDisable(uint32_t ui32Base)
 //!
 //! \param ui32Base is the base address of the watchdog timer module.
 //!
-//! This function locks out write access to the watchdog timer configuration
-//! registers.
+//! This function locks out write access to the watchdog timer registers.
 //!
 //! \return None.
 //
@@ -196,8 +195,7 @@ WatchdogLock(uint32_t ui32Base)
 //!
 //! \param ui32Base is the base address of the watchdog timer module.
 //!
-//! This function enables write access to the watchdog timer configuration
-//! registers.
+//! This function enables write access to the watchdog timer registers.
 //!
 //! \return None.
 //
@@ -362,12 +360,12 @@ WatchdogIntRegister(uint32_t ui32Base, void (*pfnHandler)(void))
     //
     // Register the interrupt handler.
     //
-    IntRegister(INT_WATCHDOG_BLIZZARD, pfnHandler);
+    IntRegister(INT_WATCHDOG_TM4C123, pfnHandler);
 
     //
     // Enable the watchdog timer interrupt.
     //
-    IntEnable(INT_WATCHDOG_BLIZZARD);
+    IntEnable(INT_WATCHDOG_TM4C123);
 }
 
 //*****************************************************************************
@@ -404,12 +402,12 @@ WatchdogIntUnregister(uint32_t ui32Base)
     //
     // Disable the interrupt.
     //
-    IntDisable(INT_WATCHDOG_BLIZZARD);
+    IntDisable(INT_WATCHDOG_TM4C123);
 
     //
     // Unregister the interrupt handler.
     //
-    IntUnregister(INT_WATCHDOG_BLIZZARD);
+    IntUnregister(INT_WATCHDOG_TM4C123);
 }
 
 //*****************************************************************************
@@ -493,7 +491,8 @@ WatchdogIntStatus(uint32_t ui32Base, bool bMasked)
 //! returning from the interrupt handler before the interrupt source is
 //! actually cleared.  Failure to do so may result in the interrupt handler
 //! being immediately reentered (because the interrupt controller still sees
-//! the interrupt source asserted).
+//! the interrupt source asserted). This function has no effect if the watchdog
+//! timer has been locked. 
 //!
 //! \return None.
 //
@@ -530,7 +529,8 @@ WatchdogIntClear(uint32_t ui32Base)
 //!
 //! \note The ability to select an NMI interrupt varies with the Tiva part
 //! in use.  Please consult the datasheet for the part you are using to
-//! determine whether this support is available.
+//! determine whether this support is available. This function has no effect if
+//! the watchdog timer has been locked.
 //!
 //! \return None.
 //
@@ -566,6 +566,8 @@ WatchdogIntTypeSet(uint32_t ui32Base, uint32_t ui32Type)
 //! debugging (or at the appropriate time after the processor has been
 //! restarted).
 //!
+//! \note This function has no effect if the watchdog timer has been locked.
+//!
 //! \return None.
 //
 //*****************************************************************************
@@ -592,6 +594,8 @@ WatchdogStallEnable(uint32_t ui32Base)
 //! This function disables the debug mode stall of the watchdog timer.  By
 //! doing so, the watchdog timer continues to count regardless of the processor
 //! debug state.
+//!
+//! \note This function has no effect if the watchdog timer has been locked.
 //!
 //! \return None.
 //

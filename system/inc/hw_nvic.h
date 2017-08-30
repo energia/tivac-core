@@ -2,7 +2,7 @@
 //
 // hw_nvic.h - Macros used when accessing the NVIC hardware.
 //
-// Copyright (c) 2005-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2005-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Firmware Development Package.
+// This is part of revision 2.1.4.178 of the Tiva Firmware Development Package.
 //
 //*****************************************************************************
 
@@ -51,30 +51,30 @@
 #define NVIC_ST_RELOAD          0xE000E014  // SysTick Reload Value Register
 #define NVIC_ST_CURRENT         0xE000E018  // SysTick Current Value Register
 #define NVIC_EN0                0xE000E100  // Interrupt 0-31 Set Enable
-#define NVIC_EN1                0xE000E104  // Interrupt 32-54 Set Enable
+#define NVIC_EN1                0xE000E104  // Interrupt 32-63 Set Enable
 #define NVIC_EN2                0xE000E108  // Interrupt 64-95 Set Enable
 #define NVIC_EN3                0xE000E10C  // Interrupt 96-127 Set Enable
-#define NVIC_EN4                0xE000E110  // Interrupt 128-131 Set Enable
+#define NVIC_EN4                0xE000E110  // Interrupt 128-159 Set Enable
 #define NVIC_DIS0               0xE000E180  // Interrupt 0-31 Clear Enable
-#define NVIC_DIS1               0xE000E184  // Interrupt 32-54 Clear Enable
+#define NVIC_DIS1               0xE000E184  // Interrupt 32-63 Clear Enable
 #define NVIC_DIS2               0xE000E188  // Interrupt 64-95 Clear Enable
 #define NVIC_DIS3               0xE000E18C  // Interrupt 96-127 Clear Enable
-#define NVIC_DIS4               0xE000E190  // Interrupt 128-131 Clear Enable
+#define NVIC_DIS4               0xE000E190  // Interrupt 128-159 Clear Enable
 #define NVIC_PEND0              0xE000E200  // Interrupt 0-31 Set Pending
-#define NVIC_PEND1              0xE000E204  // Interrupt 32-54 Set Pending
+#define NVIC_PEND1              0xE000E204  // Interrupt 32-63 Set Pending
 #define NVIC_PEND2              0xE000E208  // Interrupt 64-95 Set Pending
 #define NVIC_PEND3              0xE000E20C  // Interrupt 96-127 Set Pending
-#define NVIC_PEND4              0xE000E210  // Interrupt 128-131 Set Pending
+#define NVIC_PEND4              0xE000E210  // Interrupt 128-159 Set Pending
 #define NVIC_UNPEND0            0xE000E280  // Interrupt 0-31 Clear Pending
-#define NVIC_UNPEND1            0xE000E284  // Interrupt 32-54 Clear Pending
+#define NVIC_UNPEND1            0xE000E284  // Interrupt 32-63 Clear Pending
 #define NVIC_UNPEND2            0xE000E288  // Interrupt 64-95 Clear Pending
 #define NVIC_UNPEND3            0xE000E28C  // Interrupt 96-127 Clear Pending
-#define NVIC_UNPEND4            0xE000E290  // Interrupt 128-131 Clear Pending
+#define NVIC_UNPEND4            0xE000E290  // Interrupt 128-159 Clear Pending
 #define NVIC_ACTIVE0            0xE000E300  // Interrupt 0-31 Active Bit
-#define NVIC_ACTIVE1            0xE000E304  // Interrupt 32-54 Active Bit
+#define NVIC_ACTIVE1            0xE000E304  // Interrupt 32-63 Active Bit
 #define NVIC_ACTIVE2            0xE000E308  // Interrupt 64-95 Active Bit
 #define NVIC_ACTIVE3            0xE000E30C  // Interrupt 96-127 Active Bit
-#define NVIC_ACTIVE4            0xE000E310  // Interrupt 128-131 Active Bit
+#define NVIC_ACTIVE4            0xE000E310  // Interrupt 128-159 Active Bit
 #define NVIC_PRI0               0xE000E400  // Interrupt 0-3 Priority
 #define NVIC_PRI1               0xE000E404  // Interrupt 4-7 Priority
 #define NVIC_PRI2               0xE000E408  // Interrupt 8-11 Priority
@@ -109,7 +109,7 @@
 #define NVIC_PRI31              0xE000E47C  // Interrupt 124-127 Priority
 #define NVIC_PRI32              0xE000E480  // Interrupt 128-131 Priority
 #define NVIC_PRI33              0xE000E484  // Interrupt 132-135 Priority
-#define NVIC_PRI34              0xE000E488  // Interrupt 136-138 Priority
+#define NVIC_PRI34              0xE000E488  // Interrupt 136-139 Priority
 #define NVIC_CPUID              0xE000ED00  // CPU ID Base
 #define NVIC_INT_CTRL           0xE000ED04  // Interrupt Control and State
 #define NVIC_VTABLE             0xE000ED08  // Vector Table Offset

@@ -2,7 +2,7 @@
 //
 // epi.h - Prototypes and macros for the EPI module.
 //
-// Copyright (c) 2008-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2008-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Peripheral Driver Library.
+// This is part of revision 2.1.4.178 of the Tiva Peripheral Driver Library.
 //
 //*****************************************************************************
 
@@ -89,11 +89,8 @@ extern "C"
 //*****************************************************************************
 #define EPI_GPMODE_CLKPIN       0x80000000
 #define EPI_GPMODE_CLKGATE      0x40000000
-#define EPI_GPMODE_RDYEN        0x10000000
-#define EPI_GPMODE_FRAMEPIN     0x08000000
 #define EPI_GPMODE_FRAME50      0x04000000
 #define EPI_GPMODE_WRITE2CYCLE  0x00080000
-#define EPI_GPMODE_READ2CYCLE   0x00040000
 #define EPI_GPMODE_ASIZE_NONE   0x00000000
 #define EPI_GPMODE_ASIZE_4      0x00000010
 #define EPI_GPMODE_ASIZE_12     0x00000020
@@ -102,7 +99,6 @@ extern "C"
 #define EPI_GPMODE_DSIZE_16     0x00000001
 #define EPI_GPMODE_DSIZE_24     0x00000002
 #define EPI_GPMODE_DSIZE_32     0x00000003
-#define EPI_GPMODE_WORD_ACCESS  0x00000100
 
 //*****************************************************************************
 //

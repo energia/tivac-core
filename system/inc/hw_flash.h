@@ -2,7 +2,7 @@
 //
 // hw_flash.h - Macros used when accessing the flash controller.
 //
-// Copyright (c) 2005-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2005-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Firmware Development Package.
+// This is part of revision 2.1.4.178 of the Tiva Firmware Development Package.
 //
 //*****************************************************************************
 
@@ -57,17 +57,16 @@
 #define FLASH_FWBVAL            0x400FD030  // Flash Write Buffer Valid
 #define FLASH_FLPEKEY           0x400FD03C  // Flash Program/Erase Key
 #define FLASH_FWBN              0x400FD100  // Flash Write Buffer n
-#define FLASH_PP                0x400FDFC0  // Code SRAM Peripheral Properties
+#define FLASH_PP                0x400FDFC0  // Flash Peripheral Properties
 #define FLASH_FSIZE             0x400FDFC0  // Flash Size
 #define FLASH_SSIZE             0x400FDFC4  // SRAM Size
 #define FLASH_CONF              0x400FDFC8  // Flash Configuration Register
 #define FLASH_ROMSWMAP          0x400FDFCC  // ROM Software Map
-#define FLASH_DMASZ             0x400FDFD0  // Code SRAM DMA Address Size
-#define FLASH_DMAST             0x400FDFD4  // Code SRAM DMA Starting Address
+#define FLASH_DMASZ             0x400FDFD0  // Flash DMA Address Size
+#define FLASH_DMAST             0x400FDFD4  // Flash DMA Starting Address
 #define FLASH_RVP               0x400FE0D4  // Reset Vector Pointer
 #define FLASH_RMCTL             0x400FE0F0  // ROM Control
 #define FLASH_BOOTCFG           0x400FE1D0  // Boot Configuration
-#define FLASH_USRPWRUP          0x400FE1DC  // USER Power-Up Control
 #define FLASH_USERREG0          0x400FE1E0  // User Register 0
 #define FLASH_USERREG1          0x400FE1E4  // User Register 1
 #define FLASH_USERREG2          0x400FE1E8  // User Register 2
@@ -169,11 +168,14 @@
 // The following are defines for the bit fields in the FLASH_FCRIS register.
 //
 //*****************************************************************************
-#define FLASH_FCRIS_PROGRIS     0x00002000  // PROGVER Raw Interrupt Status
-#define FLASH_FCRIS_ERRIS       0x00000800  // ERVER Raw Interrupt Status
+#define FLASH_FCRIS_PROGRIS     0x00002000  // Program Verify Error Raw
+                                            // Interrupt Status
+#define FLASH_FCRIS_ERRIS       0x00000800  // Erase Verify Error Raw Interrupt
+                                            // Status
 #define FLASH_FCRIS_INVDRIS     0x00000400  // Invalid Data Raw Interrupt
                                             // Status
-#define FLASH_FCRIS_VOLTRIS     0x00000200  // VOLTSTAT Raw Interrupt Status
+#define FLASH_FCRIS_VOLTRIS     0x00000200  // Pump Voltage Raw Interrupt
+                                            // Status
 #define FLASH_FCRIS_ERIS        0x00000004  // EEPROM Raw Interrupt Status
 #define FLASH_FCRIS_PRIS        0x00000002  // Programming Raw Interrupt Status
 #define FLASH_FCRIS_ARIS        0x00000001  // Access Raw Interrupt Status
@@ -246,9 +248,9 @@
 // The following are defines for the bit fields in the FLASH_PP register.
 //
 //*****************************************************************************
-#define FLASH_PP_PFC            0x40000000  // Prefetch Cache Mode
+#define FLASH_PP_PFC            0x40000000  // Prefetch Buffer Mode
 #define FLASH_PP_FMM            0x20000000  // Flash Mirror Mode
-#define FLASH_PP_DFA            0x10000000  // DMA Code SRAM Access
+#define FLASH_PP_DFA            0x10000000  // DMA Flash Access
 #define FLASH_PP_EESS_M         0x00780000  // EEPROM Sector Size of the
                                             // physical bank
 #define FLASH_PP_EESS_1KB       0x00000000  // 1 KB
@@ -262,15 +264,7 @@
 #define FLASH_PP_MAINSS_4KB     0x00020000  // 4 KB
 #define FLASH_PP_MAINSS_8KB     0x00030000  // 8 KB
 #define FLASH_PP_MAINSS_16KB    0x00040000  // 16 KB
-#define FLASH_PP_SIZE_M         0x0000FFFF  // Code SRAM Size
-#define FLASH_PP_SIZE_16KB      0x00000007  // 16 KB of Code SRAM
-#define FLASH_PP_SIZE_32KB      0x0000000F  // 32 KB of Code SRAM
-#define FLASH_PP_SIZE_64KB      0x0000001F  // 64 KB of Code SRAM
-#define FLASH_PP_SIZE_96KB      0x0000002F  // 96 KB of Code SRAM
-#define FLASH_PP_SIZE_128KB     0x0000003F  // 128 KB of Code SRAM
-#define FLASH_PP_SIZE_192KB     0x0000005F  // 192 KB of Flash
-#define FLASH_PP_SIZE_256KB     0x0000007F  // 256 KB of Flash
-#define FLASH_PP_SIZE_384KB     0x000000BF  // 384 K of Flash
+#define FLASH_PP_SIZE_M         0x0000FFFF  // Flash Size
 #define FLASH_PP_SIZE_512KB     0x000000FF  // 512 KB of Flash
 #define FLASH_PP_SIZE_1MB       0x000001FF  // 1024 KB of Flash
 
@@ -303,7 +297,7 @@
 //*****************************************************************************
 #define FLASH_CONF_FMME         0x40000000  // Flash Mirror Mode Enable
 #define FLASH_CONF_SPFE         0x20000000  // Single Prefetch Mode Enable
-#define FLASH_CONF_CLRTV        0x00100000  // Clear Tag Valid Bits
+#define FLASH_CONF_CLRTV        0x00100000  // Clear Valid Tags
 #define FLASH_CONF_FPFON        0x00020000  // Force Prefetch On
 #define FLASH_CONF_FPFOFF       0x00010000  // Force Prefetch Off
 
@@ -315,60 +309,59 @@
 #define FLASH_ROMSWMAP_SAFERTOS 0x00000001  // SafeRTOS Present
 #define FLASH_ROMSWMAP_SW0EN_M  0x00000003  // ROM SW Region 0 Availability
 #define FLASH_ROMSWMAP_SW0EN_NOTVIS                                           \
-                                0x00000000  // Not Visible outside of secure
-                                            // INITIALIZATION
+                                0x00000000  // Software region not available to
+                                            // the core
 #define FLASH_ROMSWMAP_SW0EN_CORE                                             \
-                                0x00000001  // Visible to core
+                                0x00000001  // Region available to core
 #define FLASH_ROMSWMAP_SW1EN_M  0x0000000C  // ROM SW Region 1 Availability
 #define FLASH_ROMSWMAP_SW1EN_NOTVIS                                           \
-                                0x00000000  // Not Visible outside of secure
-                                            // INITIALIZATION
+                                0x00000000  // Software region not available to
+                                            // the core
 #define FLASH_ROMSWMAP_SW1EN_CORE                                             \
-                                0x00000004  // Visible to core
+                                0x00000004  // Region available to core
 #define FLASH_ROMSWMAP_SW2EN_M  0x00000030  // ROM SW Region 2 Availability
 #define FLASH_ROMSWMAP_SW2EN_NOTVIS                                           \
-                                0x00000000  // Not Visible outside of secure
-                                            // INITIALIZATION
+                                0x00000000  // Software region not available to
+                                            // the core
 #define FLASH_ROMSWMAP_SW2EN_CORE                                             \
-                                0x00000010  // Visible to core
+                                0x00000010  // Region available to core
 #define FLASH_ROMSWMAP_SW3EN_M  0x000000C0  // ROM SW Region 3 Availability
 #define FLASH_ROMSWMAP_SW3EN_NOTVIS                                           \
-                                0x00000000  // Not Visible outside of secure
-                                            // INITIALIZATION
+                                0x00000000  // Software region not available to
+                                            // the core
 #define FLASH_ROMSWMAP_SW3EN_CORE                                             \
-                                0x00000040  // Visible to core
+                                0x00000040  // Region available to core
 #define FLASH_ROMSWMAP_SW4EN_M  0x00000300  // ROM SW Region 4 Availability
 #define FLASH_ROMSWMAP_SW4EN_NOTVIS                                           \
-                                0x00000000  // Not Visible outside of secure
-                                            // INITIALIZATION
+                                0x00000000  // Software region not available to
+                                            // the core
 #define FLASH_ROMSWMAP_SW4EN_CORE                                             \
-                                0x00000100  // Visible to core
+                                0x00000100  // Region available to core
 #define FLASH_ROMSWMAP_SW5EN_M  0x00000C00  // ROM SW Region 5 Availability
 #define FLASH_ROMSWMAP_SW5EN_NOTVIS                                           \
-                                0x00000000  // Not Visible outside of secure
-                                            // INITIALIZATION
+                                0x00000000  // Software region not available to
+                                            // the core
 #define FLASH_ROMSWMAP_SW5EN_CORE                                             \
-                                0x00000400  // Visible to core
+                                0x00000400  // Region available to core
 #define FLASH_ROMSWMAP_SW6EN_M  0x00003000  // ROM SW Region 6 Availability
 #define FLASH_ROMSWMAP_SW6EN_NOTVIS                                           \
-                                0x00000000  // Not Visible outside of secure
-                                            // INITIALIZATION
+                                0x00000000  // Software region not available to
+                                            // the core
 #define FLASH_ROMSWMAP_SW6EN_CORE                                             \
-                                0x00001000  // Visible to core
+                                0x00001000  // Region available to core
 #define FLASH_ROMSWMAP_SW7EN_M  0x0000C000  // ROM SW Region 7 Availability
 #define FLASH_ROMSWMAP_SW7EN_NOTVIS                                           \
-                                0x00000000  // Not Visible outside of secure
-                                            // INITIALIZATION
+                                0x00000000  // Software region not available to
+                                            // the core
 #define FLASH_ROMSWMAP_SW7EN_CORE                                             \
-                                0x00004000  // Visible to core
+                                0x00004000  // Region available to core
 
 //*****************************************************************************
 //
 // The following are defines for the bit fields in the FLASH_DMASZ register.
 //
 //*****************************************************************************
-#define FLASH_DMASZ_SIZE_M      0x0003FFFF  // KBs of uDMA-accessible Address
-                                            // Space in powers of 2
+#define FLASH_DMASZ_SIZE_M      0x0003FFFF  // uDMA-accessible Memory Size
 #define FLASH_DMASZ_SIZE_S      0
 
 //*****************************************************************************
@@ -377,9 +370,9 @@
 //
 //*****************************************************************************
 #define FLASH_DMAST_ADDR_M      0x1FFFF800  // Contains the starting address of
-                                            // the Code SRAM region accessible
-                                            // by uDMA if the FLASHPP register
-                                            // DFA bit is set
+                                            // the flash region accessible by
+                                            // uDMA if the FLASHPP register DFA
+                                            // bit is set
 #define FLASH_DMAST_ADDR_S      11
 
 //*****************************************************************************
@@ -426,16 +419,6 @@
 #define FLASH_BOOTCFG_KEY       0x00000010  // KEY Select
 #define FLASH_BOOTCFG_DBG1      0x00000002  // Debug Control 1
 #define FLASH_BOOTCFG_DBG0      0x00000001  // Debug Control 0
-
-//*****************************************************************************
-//
-// The following are defines for the bit fields in the FLASH_USRPWRUP register.
-//
-//*****************************************************************************
-#define FLASH_USRPWRUP_LDODISABL_M                                            \
-                                0x000000FF  // LDO Disable
-#define FLASH_USRPWRUP_LDODISABL_S                                            \
-                                0
 
 //*****************************************************************************
 //

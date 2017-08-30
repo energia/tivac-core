@@ -2,7 +2,7 @@
 //
 // pwm.c - API for the PWM modules
 //
-// Copyright (c) 2005-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2005-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Peripheral Driver Library.
+// This is part of revision 2.1.4.178 of the Tiva Peripheral Driver Library.
 //
 //*****************************************************************************
 
@@ -932,13 +932,13 @@ _PWMGenIntNumberGet(uint32_t ui32Base, uint32_t ui32Gen)
         //
         case PWM0_BASE + PWM_GEN_0:
         {
-            if(CLASS_IS_BLIZZARD)
+            if(CLASS_IS_TM4C123)
             {
-                return(INT_PWM0_0_BLIZZARD);
+                return(INT_PWM0_0_TM4C123);
             }
-            else if(CLASS_IS_SNOWFLAKE)
+            else if(CLASS_IS_TM4C129)
             {
-                return(INT_PWM0_0_SNOWFLAKE);
+                return(INT_PWM0_0_TM4C129);
             }
             else
             {
@@ -951,9 +951,9 @@ _PWMGenIntNumberGet(uint32_t ui32Base, uint32_t ui32Gen)
         //
         case PWM0_BASE + PWM_GEN_1:
         {
-            if(CLASS_IS_SNOWFLAKE)
+            if(CLASS_IS_TM4C129)
             {
-                return(INT_PWM0_1_SNOWFLAKE);
+                return(INT_PWM0_1_TM4C129);
             }
             else
             {
@@ -966,9 +966,9 @@ _PWMGenIntNumberGet(uint32_t ui32Base, uint32_t ui32Gen)
         //
         case PWM0_BASE + PWM_GEN_2:
         {
-            if(CLASS_IS_SNOWFLAKE)
+            if(CLASS_IS_TM4C129)
             {
-                return(INT_PWM0_2_SNOWFLAKE);
+                return(INT_PWM0_2_TM4C129);
             }
             else
             {
@@ -981,9 +981,9 @@ _PWMGenIntNumberGet(uint32_t ui32Base, uint32_t ui32Gen)
         //
         case PWM0_BASE + PWM_GEN_3:
         {
-            if(CLASS_IS_SNOWFLAKE)
+            if(CLASS_IS_TM4C129)
             {
-                return(INT_PWM0_3_SNOWFLAKE);
+                return(INT_PWM0_3_TM4C129);
             }
             else
             {
@@ -996,9 +996,9 @@ _PWMGenIntNumberGet(uint32_t ui32Base, uint32_t ui32Gen)
         //
         case PWM1_BASE + PWM_GEN_0:
         {
-            if(CLASS_IS_BLIZZARD)
+            if(CLASS_IS_TM4C123)
             {
-                return(INT_PWM1_0_BLIZZARD);
+                return(INT_PWM1_0_TM4C123);
             }
             else
             {
@@ -1011,9 +1011,9 @@ _PWMGenIntNumberGet(uint32_t ui32Base, uint32_t ui32Gen)
         //
         case PWM1_BASE + PWM_GEN_1:
         {
-            if(CLASS_IS_BLIZZARD)
+            if(CLASS_IS_TM4C123)
             {
-                return(INT_PWM1_1_BLIZZARD);
+                return(INT_PWM1_1_TM4C123);
             }
             else
             {
@@ -1026,9 +1026,9 @@ _PWMGenIntNumberGet(uint32_t ui32Base, uint32_t ui32Gen)
         //
         case PWM1_BASE + PWM_GEN_2:
         {
-            if(CLASS_IS_BLIZZARD)
+            if(CLASS_IS_TM4C123)
             {
-                return(INT_PWM1_2_BLIZZARD);
+                return(INT_PWM1_2_TM4C123);
             }
             else
             {
@@ -1041,9 +1041,9 @@ _PWMGenIntNumberGet(uint32_t ui32Base, uint32_t ui32Gen)
         //
         case PWM1_BASE + PWM_GEN_3:
         {
-            if(CLASS_IS_BLIZZARD)
+            if(CLASS_IS_TM4C123)
             {
-                return(INT_PWM1_3_BLIZZARD);
+                return(INT_PWM1_3_TM4C123);
             }
             else
             {
@@ -1181,14 +1181,14 @@ _PWMFaultIntNumberGet(uint32_t ui32Base)
     //
     // Return the fault interrupt number.
     //
-    if(CLASS_IS_BLIZZARD)
+    if(CLASS_IS_TM4C123)
     {
-        return((ui32Base == PWM0_BASE) ? INT_PWM0_FAULT_BLIZZARD :
-               INT_PWM1_FAULT_BLIZZARD);
+        return((ui32Base == PWM0_BASE) ? INT_PWM0_FAULT_TM4C123 :
+               INT_PWM1_FAULT_TM4C123);
     }
-    else if(CLASS_IS_SNOWFLAKE)
+    else if(CLASS_IS_TM4C129)
     {
-        return((ui32Base == PWM0_BASE) ? INT_PWM0_FAULT_SNOWFLAKE : 0);
+        return((ui32Base == PWM0_BASE) ? INT_PWM0_FAULT_TM4C129 : 0);
     }
     else
     {
@@ -1624,13 +1624,11 @@ PWMIntStatus(uint32_t ui32Base, bool bMasked)
 //! \e ui32FaultInts must be the logical OR of any of \b PWM_INT_FAULT0,
 //! \b PWM_INT_FAULT1, \b PWM_INT_FAULT2, or \b PWM_INT_FAULT3.
 //!
-//! When running on a device supporting extended PWM fault handling, the fault
-//! interrupts are derived by performing a logical OR of each of the configured
-//! fault trigger signals for a given generator.  Therefore, these interrupts
-//! are not directly related to the four possible FAULTn inputs to the device
-//! but indicate that a fault has been signaled to one of the four possible PWM
-//! generators.  On a device without extended PWM fault handling, the interrupt
-//! is directly related to the state of the single FAULT pin.
+//! The fault interrupts are derived by performing a logical OR of each of the 
+//! configured fault trigger signals for a given generator.  Therefore, these
+//! interrupts are not directly related to the four possible FAULTn inputs to 
+//! the device but indicate that a fault has been signaled to one of the four 
+//! possible PWM generators. 
 //!
 //! \note Because there is a write buffer in the Cortex-M processor, it may
 //! take several clock cycles before the interrupt source is actually cleared.
@@ -1979,8 +1977,8 @@ PWMGenFaultClear(uint32_t ui32Base, uint32_t ui32Gen,
 //! system clock.  This clock is used by the PWM module to generate PWM
 //! signals; its rate forms the basis for all PWM signals.
 //!
-//! \note This function should only be used with Snowflake class devices.  For
-//! other class devices SysCtlPWMClockSet() function should be used.
+//! \note This function should not be used with TM4C123 devices.  For
+//! TM4C123 devices, the SysCtlPWMClockGet() function should be used.
 //!
 //! \note The clocking of the PWM is dependent upon the system clock rate as
 //! configured by SysCtlClockFreqSet().
@@ -2019,8 +2017,8 @@ PWMClockSet(uint32_t ui32Base, uint32_t ui32Config)
 //!
 //! This function returns the current PWM clock configuration.
 //!
-//! \note This function should only be used with Snowflake class devices.  For
-//! other class devices SysCtlPWMClockGet() function should be used.
+//! \note This function should not be used with TM4C123 devices.  For
+//! TM4C123 devices, the SysCtlPWMClockGet() function should be used.
 //!
 //! \return Returns the current PWM clock configuration; is one of
 //! \b PWM_SYSCLK_DIV_1, \b PWM_SYSCLK_DIV_2, \b PWM_SYSCLK_DIV_4,

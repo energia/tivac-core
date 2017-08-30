@@ -2,7 +2,7 @@
 //
 // udma.c - Driver for the micro-DMA controller.
 //
-// Copyright (c) 2007-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2007-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Peripheral Driver Library.
+// This is part of revision 2.1.4.178 of the Tiva Peripheral Driver Library.
 //
 //*****************************************************************************
 
@@ -649,7 +649,7 @@ uDMAChannelControlSet(uint32_t ui32ChannelStructIndex, uint32_t ui32Control)
 //! \param ui32TransferSize is the number of data items to transfer.
 //!
 //! This function is used to configure the parameters for a uDMA transfer.
-//! These parameters are typically changed often.  The function
+//! These parameters are not typically changed often.  The function
 //! uDMAChannelControlSet() MUST be called at least once for this channel prior
 //! to calling this function.
 //!
@@ -1062,6 +1062,203 @@ uDMAChannelModeGet(uint32_t ui32ChannelStructIndex)
 
 //*****************************************************************************
 //
+//! Registers an interrupt handler for the uDMA controller.
+//!
+//! \param ui32IntChannel identifies which uDMA interrupt is to be registered.
+//! \param pfnHandler is a pointer to the function to be called when the
+//! interrupt is activated.
+//!
+//! This function registers and enables the handler to be called when the uDMA
+//! controller generates an interrupt.  The \e ui32IntChannel parameter should
+//! be one of the following:
+//!
+//! - \b INT_UDMA to register an interrupt handler to process interrupts
+//!   from the uDMA software channel (UDMA_CHANNEL_SW)
+//! - \b INT_UDMAERR to register an interrupt handler to process uDMA error
+//!   interrupts
+//!
+//! \sa IntRegister() for important information about registering interrupt
+//! handlers.
+//!
+//! \note The interrupt handler for the uDMA is for transfer completion when
+//! the channel UDMA_CHANNEL_SW is used and for error interrupts.  The
+//! interrupts for each peripheral channel are handled through the individual
+//! peripheral interrupt handlers.
+//!
+//! \return None.
+//
+//*****************************************************************************
+void
+uDMAIntRegister(uint32_t ui32IntChannel, void (*pfnHandler)(void))
+{
+    //
+    // Check the arguments.
+    //
+    ASSERT(pfnHandler);
+
+    //
+    // Register the interrupt handler.
+    //
+    IntRegister(ui32IntChannel, pfnHandler);
+
+    //
+    // Enable the memory management fault.
+    //
+    IntEnable(ui32IntChannel);
+}
+
+//*****************************************************************************
+//
+//! Unregisters an interrupt handler for the uDMA controller.
+//!
+//! \param ui32IntChannel identifies which uDMA interrupt to unregister.
+//!
+//! This function disables and unregisters the handler to be called for the
+//! specified uDMA interrupt.  The \e ui32IntChannel parameter should be one of
+//! \b INT_UDMA or \b INT_UDMAERR as documented for the function
+//! uDMAIntRegister().
+//!
+//! \sa IntRegister() for important information about registering interrupt
+//! handlers.
+//!
+//! \return None.
+//
+//*****************************************************************************
+void
+uDMAIntUnregister(uint32_t ui32IntChannel)
+{
+    //
+    // Disable the interrupt.
+    //
+    IntDisable(ui32IntChannel);
+
+    //
+    // Unregister the interrupt handler.
+    //
+    IntUnregister(ui32IntChannel);
+}
+
+//*****************************************************************************
+//
+//! Gets the uDMA controller channel interrupt status.
+//!
+//! This function is used to get the interrupt status of the uDMA controller.
+//! The returned value is a 32-bit bit mask that indicates which channels are
+//! requesting an interrupt.  This function can be used from within an
+//! interrupt handler to determine or confirm which uDMA channel has requested
+//! an interrupt.
+//!
+//! \note This function is only available on devices that have the DMA Channel
+//! Interrupt Status Register (DMACHIS).  Please consult the data sheet for
+//! your part.
+//!
+//! \return Returns a 32-bit mask which indicates requesting uDMA channels.
+//! There is a bit for each channel and a 1 indicates that the channel
+//! is requesting an interrupt.  Multiple bits can be set.
+//
+//*****************************************************************************
+uint32_t
+uDMAIntStatus(void)
+{
+    //
+    // Return the value of the uDMA interrupt status register
+    //
+    return(HWREG(UDMA_CHIS));
+}
+
+//*****************************************************************************
+//
+//! Clears uDMA interrupt status.
+//!
+//! \param ui32ChanMask is a 32-bit mask with one bit for each uDMA channel.
+//!
+//! This function clears bits in the uDMA interrupt status register according
+//! to which bits are set in \e ui32ChanMask.  There is one bit for each
+//! channel.  If a a bit is set in \e ui32ChanMask, then that corresponding
+//! channel's interrupt status is cleared (if it was set).
+//!
+//! \note This function is only available on devices that have the DMA Channel
+//! Interrupt Status Register (DMACHIS).  Please consult the data sheet for
+//! your part. Devices without the DMACHIS register have uDMA done status in
+//! the interrupt registers in the peripheral memory maps.
+//!
+//! \return None.
+//
+//*****************************************************************************
+void
+uDMAIntClear(uint32_t ui32ChanMask)
+{
+    //
+    // Clear the requested bits in the uDMA interrupt status register
+    //
+    HWREG(UDMA_CHIS) = ui32ChanMask;
+}
+
+//*****************************************************************************
+//
+//! Assigns a peripheral mapping for a uDMA channel.
+//!
+//! \param ui32Mapping is a macro specifying the peripheral assignment for
+//! a channel.
+//!
+//! This function assigns a peripheral mapping to a uDMA channel.  It is
+//! used to select which peripheral is used for a uDMA channel.  The parameter
+//! \e ui32Mapping should be one of the macros named \b UDMA_CHn_tttt from the
+//! header file \e udma.h.  For example, to assign uDMA channel 0 to the
+//! UART2 RX channel, the parameter should be the macro \b UDMA_CH0_UART2RX.
+//!
+//! Please consult the Tiva data sheet for a table showing all the
+//! possible peripheral assignments for the uDMA channels for a particular
+//! device.
+//!
+//! \note This function is only available on devices that have the DMA Channel
+//! Map Select registers (DMACHMAP0-3).  Please consult the data sheet for
+//! your part.
+//!
+//! \return None.
+//
+//*****************************************************************************
+void
+uDMAChannelAssign(uint32_t ui32Mapping)
+{
+    uint32_t ui32MapReg;
+    uint_fast8_t ui8MapShift;
+    uint_fast8_t ui8ChannelNum;
+
+    //
+    // Check the parameters
+    //
+    ASSERT((ui32Mapping & 0xffffff00) < 0x00090000);
+
+    //
+    // Extract the channel number and map encoding value from the parameter.
+    //
+    ui8ChannelNum = ui32Mapping & 0xff;
+    ui32Mapping = ui32Mapping >> 16;
+
+    //
+    // Find the uDMA channel mapping register and shift value to use for this
+    // channel
+    //
+    ui32MapReg = UDMA_CHMAP0 + (uint32_t)((ui8ChannelNum / 8) * 4);
+    ui8MapShift = (ui8ChannelNum % 8) * 4;
+
+    //
+    // Set the channel map encoding for this channel
+    //
+    HWREG(ui32MapReg) = (HWREG(ui32MapReg) & ~(0xf << ui8MapShift)) |
+                        ui32Mapping << ui8MapShift;
+}
+
+//*****************************************************************************
+//
+// The following functions are deprecated.  Use uDMAChannelAssign() instead
+// to accomplish the same end.
+//
+//*****************************************************************************
+#ifndef DEPRECATED
+//*****************************************************************************
+//
 //! Selects the secondary peripheral for a set of uDMA channels.
 //!
 //! \param ui32SecPeriphs is the logical OR of the uDMA channels for which to
@@ -1175,197 +1372,7 @@ uDMAChannelSelectDefault(uint32_t ui32DefPeriphs)
     //
     HWREG(UDMA_CHASGN) &= ~ui32DefPeriphs;
 }
-
-//*****************************************************************************
-//
-//! Registers an interrupt handler for the uDMA controller.
-//!
-//! \param ui32IntChannel identifies which uDMA interrupt is to be registered.
-//! \param pfnHandler is a pointer to the function to be called when the
-//! interrupt is activated.
-//!
-//! This function registers and enables the handler to be called when the uDMA
-//! controller generates an interrupt.  The \e ui32IntChannel parameter should
-//! be one of the following:
-//!
-//! - \b UDMA_INT_SW to register an interrupt handler to process interrupts
-//!   from the uDMA software channel (UDMA_CHANNEL_SW)
-//! - \b UDMA_INT_ERR to register an interrupt handler to process uDMA error
-//!   interrupts
-//!
-//! \sa IntRegister() for important information about registering interrupt
-//! handlers.
-//!
-//! \note The interrupt handler for the uDMA is for transfer completion when
-//! the channel UDMA_CHANNEL_SW is used and for error interrupts.  The
-//! interrupts for each peripheral channel are handled through the individual
-//! peripheral interrupt handlers.
-//!
-//! \return None.
-//
-//*****************************************************************************
-void
-uDMAIntRegister(uint32_t ui32IntChannel, void (*pfnHandler)(void))
-{
-    //
-    // Check the arguments.
-    //
-    ASSERT(pfnHandler);
-    ASSERT((ui32IntChannel == UDMA_INT_SW) ||
-           (ui32IntChannel == UDMA_INT_ERR));
-
-    //
-    // Register the interrupt handler.
-    //
-    IntRegister(ui32IntChannel, pfnHandler);
-
-    //
-    // Enable the memory management fault.
-    //
-    IntEnable(ui32IntChannel);
-}
-
-//*****************************************************************************
-//
-//! Unregisters an interrupt handler for the uDMA controller.
-//!
-//! \param ui32IntChannel identifies which uDMA interrupt to unregister.
-//!
-//! This function disables and unregisters the handler to be called for the
-//! specified uDMA interrupt.  The \e ui32IntChannel parameter should be one of
-//! \b UDMA_INT_SW or \b UDMA_INT_ERR as documented for the function
-//! uDMAIntRegister().
-//!
-//! \sa IntRegister() for important information about registering interrupt
-//! handlers.
-//!
-//! \return None.
-//
-//*****************************************************************************
-void
-uDMAIntUnregister(uint32_t ui32IntChannel)
-{
-    //
-    // Disable the interrupt.
-    //
-    IntDisable(ui32IntChannel);
-
-    //
-    // Unregister the interrupt handler.
-    //
-    IntUnregister(ui32IntChannel);
-}
-
-//*****************************************************************************
-//
-//! Gets the uDMA controller channel interrupt status.
-//!
-//! This function is used to get the interrupt status of the uDMA controller.
-//! The returned value is a 32-bit bit mask that indicates which channels are
-//! requesting an interrupt.  This function can be used from within an
-//! interrupt handler to determine or confirm which uDMA channel has requested
-//! an interrupt.
-//!
-//! \note This function is only available on devices that have the DMA Channel
-//! Interrupt Status Register (DMACHIS).  Please consult the data sheet for
-//! your part.
-//!
-//! \return Returns a 32-bit mask which indicates requesting uDMA channels.
-//! There is a bit for each channel and a 1 indicates that the channel
-//! is requesting an interrupt.  Multiple bits can be set.
-//
-//*****************************************************************************
-uint32_t
-uDMAIntStatus(void)
-{
-    //
-    // Return the value of the uDMA interrupt status register
-    //
-    return(HWREG(UDMA_CHIS));
-}
-
-//*****************************************************************************
-//
-//! Clears uDMA interrupt status.
-//!
-//! \param ui32ChanMask is a 32-bit mask with one bit for each uDMA channel.
-//!
-//! This function clears bits in the uDMA interrupt status register according
-//! to which bits are set in \e ui32ChanMask.  There is one bit for each
-//! channel.  If a a bit is set in \e ui32ChanMask, then that corresponding
-//! channel's interrupt status is cleared (if it was set).
-//!
-//! \note This function is only available on devices that have the DMA Channel
-//! Interrupt Status Register (DMACHIS).  Please consult the data sheet for
-//! your part.
-//!
-//! \return None.
-//
-//*****************************************************************************
-void
-uDMAIntClear(uint32_t ui32ChanMask)
-{
-    //
-    // Clear the requested bits in the uDMA interrupt status register
-    //
-    HWREG(UDMA_CHIS) = ui32ChanMask;
-}
-
-//*****************************************************************************
-//
-//! Assigns a peripheral mapping for a uDMA channel.
-//!
-//! \param ui32Mapping is a macro specifying the peripheral assignment for
-//! a channel.
-//!
-//! This function assigns a peripheral mapping to a uDMA channel.  It is
-//! used to select which peripheral is used for a uDMA channel.  The parameter
-//! \e ui32Mapping should be one of the macros named \b UDMA_CHn_tttt from the
-//! header file \e udma.h.  For example, to assign uDMA channel 0 to the
-//! UART2 RX channel, the parameter should be the macro \b UDMA_CH0_UART2RX.
-//!
-//! Please consult the Tiva data sheet for a table showing all the
-//! possible peripheral assignments for the uDMA channels for a particular
-//! device.
-//!
-//! \note This function is only available on devices that have the DMA Channel
-//! Map Select registers (DMACHMAP0-3).  Please consult the data sheet for
-//! your part.
-//!
-//! \return None.
-//
-//*****************************************************************************
-void
-uDMAChannelAssign(uint32_t ui32Mapping)
-{
-    uint32_t ui32MapReg;
-    uint_fast8_t ui8MapShift;
-    uint_fast8_t ui8ChannelNum;
-
-    //
-    // Check the parameters
-    //
-    ASSERT((ui32Mapping & 0xffffff00) < 0x00050000);
-
-    //
-    // Extract the channel number and map encoding value from the parameter.
-    //
-    ui8ChannelNum = ui32Mapping & 0xff;
-    ui32Mapping = ui32Mapping >> 16;
-
-    //
-    // Find the uDMA channel mapping register and shift value to use for this
-    // channel
-    //
-    ui32MapReg = UDMA_CHMAP0 + (uint32_t)((ui8ChannelNum / 8) * 4);
-    ui8MapShift = (ui8ChannelNum % 8) * 4;
-
-    //
-    // Set the channel map encoding for this channel
-    //
-    HWREG(ui32MapReg) = (HWREG(ui32MapReg) & ~(0xf << ui8MapShift)) |
-                        ui32Mapping << ui8MapShift;
-}
+#endif
 
 //*****************************************************************************
 //

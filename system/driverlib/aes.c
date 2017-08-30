@@ -2,7 +2,7 @@
 //
 // aes.c - Driver for the AES module.
 //
-// Copyright (c) 2012-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2012-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Peripheral Driver Library.
+// This is part of revision 2.1.4.178 of the Tiva Peripheral Driver Library.
 //
 //*****************************************************************************
 
@@ -1182,12 +1182,12 @@ AESIntRegister(uint32_t ui32Base, void (*pfnHandler)(void))
     //
     // Register the interrupt handler.
     //
-    IntRegister(INT_AES0_SNOWFLAKE, pfnHandler);
+    IntRegister(INT_AES0_TM4C129, pfnHandler);
 
     //
     // Enable the interrupt
     //
-    IntEnable(INT_AES0_SNOWFLAKE);
+    IntEnable(INT_AES0_TM4C129);
 }
 
 //*****************************************************************************
@@ -1216,12 +1216,12 @@ AESIntUnregister(uint32_t ui32Base)
     //
     // Disable the interrupt.
     //
-    IntDisable(INT_AES0_SNOWFLAKE);
+    IntDisable(INT_AES0_TM4C129);
 
     //
     // Unregister the interrupt handler.
     //
-    IntUnregister(INT_AES0_SNOWFLAKE);
+    IntUnregister(INT_AES0_TM4C129);
 }
 
 //*****************************************************************************

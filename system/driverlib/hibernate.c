@@ -2,7 +2,7 @@
 //
 // hibernate.c - Driver for the Hibernation module
 //
-// Copyright (c) 2007-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2007-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Peripheral Driver Library.
+// This is part of revision 2.1.4.178 of the Tiva Peripheral Driver Library.
 //
 //*****************************************************************************
 
@@ -76,7 +76,7 @@
 // pins.
 //
 //*****************************************************************************
-#define HIBERNATE_WAKE_IO       CLASS_IS_SNOWFLAKE
+#define HIBERNATE_WAKE_IO       CLASS_IS_TM4C129
 
 //*****************************************************************************
 //
@@ -84,7 +84,7 @@
 // pins.
 //
 //*****************************************************************************
-#define HIBERNATE_CLOCK_OUTPUT  CLASS_IS_SNOWFLAKE
+#define HIBERNATE_CLOCK_OUTPUT  CLASS_IS_TM4C129
 
 //*****************************************************************************
 //
@@ -124,10 +124,12 @@ _HibernateWriteComplete(void)
 //! This function enables the Hibernation module for operation.  This function
 //! should be called before any of the Hibernation module features are used.
 //!
-//! The peripheral clock is the same as the processor clock.  This value is
-//! returned by SysCtlClockGet(), or it can be explicitly hard-coded if it is
-//! constant and known (to save the code/execution overhead of a call to
-//! SysCtlClockGet()).
+//! The peripheral clock is the same as the processor clock.  The frequency of
+//! the system clock is the value returned by SysCtlClockGet() for TM4C123x
+//! devices or the value returned by SysCtlClockFreqSet() for TM4C129x devices,
+//! or it can be explicitly hard coded if it is constant and known (to save the
+//! code/execution overhead of a call to SysCtlClockGet() or fetch of the 
+//! variable call holding the return value of SysCtlClockFreqSet()).
 //!
 //! \return None.
 //
@@ -181,37 +183,34 @@ HibernateDisable(void)
 //! module.  The \e ui32Config parameter can be one of the following values:
 //!
 //! - \b HIBERNATE_OSC_DISABLE specifies that the internal oscillator
-//! is powered off.  This is used when an externally supplied oscillator is
-//! connected to the XOSC0 pin or to save power when the LFIOSC is used in
-//! devices that have an LFIOSC in the hibernation module.
-//! - \b HIBERNATE_OSC_HIGHDRIVE specifies a higher drive strength when a 24pF
+//! is powered off.  This option is used when an externally supplied oscillator
+//! is connected to the XOSC0 pin or to save power when the LFIOSC is used in
+//! devices that have an LFIOSC in the Hibernation module.
+//! - \b HIBERNATE_OSC_HIGHDRIVE specifies a higher drive strength when a 24-pF
 //! filter capacitor is used with a crystal.
-//! - \b HIBERNATE_OSC_LOWDRIVE specifies a lower drive strength when a 12pF
+//! - \b HIBERNATE_OSC_LOWDRIVE specifies a lower drive strength when a 12-pF
 //! filter capacitor is used with a crystal.
 //!
 //! On some devices, there is an option to use an internal low frequency
-//! oscillator (LFIOSC) as the clock source for the hibernation module.
+//! oscillator (LFIOSC) as the clock source for the Hibernation module.
 //! Because of the low accuracy of this oscillator, this option should not be
 //! used when the system requires a real time counter.  Adding the
 //! \b HIBERNATE_OSC_LFIOSC value enables the LFIOSC as the clock source to
-//! the hibernation module.
+//! the Hibernation module.
 //!
-//! - \b HIBERNATE_OSC_LFIOSC enables the hibernation module's internal low
-//! frequency oscillator as the clock to the hibernation module.
+//! - \b HIBERNATE_OSC_LFIOSC enables the Hibernation module's internal low
+//! frequency oscillator as the clock to the Hibernation module.
 //!
 //! This \e ui32Config also configures how the clock output from the
 //! hibernation is used to clock other peripherals in the system.  The ALT
 //! clock settings allow clocking a subset of the peripherals.  See the
 //! hibernate section in the datasheet to determine which peripherals can be
-//! clocked by the ALT clock outputs from the hibernation module.
-//! The \e ui32Config parameter can have any combination of the
-//! following values:
+//! clocked by the ALT clock outputs from the Hibernation module.
+//! The \e ui32Config parameter can have any combination of the following
+//! values:
 //!
 //! - \b HIBERNATE_OUT_SYSCLK enables the hibernate clock output to the system
 //!      clock.
-//! - \b HIBERNATE_OUT_ALT1CLK enables the hibernate clock output to the
-//!      LPC module to allow the LPC and the hibernation module RTC to use the
-//!      same 32.768-kHz clock.
 //!
 //! The \b HIBERNATE_OSC_DISABLE option is used to disable and power down the
 //! internal oscillator if an external clock source or no clock source is used
@@ -369,7 +368,7 @@ HibernateBatCheckStart(void)
 //! This function determines whether the forced battery check initiated by a
 //! call to the HibernateBatCheckStart() function has completed.  This function
 //! returns a non-zero value until the battery level check has completed.  Once
-//! this function returns a value of zero, the hibernation module has completed
+//! this function returns a value of zero, the Hibernation module has completed
 //! the battery check and the HibernateIntStatus() function can be used to
 //! check if the battery was low by checking if the value returned has the
 //! \b HIBERNATE_INT_LOW_BAT set.
@@ -413,7 +412,7 @@ HibernateBatCheckDone(void)
 //! only available on some Tiva devices.
 //!
 //! \note On some Tiva devices a tamper event acts as a wake source for the
-//! hibernation module.  Refer the function \b HibernateTamperEventsConfig() to
+//! Hibernation module.  Refer the function \b HibernateTamperEventsConfig() to
 //! wake from hibernation on a tamper event.
 //!
 //! \return None.
@@ -505,7 +504,7 @@ HibernateWakeSet(uint32_t ui32WakeFlags)
 //! \b HIBERNATE_WAKE_RESET parameters are only available on some Tiva devices.
 //!
 //! \note On some Tiva devices a tamper event acts as a wake source for the
-//! hibernation module.  Refer the function \b HibernateTamperEventsConfig() to
+//! Hibernation module.  Refer the function \b HibernateTamperEventsConfig() to
 //! wake from hibernation on a tamper event.
 //!
 //! \return Returns flags indicating the configured wake conditions.
@@ -1019,7 +1018,7 @@ HibernateRequest(void)
 //! - \b HIBERNATE_INT_RTC_MATCH_0 - RTC match 0 interrupt
 //! - \b HIBERNATE_INT_VDDFAIL - supply failure interrupt.
 //! - \b HIBERNATE_INT_RESET_WAKE - wake from reset pin interrupt
-//! - \b HIBERNATE_INT_GPIO_WAKE - wake from GPIO pin interrupt
+//! - \b HIBERNATE_INT_GPIO_WAKE - wake from GPIO pin or reset pin interrupt.
 //!
 //! \note The \b HIBERNATE_INT_RESET_WAKE, \b HIBERNATE_INT_GPIO_WAKE, and
 //! \b HIBERNATE_INT_VDDFAIL settings are not available on all Tiva devices.
@@ -1110,13 +1109,13 @@ _HibernateIntNumberGet(void)
     //
     // Find the valid interrupt number for the hibernate module.
     //
-    if(CLASS_IS_SNOWFLAKE)
+    if(CLASS_IS_TM4C129)
     {
-        ui32Int = INT_HIBERNATE_SNOWFLAKE;
+        ui32Int = INT_HIBERNATE_TM4C129;
     }
     else
     {
-        ui32Int = INT_HIBERNATE_BLIZZARD;
+        ui32Int = INT_HIBERNATE_TM4C123;
     }
 
     return(ui32Int);
@@ -1210,6 +1209,10 @@ HibernateIntUnregister(void)
 //! This function returns the interrupt status of the Hibernation module.  The
 //! caller can use this function to determine the cause of a hibernation
 //! interrupt.  Either the masked or raw interrupt status can be returned.
+//!
+//! \note A wake from reset pin also signals a wake from GPIO pin with the
+//! value returned being HIBERNATE_INT_GPIO_WAKE | HIBERNATE_INT_RESET_WAKE.
+//! Hence a wake from reset pin should take priority over wake from GPIO pin.
 //!
 //! \return Returns the interrupt status as a bit field with the values as
 //! described in the HibernateIntEnable() function.
@@ -1408,7 +1411,7 @@ HibernateGPIORetentionGet(void)
 //
 //! Configures the Hibernation module's internal counter mode.
 //!
-//! \param ui32Config is the configuration to use for the hibernation module's
+//! \param ui32Config is the configuration to use for the Hibernation module's
 //! counter.
 //!
 //! This function configures the Hibernate module's counter mode to operate
@@ -2066,7 +2069,7 @@ HibernateTamperIOEnable(uint32_t ui32Input, uint32_t ui32Config)
     //
     // Set tamper I/O configuration for the requested input.
     //
-    ui32Temp |= (ui32Mask | ((ui32Config | HIB_TPIO_EN0) << (ui32Input << 3)));
+    ui32Temp = (ui32Mask | ((ui32Config | HIB_TPIO_EN0) << (ui32Input << 3)));
 
     //
     // Unlock the tamper registers.
@@ -2221,7 +2224,6 @@ HibernateTamperEventsClearNoLock(void)
     _HibernateWriteComplete();
 
     //
-    //
     // Set the tamper event clear bit.
     //
     HWREG(HIB_TPCTL) |= HIB_TPCTL_TPCLR;
@@ -2370,7 +2372,7 @@ HibernateTamperStatusGet(void)
 //! to query and has a valid range of 0-3.
 //!
 //! When this function returns, the \e pui32RTC value contains the time value
-//! and \e pui32Event  parameter contains the tamper I/O event that triggered
+//! and \e pui32Event parameter contains the tamper I/O event that triggered
 //! this log.
 //!
 //! The format of the returned \e pui32RTC data is dependent on the

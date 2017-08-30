@@ -2,7 +2,7 @@
 //
 // hw_memmap.h - Macros defining the memory map of the device.
 //
-// Copyright (c) 2005-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2005-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Firmware Development Package.
+// This is part of revision 2.1.4.178 of the Tiva Firmware Development Package.
 //
 //*****************************************************************************
 
@@ -118,14 +118,8 @@
                                             // (GPIOs)
 #define GPIO_PORTT_BASE         0x40069000  // General-Purpose Input/Outputs
                                             // (GPIOs)
-#define LPCB0_BASE              0x40080000  // Low Pin Count Interface (LPC)
-#define FAN0_BASE               0x40084000  // Fan Control (FAN)
-#define FAN1_BASE               0x40085000  // Fan Control (FAN)
 #define EEPROM_BASE             0x400AF000  // EEPROM memory
-#define PECI0_BASE              0x400B0000  // Platform Environment Control
-                                            // Interface (PECI)
 #define ONEWIRE0_BASE           0x400B6000  // 1-Wire Master Module
-#define HIM0_BASE               0x400B7000  // Human Interface Master (HIM)
 #define I2C8_BASE               0x400B8000  // I2C8
 #define I2C9_BASE               0x400B9000  // I2C9
 #define I2C4_BASE               0x400C0000  // I2C4

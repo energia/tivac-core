@@ -2,7 +2,7 @@
 //
 // hw_comp.h - Macros used when accessing the comparator hardware.
 //
-// Copyright (c) 2005-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2005-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Firmware Development Package.
+// This is part of revision 2.1.4.178 of the Tiva Firmware Development Package.
 //
 //*****************************************************************************
 
@@ -151,7 +151,6 @@
 #define COMP_ACCTL1_ASRCP_PIN   0x00000000  // Pin value of Cn+
 #define COMP_ACCTL1_ASRCP_PIN0  0x00000200  // Pin value of C0+
 #define COMP_ACCTL1_ASRCP_REF   0x00000400  // Internal voltage reference
-                                            // (VIREF)
 #define COMP_ACCTL1_TSLVAL      0x00000080  // Trigger Sense Level Value
 #define COMP_ACCTL1_TSEN_M      0x00000060  // Trigger Sense
 #define COMP_ACCTL1_TSEN_LEVEL  0x00000000  // Level sense, see TSLVAL
@@ -183,7 +182,6 @@
 #define COMP_ACCTL2_ASRCP_PIN   0x00000000  // Pin value of Cn+
 #define COMP_ACCTL2_ASRCP_PIN0  0x00000200  // Pin value of C0+
 #define COMP_ACCTL2_ASRCP_REF   0x00000400  // Internal voltage reference
-                                            // (VIREF)
 #define COMP_ACCTL2_TSLVAL      0x00000080  // Trigger Sense Level Value
 #define COMP_ACCTL2_TSEN_M      0x00000060  // Trigger Sense
 #define COMP_ACCTL2_TSEN_LEVEL  0x00000000  // Level sense, see TSLVAL

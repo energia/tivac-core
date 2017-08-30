@@ -2,7 +2,7 @@
 //
 // hw_uart.h - Macros and defines used when accessing the UART hardware.
 //
-// Copyright (c) 2005-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2005-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Firmware Development Package.
+// This is part of revision 2.1.4.178 of the Tiva Firmware Development Package.
 //
 //*****************************************************************************
 
@@ -360,7 +360,8 @@
 //
 //*****************************************************************************
 #define UART_CC_CS_M            0x0000000F  // UART Baud Clock Source
-#define UART_CC_CS_SYSCLK       0x00000000  // The system clock (default)
+#define UART_CC_CS_SYSCLK       0x00000000  // System clock (based on clock
+                                            // source and divisor factor)
 #define UART_CC_CS_PIOSC        0x00000005  // PIOSC
 
 #endif // __HW_UART_H__

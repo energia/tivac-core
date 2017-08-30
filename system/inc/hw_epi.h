@@ -2,7 +2,7 @@
 //
 // hw_epi.h - Macros for use in accessing the EPI registers.
 //
-// Copyright (c) 2008-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2008-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Firmware Development Package.
+// This is part of revision 2.1.4.178 of the Tiva Firmware Development Package.
 //
 //*****************************************************************************
 
@@ -150,15 +150,15 @@
 #define EPI_HB16CFG_BURST       0x00010000  // Burst Mode
 #define EPI_HB16CFG_MAXWAIT_M   0x0000FF00  // Maximum Wait
 #define EPI_HB16CFG_WRWS_M      0x000000C0  // Write Wait States
-#define EPI_HB16CFG_WRWS_0      0x00000000  // No wait states
-#define EPI_HB16CFG_WRWS_1      0x00000040  // 1 wait state
-#define EPI_HB16CFG_WRWS_2      0x00000080  // 2 wait states
-#define EPI_HB16CFG_WRWS_3      0x000000C0  // 3 wait states
+#define EPI_HB16CFG_WRWS_2      0x00000000  // Active WRn is 2 EPI clocks
+#define EPI_HB16CFG_WRWS_4      0x00000040  // Active WRn is 4 EPI clocks
+#define EPI_HB16CFG_WRWS_6      0x00000080  // Active WRn is 6 EPI clocks
+#define EPI_HB16CFG_WRWS_8      0x000000C0  // Active WRn is 8 EPI clocks
 #define EPI_HB16CFG_RDWS_M      0x00000030  // Read Wait States
-#define EPI_HB16CFG_RDWS_0      0x00000000  // No wait states
-#define EPI_HB16CFG_RDWS_1      0x00000010  // 1 wait state
-#define EPI_HB16CFG_RDWS_2      0x00000020  // 2 wait states
-#define EPI_HB16CFG_RDWS_3      0x00000030  // 3 wait states
+#define EPI_HB16CFG_RDWS_2      0x00000000  // Active RDn is 2 EPI clocks
+#define EPI_HB16CFG_RDWS_4      0x00000010  // Active RDn is 4 EPI clocks
+#define EPI_HB16CFG_RDWS_6      0x00000020  // Active RDn is 6 EPI clocks
+#define EPI_HB16CFG_RDWS_8      0x00000030  // Active RDn is 8 EPI clocks
 #define EPI_HB16CFG_BSEL        0x00000004  // Byte Select Configuration
 #define EPI_HB16CFG_MODE_M      0x00000003  // Host Bus Sub-Mode
 #define EPI_HB16CFG_MODE_ADMUX  0x00000000  // ADMUX - AD[15:0]
@@ -174,11 +174,9 @@
 //*****************************************************************************
 #define EPI_GPCFG_CLKPIN        0x80000000  // Clock Pin
 #define EPI_GPCFG_CLKGATE       0x40000000  // Clock Gated
-#define EPI_GPCFG_RDYEN         0x10000000  // Ready Enable
 #define EPI_GPCFG_FRM50         0x04000000  // 50/50 Frame
 #define EPI_GPCFG_FRMCNT_M      0x03C00000  // Frame Count
 #define EPI_GPCFG_WR2CYC        0x00080000  // 2-Cycle Writes
-#define EPI_GPCFG_MAXWAIT_M     0x0000FF00  // Maximum Wait
 #define EPI_GPCFG_ASIZE_M       0x00000030  // Address Bus Size
 #define EPI_GPCFG_ASIZE_NONE    0x00000000  // No address
 #define EPI_GPCFG_ASIZE_4BIT    0x00000010  // Up to 4 bits wide
@@ -193,7 +191,6 @@
 #define EPI_GPCFG_DSIZE_24BIT   0x00000002  // 24 Bits Wide (EPI0S0 to EPI0S23)
 #define EPI_GPCFG_DSIZE_32BIT   0x00000003  // 32 Bits Wide (EPI0S0 to EPI0S31)
 #define EPI_GPCFG_FRMCNT_S      22
-#define EPI_GPCFG_MAXWAIT_S     8
 
 //*****************************************************************************
 //
@@ -230,15 +227,15 @@
 #define EPI_HB8CFG_ALEHIGH      0x00080000  // ALE Strobe Polarity
 #define EPI_HB8CFG_MAXWAIT_M    0x0000FF00  // Maximum Wait
 #define EPI_HB8CFG_WRWS_M       0x000000C0  // Write Wait States
-#define EPI_HB8CFG_WRWS_0       0x00000000  // No wait states
-#define EPI_HB8CFG_WRWS_1       0x00000040  // 1 wait state
-#define EPI_HB8CFG_WRWS_2       0x00000080  // 2 wait states
-#define EPI_HB8CFG_WRWS_3       0x000000C0  // 3 wait states
+#define EPI_HB8CFG_WRWS_2       0x00000000  // Active WRn is 2 EPI clocks
+#define EPI_HB8CFG_WRWS_4       0x00000040  // Active WRn is 4 EPI clocks
+#define EPI_HB8CFG_WRWS_6       0x00000080  // Active WRn is 6 EPI clocks
+#define EPI_HB8CFG_WRWS_8       0x000000C0  // Active WRn is 8 EPI clocks
 #define EPI_HB8CFG_RDWS_M       0x00000030  // Read Wait States
-#define EPI_HB8CFG_RDWS_0       0x00000000  // No wait states
-#define EPI_HB8CFG_RDWS_1       0x00000010  // 1 wait state
-#define EPI_HB8CFG_RDWS_2       0x00000020  // 2 wait states
-#define EPI_HB8CFG_RDWS_3       0x00000030  // 3 wait states
+#define EPI_HB8CFG_RDWS_2       0x00000000  // Active RDn is 2 EPI clocks
+#define EPI_HB8CFG_RDWS_4       0x00000010  // Active RDn is 4 EPI clocks
+#define EPI_HB8CFG_RDWS_6       0x00000020  // Active RDn is 6 EPI clocks
+#define EPI_HB8CFG_RDWS_8       0x00000030  // Active RDn is 8 EPI clocks
 #define EPI_HB8CFG_MODE_M       0x00000003  // Host Bus Sub-Mode
 #define EPI_HB8CFG_MODE_MUX     0x00000000  // ADMUX - AD[7:0]
 #define EPI_HB8CFG_MODE_NMUX    0x00000001  // ADNONMUX - D[7:0]
@@ -253,7 +250,9 @@
 //*****************************************************************************
 #define EPI_HB8CFG2_CSCFGEXT    0x08000000  // Chip Select Extended
                                             // Configuration
-#define EPI_HB8CFG2_CSBAUD      0x04000000  // Chip Select Baud Rate
+#define EPI_HB8CFG2_CSBAUD      0x04000000  // Chip Select Baud Rate and
+                                            // Multiple Sub-Mode Configuration
+                                            // enable
 #define EPI_HB8CFG2_CSCFG_M     0x03000000  // Chip Select Configuration
 #define EPI_HB8CFG2_CSCFG_ALE   0x00000000  // ALE Configuration
 #define EPI_HB8CFG2_CSCFG_CS    0x01000000  // CSn Configuration
@@ -263,15 +262,15 @@
 #define EPI_HB8CFG2_RDHIGH      0x00100000  // CS1n READ Strobe Polarity
 #define EPI_HB8CFG2_ALEHIGH     0x00080000  // CS1n ALE Strobe Polarity
 #define EPI_HB8CFG2_WRWS_M      0x000000C0  // CS1n Write Wait States
-#define EPI_HB8CFG2_WRWS_0      0x00000000  // No wait states
-#define EPI_HB8CFG2_WRWS_1      0x00000040  // 1 wait state
-#define EPI_HB8CFG2_WRWS_2      0x00000080  // 2 wait states
-#define EPI_HB8CFG2_WRWS_3      0x000000C0  // 3 wait states
+#define EPI_HB8CFG2_WRWS_2      0x00000000  // Active WRn is 2 EPI clocks
+#define EPI_HB8CFG2_WRWS_4      0x00000040  // Active WRn is 4 EPI clocks
+#define EPI_HB8CFG2_WRWS_6      0x00000080  // Active WRn is 6 EPI clocks
+#define EPI_HB8CFG2_WRWS_8      0x000000C0  // Active WRn is 8 EPI clocks
 #define EPI_HB8CFG2_RDWS_M      0x00000030  // CS1n Read Wait States
-#define EPI_HB8CFG2_RDWS_0      0x00000000  // No wait states
-#define EPI_HB8CFG2_RDWS_1      0x00000010  // 1 wait state
-#define EPI_HB8CFG2_RDWS_2      0x00000020  // 2 wait states
-#define EPI_HB8CFG2_RDWS_3      0x00000030  // 3 wait states
+#define EPI_HB8CFG2_RDWS_2      0x00000000  // Active RDn is 2 EPI clocks
+#define EPI_HB8CFG2_RDWS_4      0x00000010  // Active RDn is 4 EPI clocks
+#define EPI_HB8CFG2_RDWS_6      0x00000020  // Active RDn is 6 EPI clocks
+#define EPI_HB8CFG2_RDWS_8      0x00000030  // Active RDn is 8 EPI clocks
 #define EPI_HB8CFG2_MODE_M      0x00000003  // CS1n Host Bus Sub-Mode
 #define EPI_HB8CFG2_MODE_ADMUX  0x00000000  // ADMUX - AD[7:0]
 #define EPI_HB8CFG2_MODE_AD     0x00000001  // ADNONMUX - D[7:0]
@@ -283,7 +282,9 @@
 //*****************************************************************************
 #define EPI_HB16CFG2_CSCFGEXT   0x08000000  // Chip Select Extended
                                             // Configuration
-#define EPI_HB16CFG2_CSBAUD     0x04000000  // Chip Select Baud Rate
+#define EPI_HB16CFG2_CSBAUD     0x04000000  // Chip Select Baud Rate and
+                                            // Multiple Sub-Mode Configuration
+                                            // enable
 #define EPI_HB16CFG2_CSCFG_M    0x03000000  // Chip Select Configuration
 #define EPI_HB16CFG2_CSCFG_ALE  0x00000000  // ALE Configuration
 #define EPI_HB16CFG2_CSCFG_CS   0x01000000  // CSn Configuration
@@ -298,19 +299,18 @@
                                             // Register Read
 #define EPI_HB16CFG2_BURST      0x00010000  // CS1n Burst Mode
 #define EPI_HB16CFG2_WRWS_M     0x000000C0  // CS1n Write Wait States
-#define EPI_HB16CFG2_WRWS_0     0x00000000  // No wait states
-#define EPI_HB16CFG2_WRWS_1     0x00000040  // 1 wait state
-#define EPI_HB16CFG2_WRWS_2     0x00000080  // 2 wait states
-#define EPI_HB16CFG2_WRWS_3     0x000000C0  // 3 wait states
+#define EPI_HB16CFG2_WRWS_2     0x00000000  // Active WRn is 2 EPI clocks
+#define EPI_HB16CFG2_WRWS_4     0x00000040  // Active WRn is 4 EPI clocks
+#define EPI_HB16CFG2_WRWS_6     0x00000080  // Active WRn is 6 EPI clocks
+#define EPI_HB16CFG2_WRWS_8     0x000000C0  // Active WRn is 8 EPI clocks
 #define EPI_HB16CFG2_RDWS_M     0x00000030  // CS1n Read Wait States
-#define EPI_HB16CFG2_RDWS_0     0x00000000  // No wait states
-#define EPI_HB16CFG2_RDWS_1     0x00000010  // 1 wait state
-#define EPI_HB16CFG2_RDWS_2     0x00000020  // 2 wait states
-#define EPI_HB16CFG2_RDWS_3     0x00000030  // 3 wait states
+#define EPI_HB16CFG2_RDWS_2     0x00000000  // Active RDn is 2 EPI clocks
+#define EPI_HB16CFG2_RDWS_4     0x00000010  // Active RDn is 4 EPI clocks
+#define EPI_HB16CFG2_RDWS_6     0x00000020  // Active RDn is 6 EPI clocks
+#define EPI_HB16CFG2_RDWS_8     0x00000030  // Active RDn is 8 EPI clocks
 #define EPI_HB16CFG2_MODE_M     0x00000003  // CS1n Host Bus Sub-Mode
 #define EPI_HB16CFG2_MODE_ADMUX 0x00000000  // ADMUX - AD[15:0]
 #define EPI_HB16CFG2_MODE_AD    0x00000001  // ADNONMUX - D[15:0]
-#define EPI_HB16CFG2_MODE_CR    0x00000002  // Continuous Read - D[15:0]
 
 //*****************************************************************************
 //
@@ -423,7 +423,6 @@
 // The following are defines for the bit fields in the EPI_O_STAT register.
 //
 //*****************************************************************************
-#define EPI_STAT_CELOW          0x00000200  // Clock Enable Low
 #define EPI_STAT_XFFULL         0x00000100  // External FIFO Full
 #define EPI_STAT_XFEMPTY        0x00000080  // External FIFO Empty
 #define EPI_STAT_INITSEQ        0x00000040  // Initialization Sequence
@@ -519,27 +518,37 @@
 #define EPI_FIFOLVL_WFERR       0x00020000  // Write Full Error
 #define EPI_FIFOLVL_RSERR       0x00010000  // Read Stall Error
 #define EPI_FIFOLVL_WRFIFO_M    0x00000070  // Write FIFO
-#define EPI_FIFOLVL_WRFIFO_EMPT 0x00000000  // Trigger when there are any
-                                            // spaces available in the WFIFO
-#define EPI_FIFOLVL_WRFIFO_1_4  0x00000020  // Trigger when there are up to 3
-                                            // spaces available in the WFIFO
-#define EPI_FIFOLVL_WRFIFO_1_2  0x00000030  // Trigger when there are up to 2
-                                            // spaces available in the WFIFO
-#define EPI_FIFOLVL_WRFIFO_3_4  0x00000040  // Trigger when there is 1 space
-                                            // available in the WFIFO
+#define EPI_FIFOLVL_WRFIFO_EMPT 0x00000000  // Interrupt is triggered while
+                                            // WRFIFO is empty.
+#define EPI_FIFOLVL_WRFIFO_2    0x00000020  // Interrupt is triggered until
+                                            // there are only two slots
+                                            // available. Thus, trigger is
+                                            // deasserted when there are two
+                                            // WRFIFO entries present. This
+                                            // configuration is optimized for
+                                            // bursts of 2
+#define EPI_FIFOLVL_WRFIFO_1    0x00000030  // Interrupt is triggered until
+                                            // there is one WRFIFO entry
+                                            // available. This configuration
+                                            // expects only single writes
+#define EPI_FIFOLVL_WRFIFO_NFULL                                              \
+                                0x00000040  // Trigger interrupt when WRFIFO is
+                                            // not full, meaning trigger will
+                                            // continue to assert until there
+                                            // are four entries in the WRFIFO
 #define EPI_FIFOLVL_RDFIFO_M    0x00000007  // Read FIFO
 #define EPI_FIFOLVL_RDFIFO_EMPT 0x00000000  // Empty
-#define EPI_FIFOLVL_RDFIFO_1_8  0x00000001  // Trigger when there are 1 or more
+#define EPI_FIFOLVL_RDFIFO_1    0x00000001  // Trigger when there are 1 or more
                                             // entries in the NBRFIFO
-#define EPI_FIFOLVL_RDFIFO_1_4  0x00000002  // Trigger when there are 2 or more
+#define EPI_FIFOLVL_RDFIFO_2    0x00000002  // Trigger when there are 2 or more
                                             // entries in the NBRFIFO
-#define EPI_FIFOLVL_RDFIFO_1_2  0x00000003  // Trigger when there are 4 or more
+#define EPI_FIFOLVL_RDFIFO_4    0x00000003  // Trigger when there are 4 or more
                                             // entries in the NBRFIFO
-#define EPI_FIFOLVL_RDFIFO_3_4  0x00000004  // Trigger when there are 6 or more
+#define EPI_FIFOLVL_RDFIFO_6    0x00000004  // Trigger when there are 6 or more
                                             // entries in the NBRFIFO
-#define EPI_FIFOLVL_RDFIFO_7_8  0x00000005  // Trigger when there are 7 or more
+#define EPI_FIFOLVL_RDFIFO_7    0x00000005  // Trigger when there are 7 or more
                                             // entries in the NBRFIFO
-#define EPI_FIFOLVL_RDFIFO_FULL 0x00000006  // Trigger when there are 8 entries
+#define EPI_FIFOLVL_RDFIFO_8    0x00000006  // Trigger when there are 8 entries
                                             // in the NBRFIFO
 
 //*****************************************************************************
@@ -625,7 +634,6 @@
 #define EPI_HB8CFG3_MODE_M      0x00000003  // CS2n Host Bus Sub-Mode
 #define EPI_HB8CFG3_MODE_ADMUX  0x00000000  // ADMUX - AD[7:0]
 #define EPI_HB8CFG3_MODE_AD     0x00000001  // ADNONMUX - D[7:0]
-#define EPI_HB8CFG3_MODE_CR     0x00000002  // Continuous Read - D[7:0]
 
 //*****************************************************************************
 //
@@ -653,7 +661,6 @@
 #define EPI_HB16CFG3_MODE_M     0x00000003  // CS2n Host Bus Sub-Mode
 #define EPI_HB16CFG3_MODE_ADMUX 0x00000000  // ADMUX - AD[15:0]
 #define EPI_HB16CFG3_MODE_AD    0x00000001  // ADNONMUX - D[15:0]
-#define EPI_HB16CFG3_MODE_CR    0x00000002  // Continuous Read - D[15:0]
 
 //*****************************************************************************
 //
@@ -681,7 +688,6 @@
 #define EPI_HB16CFG4_MODE_M     0x00000003  // CS3n Host Bus Sub-Mode
 #define EPI_HB16CFG4_MODE_ADMUX 0x00000000  // ADMUX - AD[15:0]
 #define EPI_HB16CFG4_MODE_AD    0x00000001  // ADNONMUX - D[15:0]
-#define EPI_HB16CFG4_MODE_CR    0x00000002  // Continuous Read - D[15:0]
 
 //*****************************************************************************
 //
@@ -704,7 +710,6 @@
 #define EPI_HB8CFG4_MODE_M      0x00000003  // CS3n Host Bus Sub-Mode
 #define EPI_HB8CFG4_MODE_ADMUX  0x00000000  // ADMUX - AD[7:0]
 #define EPI_HB8CFG4_MODE_AD     0x00000001  // ADNONMUX - D[7:0]
-#define EPI_HB8CFG4_MODE_CR     0x00000002  // Continuous Read - D[7:0]
 
 //*****************************************************************************
 //
@@ -726,7 +731,7 @@
 //*****************************************************************************
 #define EPI_HB16TIME_IRDYDLY_M  0x03000000  // CS0n Input Ready Delay
 #define EPI_HB16TIME_PSRAMSZ_M  0x00070000  // PSRAM Row Size
-#define EPI_HB16TIME_PSRAMSZ_0  0x00000000  // No PSRAM
+#define EPI_HB16TIME_PSRAMSZ_0  0x00000000  // No row size limitation
 #define EPI_HB16TIME_PSRAMSZ_128B                                             \
                                 0x00010000  // 128 B
 #define EPI_HB16TIME_PSRAMSZ_256B                                             \
@@ -769,7 +774,7 @@
 //*****************************************************************************
 #define EPI_HB16TIME2_IRDYDLY_M 0x03000000  // CS1n Input Ready Delay
 #define EPI_HB16TIME2_PSRAMSZ_M 0x00070000  // PSRAM Row Size
-#define EPI_HB16TIME2_PSRAMSZ_0 0x00000000  // No PSRAM
+#define EPI_HB16TIME2_PSRAMSZ_0 0x00000000  // No row size limitation
 #define EPI_HB16TIME2_PSRAMSZ_128B                                            \
                                 0x00010000  // 128 B
 #define EPI_HB16TIME2_PSRAMSZ_256B                                            \
@@ -801,7 +806,7 @@
 //*****************************************************************************
 #define EPI_HB16TIME3_IRDYDLY_M 0x03000000  // CS2n Input Ready Delay
 #define EPI_HB16TIME3_PSRAMSZ_M 0x00070000  // PSRAM Row Size
-#define EPI_HB16TIME3_PSRAMSZ_0 0x00000000  // No PSRAM
+#define EPI_HB16TIME3_PSRAMSZ_0 0x00000000  // No row size limitation
 #define EPI_HB16TIME3_PSRAMSZ_128B                                            \
                                 0x00010000  // 128 B
 #define EPI_HB16TIME3_PSRAMSZ_256B                                            \
@@ -859,7 +864,7 @@
 //*****************************************************************************
 #define EPI_HB16TIME4_IRDYDLY_M 0x03000000  // CS3n Input Ready Delay
 #define EPI_HB16TIME4_PSRAMSZ_M 0x00070000  // PSRAM Row Size
-#define EPI_HB16TIME4_PSRAMSZ_0 0x00000000  // No PSRAM
+#define EPI_HB16TIME4_PSRAMSZ_0 0x00000000  // No row size limitation
 #define EPI_HB16TIME4_PSRAMSZ_128B                                            \
                                 0x00010000  // 128 B
 #define EPI_HB16TIME4_PSRAMSZ_256B                                            \
@@ -890,5 +895,39 @@
 //*****************************************************************************
 #define EPI_HBPSRAM_CR_M        0x001FFFFF  // PSRAM Config Register
 #define EPI_HBPSRAM_CR_S        0
+
+//*****************************************************************************
+//
+// The following definitions are deprecated.
+//
+//*****************************************************************************
+#ifndef DEPRECATED
+
+//*****************************************************************************
+//
+// The following are deprecated defines for the bit fields in the EPI_O_FIFOLVL
+// register.
+//
+//*****************************************************************************
+#define EPI_FIFOLVL_WRFIFO_1_4  0x00000020  // Trigger when there are up to 3
+                                            // spaces available in the WFIFO
+#define EPI_FIFOLVL_WRFIFO_1_2  0x00000030  // Trigger when there are up to 2
+                                            // spaces available in the WFIFO
+#define EPI_FIFOLVL_WRFIFO_3_4  0x00000040  // Trigger when there is 1 space
+                                            // available in the WFIFO
+#define EPI_FIFOLVL_RDFIFO_1_8  0x00000001  // Trigger when there are 1 or more
+                                            // entries in the NBRFIFO
+#define EPI_FIFOLVL_RDFIFO_1_4  0x00000002  // Trigger when there are 2 or more
+                                            // entries in the NBRFIFO
+#define EPI_FIFOLVL_RDFIFO_1_2  0x00000003  // Trigger when there are 4 or more
+                                            // entries in the NBRFIFO
+#define EPI_FIFOLVL_RDFIFO_3_4  0x00000004  // Trigger when there are 6 or more
+                                            // entries in the NBRFIFO
+#define EPI_FIFOLVL_RDFIFO_7_8  0x00000005  // Trigger when there are 7 or more
+                                            // entries in the NBRFIFO
+#define EPI_FIFOLVL_RDFIFO_FULL 0x00000006  // Trigger when there are 8 entries
+                                            // in the NBRFIFO
+
+#endif
 
 #endif // __HW_EPI_H__

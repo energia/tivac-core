@@ -2,7 +2,7 @@
 //
 // uart.c - Driver for the UART.
 //
-// Copyright (c) 2005-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2005-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Peripheral Driver Library.
+// This is part of revision 2.1.4.178 of the Tiva Peripheral Driver Library.
 //
 //*****************************************************************************
 
@@ -70,27 +70,27 @@
 //*****************************************************************************
 static const uint32_t g_ppui32UARTIntMap[][2] =
 {
-    { UART0_BASE, INT_UART0_BLIZZARD },
-    { UART1_BASE, INT_UART1_BLIZZARD },
-    { UART2_BASE, INT_UART2_BLIZZARD },
-    { UART3_BASE, INT_UART3_BLIZZARD },
-    { UART4_BASE, INT_UART4_BLIZZARD },
-    { UART5_BASE, INT_UART5_BLIZZARD },
-    { UART6_BASE, INT_UART6_BLIZZARD },
-    { UART7_BASE, INT_UART7_BLIZZARD },
+    { UART0_BASE, INT_UART0_TM4C123 },
+    { UART1_BASE, INT_UART1_TM4C123 },
+    { UART2_BASE, INT_UART2_TM4C123 },
+    { UART3_BASE, INT_UART3_TM4C123 },
+    { UART4_BASE, INT_UART4_TM4C123 },
+    { UART5_BASE, INT_UART5_TM4C123 },
+    { UART6_BASE, INT_UART6_TM4C123 },
+    { UART7_BASE, INT_UART7_TM4C123 },
 };
 static const uint_fast8_t g_ui8UARTIntMapRows =
     sizeof(g_ppui32UARTIntMap) / sizeof(g_ppui32UARTIntMap[0]);
 static const uint32_t g_ppui32UARTIntMapSnowflake[][2] =
 {
-    { UART0_BASE, INT_UART0_SNOWFLAKE },
-    { UART1_BASE, INT_UART1_SNOWFLAKE },
-    { UART2_BASE, INT_UART2_SNOWFLAKE },
-    { UART3_BASE, INT_UART3_SNOWFLAKE },
-    { UART4_BASE, INT_UART4_SNOWFLAKE },
-    { UART5_BASE, INT_UART5_SNOWFLAKE },
-    { UART6_BASE, INT_UART6_SNOWFLAKE },
-    { UART7_BASE, INT_UART7_SNOWFLAKE },
+    { UART0_BASE, INT_UART0_TM4C129 },
+    { UART1_BASE, INT_UART1_TM4C129 },
+    { UART2_BASE, INT_UART2_TM4C129 },
+    { UART3_BASE, INT_UART3_TM4C129 },
+    { UART4_BASE, INT_UART4_TM4C129 },
+    { UART5_BASE, INT_UART5_TM4C129 },
+    { UART6_BASE, INT_UART6_TM4C129 },
+    { UART7_BASE, INT_UART7_TM4C129 },
 };
 static const uint_fast8_t g_ui8UARTIntMapRowsSnowflake =
     sizeof(g_ppui32UARTIntMapSnowflake) /
@@ -145,7 +145,7 @@ _UARTIntNumberGet(uint32_t ui32Base)
     ppui32UARTIntMap = g_ppui32UARTIntMap;
     ui8Rows = g_ui8UARTIntMapRows;
 
-    if(CLASS_IS_SNOWFLAKE)
+    if(CLASS_IS_TM4C129)
     {
         ppui32UARTIntMap = g_ppui32UARTIntMapSnowflake;
         ui8Rows = g_ui8UARTIntMapRowsSnowflake;
@@ -352,9 +352,14 @@ UARTFIFOLevelGet(uint32_t ui32Base, uint32_t *pui32TxLevel,
 //! zero, respectively).
 //!
 //! The peripheral clock is the same as the processor clock.  The frequency of
-//! the system clock is the value returned by SysCtlClockGet(), or it can be
-//! explicitly hard coded if it is constant and known (to save the
-//! code/execution overhead of a call to SysCtlClockGet()).
+//! the system clock is the value returned by SysCtlClockGet() for TM4C123x
+//! devices or the value returned by SysCtlClockFreqSet() for TM4C129x devices,
+//! or it can be explicitly hard coded if it is constant and known (to save the
+//! code/execution overhead of a call to SysCtlClockGet() or fetch of the 
+//! variable call holding the return value of SysCtlClockFreqSet()).
+//!
+//! The function disables the UART by calling UARTDisable() before changing the
+//! the parameters and enables the UART by calling UARTEnable().
 //!
 //! For Tiva parts that have the ability to specify the UART baud clock
 //! source (via UARTClockSourceSet()), the peripheral clock can be changed to
@@ -451,9 +456,11 @@ UARTConfigSetExpClk(uint32_t ui32Base, uint32_t ui32UARTClk,
 //! UARTConfigSetExpClk().
 //!
 //! The peripheral clock is the same as the processor clock.  The frequency of
-//! the system clock is the value returned by SysCtlClockGet(), or it can be
-//! explicitly hard coded if it is constant and known (to save the
-//! code/execution overhead of a call to SysCtlClockGet()).
+//! the system clock is the value returned by SysCtlClockGet() for TM4C123x
+//! devices or the value returned by SysCtlClockFreqSet() for TM4C129x devices,
+//! or it can be explicitly hard coded if it is constant and known (to save the
+//! code/execution overhead of a call to SysCtlClockGet() or fetch of the 
+//! variable call holding the return value of SysCtlClockFreqSet()).
 //!
 //! For Tiva parts that have the ability to specify the UART baud clock
 //! source (via UARTClockSourceSet()), the peripheral clock can be changed to
@@ -786,8 +793,8 @@ UARTSmartCardDisable(uint32_t ui32Base)
 //!
 //! The \e ui32Control parameter is the logical OR of any of the following:
 //!
-//! - \b UART_OUTPUT_DTR - The Modem Control DTR signal
-//! - \b UART_OUTPUT_RTS - The Modem Control RTS signal
+//! - \b UART_OUTPUT_DTR - The modem control DTR signal
+//! - \b UART_OUTPUT_RTS - The modem control RTS signal
 //!
 //! \note The availability of hardware modem handshake signals varies with the
 //! Tiva part and UART in use.  Please consult the datasheet for the part
@@ -828,8 +835,8 @@ UARTModemControlSet(uint32_t ui32Base, uint32_t ui32Control)
 //!
 //! The \e ui32Control parameter is the logical OR of any of the following:
 //!
-//! - \b UART_OUTPUT_DTR - The Modem Control DTR signal
-//! - \b UART_OUTPUT_RTS - The Modem Control RTS signal
+//! - \b UART_OUTPUT_DTR - The modem control DTR signal
+//! - \b UART_OUTPUT_RTS - The modem control RTS signal
 //!
 //! \note The availability of hardware modem handshake signals varies with the
 //! Tiva part and UART in use.  Please consult the datasheet for the part
@@ -1593,19 +1600,19 @@ UARTIntClear(uint32_t ui32Base, uint32_t ui32IntFlags)
 
 //*****************************************************************************
 //
-//! Enable UART DMA operation.
+//! Enable UART uDMA operation.
 //!
 //! \param ui32Base is the base address of the UART port.
-//! \param ui32DMAFlags is a bit mask of the DMA features to enable.
+//! \param ui32DMAFlags is a bit mask of the uDMA features to enable.
 //!
-//! The specified UART DMA features are enabled.  The UART can be
-//! configured to use DMA for transmit or receive and to disable
+//! The specified UART uDMA features are enabled.  The UART can be
+//! configured to use uDMA for transmit or receive and to disable
 //! receive if an error occurs.  The \e ui32DMAFlags parameter is the
 //! logical OR of any of the following values:
 //!
-//! - UART_DMA_RX - enable DMA for receive
-//! - UART_DMA_TX - enable DMA for transmit
-//! - UART_DMA_ERR_RXSTOP - disable DMA receive on UART error
+//! - \b UART_DMA_RX - enable uDMA for receive
+//! - \b UART_DMA_TX - enable uDMA for transmit
+//! - \b UART_DMA_ERR_RXSTOP - disable uDMA receive on UART error
 //!
 //! \note The uDMA controller must also be set up before DMA can be used
 //! with the UART.
@@ -1622,25 +1629,25 @@ UARTDMAEnable(uint32_t ui32Base, uint32_t ui32DMAFlags)
     ASSERT(_UARTBaseValid(ui32Base));
 
     //
-    // Set the requested bits in the UART DMA control register.
+    // Set the requested bits in the UART uDMA control register.
     //
     HWREG(ui32Base + UART_O_DMACTL) |= ui32DMAFlags;
 }
 
 //*****************************************************************************
 //
-//! Disable UART DMA operation.
+//! Disable UART uDMA operation.
 //!
 //! \param ui32Base is the base address of the UART port.
-//! \param ui32DMAFlags is a bit mask of the DMA features to disable.
+//! \param ui32DMAFlags is a bit mask of the uDMA features to disable.
 //!
-//! This function is used to disable UART DMA features that were enabled
-//! by UARTDMAEnable().  The specified UART DMA features are disabled.  The
+//! This function is used to disable UART uDMA features that were enabled
+//! by UARTDMAEnable().  The specified UART uDMA features are disabled.  The
 //! \e ui32DMAFlags parameter is the logical OR of any of the following values:
 //!
-//! - UART_DMA_RX - disable DMA for receive
-//! - UART_DMA_TX - disable DMA for transmit
-//! - UART_DMA_ERR_RXSTOP - do not disable DMA receive on UART error
+//! - \b UART_DMA_RX - disable uDMA for receive
+//! - \b UART_DMA_TX - disable uDMA for transmit
+//! - \b UART_DMA_ERR_RXSTOP - do not disable uDMA receive on UART error
 //!
 //! \return None.
 //
@@ -1654,7 +1661,7 @@ UARTDMADisable(uint32_t ui32Base, uint32_t ui32DMAFlags)
     ASSERT(_UARTBaseValid(ui32Base));
 
     //
-    // Clear the requested bits in the UART DMA control register.
+    // Clear the requested bits in the UART uDMA control register.
     //
     HWREG(ui32Base + UART_O_DMACTL) &= ~ui32DMAFlags;
 }
@@ -1948,6 +1955,35 @@ UART9BitAddrSend(uint32_t ui32Base, uint8_t ui8Addr)
     // Restore the address/data setting.
     //
     HWREG(ui32Base + UART_O_LCRH) = ui32LCRH;
+}
+
+//*****************************************************************************
+//
+//! Enables internal loopback mode for a UART port
+//!
+//! \param ui32Base is the base address of the UART port.
+//!
+//! This function configures a UART port in internal loopback mode to help with
+//! diagnostics and debug.  In this mode, the transmit and receive terminals of
+//! the same UART port are internally connected.  Hence, the data transmitted
+//! on the UnTx output is received on the UxRx input, without having to go
+//! through I/O's.  UARTCharPut(), UARTCharGet() functions can be used along 
+//! with this function.
+//!
+//! \return None.
+//
+//*****************************************************************************
+void UARTLoopbackEnable(uint32_t ui32Base)
+{
+    //
+    // Check the arguments.
+    //
+    ASSERT(_UARTBaseValid(ui32Base));
+
+    //
+    // Write the Loopback Enable bit to register.
+    //
+    HWREG(ui32Base + UART_O_CTL) |= UART_CTL_LBE;
 }
 
 //*****************************************************************************

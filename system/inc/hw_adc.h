@@ -2,7 +2,7 @@
 //
 // hw_adc.h - Macros used when accessing the ADC hardware.
 //
-// Copyright (c) 2005-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2005-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Firmware Development Package.
+// This is part of revision 2.1.4.178 of the Tiva Firmware Development Package.
 //
 //*****************************************************************************
 
@@ -238,12 +238,12 @@
 #define ADC_EMUX_EM3_COMP0      0x00001000  // Analog Comparator 0
 #define ADC_EMUX_EM3_COMP1      0x00002000  // Analog Comparator 1
 #define ADC_EMUX_EM3_COMP2      0x00003000  // Analog Comparator 2
-#define ADC_EMUX_EM3_EXTERNAL   0x00004000  // External (GPIO PB4)
+#define ADC_EMUX_EM3_EXTERNAL   0x00004000  // External (GPIO Pins)
 #define ADC_EMUX_EM3_TIMER      0x00005000  // Timer
-#define ADC_EMUX_EM3_PWM0       0x00006000  // PWM0
-#define ADC_EMUX_EM3_PWM1       0x00007000  // PWM1
-#define ADC_EMUX_EM3_PWM2       0x00008000  // PWM2
-#define ADC_EMUX_EM3_PWM3       0x00009000  // PWM3
+#define ADC_EMUX_EM3_PWM0       0x00006000  // PWM generator 0
+#define ADC_EMUX_EM3_PWM1       0x00007000  // PWM generator 1
+#define ADC_EMUX_EM3_PWM2       0x00008000  // PWM generator 2
+#define ADC_EMUX_EM3_PWM3       0x00009000  // PWM generator 3
 #define ADC_EMUX_EM3_NEVER      0x0000E000  // Never Trigger
 #define ADC_EMUX_EM3_ALWAYS     0x0000F000  // Always (continuously sample)
 #define ADC_EMUX_EM2_M          0x00000F00  // SS2 Trigger Select
@@ -251,12 +251,12 @@
 #define ADC_EMUX_EM2_COMP0      0x00000100  // Analog Comparator 0
 #define ADC_EMUX_EM2_COMP1      0x00000200  // Analog Comparator 1
 #define ADC_EMUX_EM2_COMP2      0x00000300  // Analog Comparator 2
-#define ADC_EMUX_EM2_EXTERNAL   0x00000400  // External (GPIO PB4)
+#define ADC_EMUX_EM2_EXTERNAL   0x00000400  // External (GPIO Pins)
 #define ADC_EMUX_EM2_TIMER      0x00000500  // Timer
-#define ADC_EMUX_EM2_PWM0       0x00000600  // PWM0
-#define ADC_EMUX_EM2_PWM1       0x00000700  // PWM1
-#define ADC_EMUX_EM2_PWM2       0x00000800  // PWM2
-#define ADC_EMUX_EM2_PWM3       0x00000900  // PWM3
+#define ADC_EMUX_EM2_PWM0       0x00000600  // PWM generator 0
+#define ADC_EMUX_EM2_PWM1       0x00000700  // PWM generator 1
+#define ADC_EMUX_EM2_PWM2       0x00000800  // PWM generator 2
+#define ADC_EMUX_EM2_PWM3       0x00000900  // PWM generator 3
 #define ADC_EMUX_EM2_NEVER      0x00000E00  // Never Trigger
 #define ADC_EMUX_EM2_ALWAYS     0x00000F00  // Always (continuously sample)
 #define ADC_EMUX_EM1_M          0x000000F0  // SS1 Trigger Select
@@ -264,12 +264,12 @@
 #define ADC_EMUX_EM1_COMP0      0x00000010  // Analog Comparator 0
 #define ADC_EMUX_EM1_COMP1      0x00000020  // Analog Comparator 1
 #define ADC_EMUX_EM1_COMP2      0x00000030  // Analog Comparator 2
-#define ADC_EMUX_EM1_EXTERNAL   0x00000040  // External (GPIO PB4)
+#define ADC_EMUX_EM1_EXTERNAL   0x00000040  // External (GPIO Pins)
 #define ADC_EMUX_EM1_TIMER      0x00000050  // Timer
-#define ADC_EMUX_EM1_PWM0       0x00000060  // PWM0
-#define ADC_EMUX_EM1_PWM1       0x00000070  // PWM1
-#define ADC_EMUX_EM1_PWM2       0x00000080  // PWM2
-#define ADC_EMUX_EM1_PWM3       0x00000090  // PWM3
+#define ADC_EMUX_EM1_PWM0       0x00000060  // PWM generator 0
+#define ADC_EMUX_EM1_PWM1       0x00000070  // PWM generator 1
+#define ADC_EMUX_EM1_PWM2       0x00000080  // PWM generator 2
+#define ADC_EMUX_EM1_PWM3       0x00000090  // PWM generator 3
 #define ADC_EMUX_EM1_NEVER      0x000000E0  // Never Trigger
 #define ADC_EMUX_EM1_ALWAYS     0x000000F0  // Always (continuously sample)
 #define ADC_EMUX_EM0_M          0x0000000F  // SS0 Trigger Select
@@ -277,12 +277,12 @@
 #define ADC_EMUX_EM0_COMP0      0x00000001  // Analog Comparator 0
 #define ADC_EMUX_EM0_COMP1      0x00000002  // Analog Comparator 1
 #define ADC_EMUX_EM0_COMP2      0x00000003  // Analog Comparator 2
-#define ADC_EMUX_EM0_EXTERNAL   0x00000004  // External (GPIO PB4)
+#define ADC_EMUX_EM0_EXTERNAL   0x00000004  // External (GPIO Pins)
 #define ADC_EMUX_EM0_TIMER      0x00000005  // Timer
-#define ADC_EMUX_EM0_PWM0       0x00000006  // PWM0
-#define ADC_EMUX_EM0_PWM1       0x00000007  // PWM1
-#define ADC_EMUX_EM0_PWM2       0x00000008  // PWM2
-#define ADC_EMUX_EM0_PWM3       0x00000009  // PWM3
+#define ADC_EMUX_EM0_PWM0       0x00000006  // PWM generator 0
+#define ADC_EMUX_EM0_PWM1       0x00000007  // PWM generator 1
+#define ADC_EMUX_EM0_PWM2       0x00000008  // PWM generator 2
+#define ADC_EMUX_EM0_PWM3       0x00000009  // PWM generator 3
 #define ADC_EMUX_EM0_NEVER      0x0000000E  // Never Trigger
 #define ADC_EMUX_EM0_ALWAYS     0x0000000F  // Always (continuously sample)
 
@@ -301,18 +301,30 @@
 // The following are defines for the bit fields in the ADC_O_TSSEL register.
 //
 //*****************************************************************************
-#define ADC_TSSEL_PS3_M         0x30000000  // PWM Unit Select
-#define ADC_TSSEL_PS3_0         0x00000000  // PWM Unit 0
-#define ADC_TSSEL_PS3_1         0x10000000  // PWM Unit 1
-#define ADC_TSSEL_PS2_M         0x00300000  // PWM Unit Select
-#define ADC_TSSEL_PS2_0         0x00000000  // PWM Unit 0
-#define ADC_TSSEL_PS2_1         0x00100000  // PWM Unit 1
-#define ADC_TSSEL_PS1_M         0x00003000  // PWM Unit Select
-#define ADC_TSSEL_PS1_0         0x00000000  // PWM Unit 0
-#define ADC_TSSEL_PS1_1         0x00001000  // PWM Unit 1
-#define ADC_TSSEL_PS0_M         0x00000030  // PWM Unit Select
-#define ADC_TSSEL_PS0_0         0x00000000  // PWM Unit 0
-#define ADC_TSSEL_PS0_1         0x00000010  // PWM Unit 1
+#define ADC_TSSEL_PS3_M         0x30000000  // Generator 3 PWM Module Trigger
+                                            // Select
+#define ADC_TSSEL_PS3_0         0x00000000  // Use Generator 3 (and its
+                                            // trigger) in PWM module 0
+#define ADC_TSSEL_PS3_1         0x10000000  // Use Generator 3 (and its
+                                            // trigger) in PWM module 1
+#define ADC_TSSEL_PS2_M         0x00300000  // Generator 2 PWM Module Trigger
+                                            // Select
+#define ADC_TSSEL_PS2_0         0x00000000  // Use Generator 2 (and its
+                                            // trigger) in PWM module 0
+#define ADC_TSSEL_PS2_1         0x00100000  // Use Generator 2 (and its
+                                            // trigger) in PWM module 1
+#define ADC_TSSEL_PS1_M         0x00003000  // Generator 1 PWM Module Trigger
+                                            // Select
+#define ADC_TSSEL_PS1_0         0x00000000  // Use Generator 1 (and its
+                                            // trigger) in PWM module 0
+#define ADC_TSSEL_PS1_1         0x00001000  // Use Generator 1 (and its
+                                            // trigger) in PWM module 1
+#define ADC_TSSEL_PS0_M         0x00000030  // Generator 0 PWM Module Trigger
+                                            // Select
+#define ADC_TSSEL_PS0_0         0x00000000  // Use Generator 0 (and its
+                                            // trigger) in PWM module 0
+#define ADC_TSSEL_PS0_1         0x00000010  // Use Generator 0 (and its
+                                            // trigger) in PWM module 1
 
 //*****************************************************************************
 //
@@ -400,14 +412,12 @@
 // The following are defines for the bit fields in the ADC_O_CTL register.
 //
 //*****************************************************************************
-#define ADC_CTL_DITHER          0x00000040  // Dither Mode Enable
 #define ADC_CTL_VREF_M          0x00000003  // Voltage Reference Select
-#define ADC_CTL_VREF_INTERNAL   0x00000000  // The internal reference as the
-                                            // voltage reference
-#define ADC_CTL_VREF_EXT_3V     0x00000001  // A 3.0 V external VREFA input is
-                                            // the voltage reference. The ADC
-                                            // conversion range is 0.0 V to the
-                                            // external reference value
+#define ADC_CTL_VREF_INTERNAL   0x00000000  // VDDA and GNDA are the voltage
+                                            // references
+#define ADC_CTL_VREF_EXT_3V     0x00000001  // The external VREFA+ and VREFA-
+                                            // inputs are the voltage
+                                            // references
 
 //*****************************************************************************
 //
@@ -439,35 +449,43 @@
 #define ADC_SSCTL0_TS7          0x80000000  // 8th Sample Temp Sensor Select
 #define ADC_SSCTL0_IE7          0x40000000  // 8th Sample Interrupt Enable
 #define ADC_SSCTL0_END7         0x20000000  // 8th Sample is End of Sequence
-#define ADC_SSCTL0_D7           0x10000000  // 8th Sample Diff Input Select
+#define ADC_SSCTL0_D7           0x10000000  // 8th Sample Differential Input
+                                            // Select
 #define ADC_SSCTL0_TS6          0x08000000  // 7th Sample Temp Sensor Select
 #define ADC_SSCTL0_IE6          0x04000000  // 7th Sample Interrupt Enable
 #define ADC_SSCTL0_END6         0x02000000  // 7th Sample is End of Sequence
-#define ADC_SSCTL0_D6           0x01000000  // 7th Sample Diff Input Select
+#define ADC_SSCTL0_D6           0x01000000  // 7th Sample Differential Input
+                                            // Select
 #define ADC_SSCTL0_TS5          0x00800000  // 6th Sample Temp Sensor Select
 #define ADC_SSCTL0_IE5          0x00400000  // 6th Sample Interrupt Enable
 #define ADC_SSCTL0_END5         0x00200000  // 6th Sample is End of Sequence
-#define ADC_SSCTL0_D5           0x00100000  // 6th Sample Diff Input Select
+#define ADC_SSCTL0_D5           0x00100000  // 6th Sample Differential Input
+                                            // Select
 #define ADC_SSCTL0_TS4          0x00080000  // 5th Sample Temp Sensor Select
 #define ADC_SSCTL0_IE4          0x00040000  // 5th Sample Interrupt Enable
 #define ADC_SSCTL0_END4         0x00020000  // 5th Sample is End of Sequence
-#define ADC_SSCTL0_D4           0x00010000  // 5th Sample Diff Input Select
+#define ADC_SSCTL0_D4           0x00010000  // 5th Sample Differential Input
+                                            // Select
 #define ADC_SSCTL0_TS3          0x00008000  // 4th Sample Temp Sensor Select
 #define ADC_SSCTL0_IE3          0x00004000  // 4th Sample Interrupt Enable
 #define ADC_SSCTL0_END3         0x00002000  // 4th Sample is End of Sequence
-#define ADC_SSCTL0_D3           0x00001000  // 4th Sample Diff Input Select
+#define ADC_SSCTL0_D3           0x00001000  // 4th Sample Differential Input
+                                            // Select
 #define ADC_SSCTL0_TS2          0x00000800  // 3rd Sample Temp Sensor Select
 #define ADC_SSCTL0_IE2          0x00000400  // 3rd Sample Interrupt Enable
 #define ADC_SSCTL0_END2         0x00000200  // 3rd Sample is End of Sequence
-#define ADC_SSCTL0_D2           0x00000100  // 3rd Sample Diff Input Select
+#define ADC_SSCTL0_D2           0x00000100  // 3rd Sample Differential Input
+                                            // Select
 #define ADC_SSCTL0_TS1          0x00000080  // 2nd Sample Temp Sensor Select
 #define ADC_SSCTL0_IE1          0x00000040  // 2nd Sample Interrupt Enable
 #define ADC_SSCTL0_END1         0x00000020  // 2nd Sample is End of Sequence
-#define ADC_SSCTL0_D1           0x00000010  // 2nd Sample Diff Input Select
+#define ADC_SSCTL0_D1           0x00000010  // 2nd Sample Differential Input
+                                            // Select
 #define ADC_SSCTL0_TS0          0x00000008  // 1st Sample Temp Sensor Select
 #define ADC_SSCTL0_IE0          0x00000004  // 1st Sample Interrupt Enable
 #define ADC_SSCTL0_END0         0x00000002  // 1st Sample is End of Sequence
-#define ADC_SSCTL0_D0           0x00000001  // 1st Sample Diff Input Select
+#define ADC_SSCTL0_D0           0x00000001  // 1st Sample Differential Input
+                                            // Select
 
 //*****************************************************************************
 //
@@ -614,19 +632,23 @@
 #define ADC_SSCTL1_TS3          0x00008000  // 4th Sample Temp Sensor Select
 #define ADC_SSCTL1_IE3          0x00004000  // 4th Sample Interrupt Enable
 #define ADC_SSCTL1_END3         0x00002000  // 4th Sample is End of Sequence
-#define ADC_SSCTL1_D3           0x00001000  // 4th Sample Diff Input Select
+#define ADC_SSCTL1_D3           0x00001000  // 4th Sample Differential Input
+                                            // Select
 #define ADC_SSCTL1_TS2          0x00000800  // 3rd Sample Temp Sensor Select
 #define ADC_SSCTL1_IE2          0x00000400  // 3rd Sample Interrupt Enable
 #define ADC_SSCTL1_END2         0x00000200  // 3rd Sample is End of Sequence
-#define ADC_SSCTL1_D2           0x00000100  // 3rd Sample Diff Input Select
+#define ADC_SSCTL1_D2           0x00000100  // 3rd Sample Differential Input
+                                            // Select
 #define ADC_SSCTL1_TS1          0x00000080  // 2nd Sample Temp Sensor Select
 #define ADC_SSCTL1_IE1          0x00000040  // 2nd Sample Interrupt Enable
 #define ADC_SSCTL1_END1         0x00000020  // 2nd Sample is End of Sequence
-#define ADC_SSCTL1_D1           0x00000010  // 2nd Sample Diff Input Select
+#define ADC_SSCTL1_D1           0x00000010  // 2nd Sample Differential Input
+                                            // Select
 #define ADC_SSCTL1_TS0          0x00000008  // 1st Sample Temp Sensor Select
 #define ADC_SSCTL1_IE0          0x00000004  // 1st Sample Interrupt Enable
 #define ADC_SSCTL1_END0         0x00000002  // 1st Sample is End of Sequence
-#define ADC_SSCTL1_D0           0x00000001  // 1st Sample Diff Input Select
+#define ADC_SSCTL1_D0           0x00000001  // 1st Sample Differential Input
+                                            // Select
 
 //*****************************************************************************
 //
@@ -733,19 +755,23 @@
 #define ADC_SSCTL2_TS3          0x00008000  // 4th Sample Temp Sensor Select
 #define ADC_SSCTL2_IE3          0x00004000  // 4th Sample Interrupt Enable
 #define ADC_SSCTL2_END3         0x00002000  // 4th Sample is End of Sequence
-#define ADC_SSCTL2_D3           0x00001000  // 4th Sample Diff Input Select
+#define ADC_SSCTL2_D3           0x00001000  // 4th Sample Differential Input
+                                            // Select
 #define ADC_SSCTL2_TS2          0x00000800  // 3rd Sample Temp Sensor Select
 #define ADC_SSCTL2_IE2          0x00000400  // 3rd Sample Interrupt Enable
 #define ADC_SSCTL2_END2         0x00000200  // 3rd Sample is End of Sequence
-#define ADC_SSCTL2_D2           0x00000100  // 3rd Sample Diff Input Select
+#define ADC_SSCTL2_D2           0x00000100  // 3rd Sample Differential Input
+                                            // Select
 #define ADC_SSCTL2_TS1          0x00000080  // 2nd Sample Temp Sensor Select
 #define ADC_SSCTL2_IE1          0x00000040  // 2nd Sample Interrupt Enable
 #define ADC_SSCTL2_END1         0x00000020  // 2nd Sample is End of Sequence
-#define ADC_SSCTL2_D1           0x00000010  // 2nd Sample Diff Input Select
+#define ADC_SSCTL2_D1           0x00000010  // 2nd Sample Differential Input
+                                            // Select
 #define ADC_SSCTL2_TS0          0x00000008  // 1st Sample Temp Sensor Select
 #define ADC_SSCTL2_IE0          0x00000004  // 1st Sample Interrupt Enable
 #define ADC_SSCTL2_END0         0x00000002  // 1st Sample is End of Sequence
-#define ADC_SSCTL2_D0           0x00000001  // 1st Sample Diff Input Select
+#define ADC_SSCTL2_D0           0x00000001  // 1st Sample Differential Input
+                                            // Select
 
 //*****************************************************************************
 //
@@ -844,9 +870,9 @@
 //
 //*****************************************************************************
 #define ADC_SSCTL3_TS0          0x00000008  // 1st Sample Temp Sensor Select
-#define ADC_SSCTL3_IE0          0x00000004  // 1st Sample Interrupt Enable
-#define ADC_SSCTL3_END0         0x00000002  // 1st Sample is End of Sequence
-#define ADC_SSCTL3_D0           0x00000001  // 1st Sample Diff Input Select
+#define ADC_SSCTL3_IE0          0x00000004  // Sample Interrupt Enable
+#define ADC_SSCTL3_END0         0x00000002  // End of Sequence
+#define ADC_SSCTL3_D0           0x00000001  // Sample Differential Input Select
 
 //*****************************************************************************
 //
@@ -1272,10 +1298,7 @@
 //*****************************************************************************
 #define ADC_CC_CLKDIV_M         0x000003F0  // PLL VCO Clock Divisor
 #define ADC_CC_CS_M             0x0000000F  // ADC Clock Source
-#define ADC_CC_CS_SYSPLL        0x00000000  // Either the system clock (if the
-                                            // PLL bypass is in effect) or the
-                                            // 16 MHz clock derived from PLL /
-                                            // 25 (default)
+#define ADC_CC_CS_SYSPLL        0x00000000  // PLL VCO divided by CLKDIV
 #define ADC_CC_CS_PIOSC         0x00000001  // PIOSC
 #define ADC_CC_CS_MOSC          0x00000002  // MOSC
 #define ADC_CC_CLKDIV_S         4

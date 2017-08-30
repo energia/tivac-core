@@ -2,7 +2,7 @@
 //
 // hw_i2c.h - Macros used when accessing the I2C master and slave hardware.
 //
-// Copyright (c) 2005-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2005-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Firmware Development Package.
+// This is part of revision 2.1.4.178 of the Tiva Firmware Development Package.
 //
 //*****************************************************************************
 
@@ -114,7 +114,8 @@
 // The following are defines for the bit fields in the I2C_O_MDR register.
 //
 //*****************************************************************************
-#define I2C_MDR_DATA_M          0x000000FF  // Data Transferred
+#define I2C_MDR_DATA_M          0x000000FF  // This byte contains the data
+                                            // transferred during a transaction
 #define I2C_MDR_DATA_S          0
 
 //*****************************************************************************
@@ -130,7 +131,7 @@
 #define I2C_MTPR_PULSEL_4       0x00040000  // 4 clocks
 #define I2C_MTPR_PULSEL_8       0x00050000  // 8 clocks
 #define I2C_MTPR_PULSEL_16      0x00060000  // 16 clocks
-#define I2C_MTPR_PULSEL_32      0x00070000  // 32 clocks
+#define I2C_MTPR_PULSEL_31      0x00070000  // 31 clocks
 #define I2C_MTPR_HS             0x00000080  // High-Speed Enable
 #define I2C_MTPR_TPR_M          0x0000007F  // Timer Period
 #define I2C_MTPR_TPR_S          0
@@ -283,7 +284,7 @@
 #define I2C_MCR2_GFPW_4         0x00000040  // 4 clocks
 #define I2C_MCR2_GFPW_8         0x00000050  // 8 clocks
 #define I2C_MCR2_GFPW_16        0x00000060  // 16 clocks
-#define I2C_MCR2_GFPW_32        0x00000070  // 32 clocks
+#define I2C_MCR2_GFPW_31        0x00000070  // 31 clocks
 
 //*****************************************************************************
 //
@@ -418,7 +419,7 @@
 // The following are defines for the bit fields in the I2C_O_FIFODATA register.
 //
 //*****************************************************************************
-#define I2C_FIFODATA_DATA_M     0x000000FF  // I2C FIFO Data Byte
+#define I2C_FIFODATA_DATA_M     0x000000FF  // I2C TX FIFO Write Data Byte
 #define I2C_FIFODATA_DATA_S     0
 
 //*****************************************************************************

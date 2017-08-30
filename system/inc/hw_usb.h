@@ -2,7 +2,7 @@
 //
 // hw_usb.h - Macros for use in accessing the USB registers.
 //
-// Copyright (c) 2007-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2007-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Firmware Development Package.
+// This is part of revision 2.1.4.178 of the Tiva Firmware Development Package.
 //
 //*****************************************************************************
 
@@ -74,7 +74,6 @@
 #define USB_O_ULPIREGDATA       0x00000074  // USB ULPI Register Data
 #define USB_O_ULPIREGADDR       0x00000075  // USB ULPI Register Address
 #define USB_O_ULPIREGCTL        0x00000076  // USB ULPI Register Control
-#define USB_O_ULPIRAWDATA       0x00000077  // USB ULPI Raw Data
 #define USB_O_EPINFO            0x00000078  // USB Endpoint Information
 #define USB_O_RAMINFO           0x00000079  // USB RAM Information
 #define USB_O_CONTIM            0x0000007A  // USB Connect Timing
@@ -488,9 +487,9 @@
 // The following are defines for the bit fields in the USB_O_IS register.
 //
 //*****************************************************************************
-#define USB_IS_VBUSERR          0x00000080  // VBUS Error
-#define USB_IS_SESREQ           0x00000040  // SESSION REQUEST
-#define USB_IS_DISCON           0x00000020  // Session Disconnect
+#define USB_IS_VBUSERR          0x00000080  // VBUS Error (OTG only)
+#define USB_IS_SESREQ           0x00000040  // SESSION REQUEST (OTG only)
+#define USB_IS_DISCON           0x00000020  // Session Disconnect (OTG only)
 #define USB_IS_CONN             0x00000010  // Session Connect
 #define USB_IS_SOF              0x00000008  // Start of Frame
 #define USB_IS_BABBLE           0x00000004  // Babble Detected
@@ -503,8 +502,10 @@
 // The following are defines for the bit fields in the USB_O_IE register.
 //
 //*****************************************************************************
-#define USB_IE_VBUSERR          0x00000080  // Enable VBUS Error Interrupt
-#define USB_IE_SESREQ           0x00000040  // Enable Session Request
+#define USB_IE_VBUSERR          0x00000080  // Enable VBUS Error Interrupt (OTG
+                                            // only)
+#define USB_IE_SESREQ           0x00000040  // Enable Session Request (OTG
+                                            // only)
 #define USB_IE_DISCON           0x00000020  // Enable Disconnect Interrupt
 #define USB_IE_CONN             0x00000010  // Enable Connect Interrupt
 #define USB_IE_SOF              0x00000008  // Enable Start-of-Frame Interrupt
@@ -612,17 +613,17 @@
 // The following are defines for the bit fields in the USB_O_DEVCTL register.
 //
 //*****************************************************************************
-#define USB_DEVCTL_DEV          0x00000080  // Device Mode
+#define USB_DEVCTL_DEV          0x00000080  // Device Mode (OTG only)
 #define USB_DEVCTL_FSDEV        0x00000040  // Full-Speed Device Detected
 #define USB_DEVCTL_LSDEV        0x00000020  // Low-Speed Device Detected
-#define USB_DEVCTL_VBUS_M       0x00000018  // VBUS Level
+#define USB_DEVCTL_VBUS_M       0x00000018  // VBUS Level (OTG only)
 #define USB_DEVCTL_VBUS_NONE    0x00000000  // Below SessionEnd
 #define USB_DEVCTL_VBUS_SEND    0x00000008  // Above SessionEnd, below AValid
 #define USB_DEVCTL_VBUS_AVALID  0x00000010  // Above AValid, below VBUSValid
 #define USB_DEVCTL_VBUS_VALID   0x00000018  // Above VBUSValid
 #define USB_DEVCTL_HOST         0x00000004  // Host Mode
-#define USB_DEVCTL_HOSTREQ      0x00000002  // Host Request
-#define USB_DEVCTL_SESSION      0x00000001  // Session Start/End
+#define USB_DEVCTL_HOSTREQ      0x00000002  // Host Request (OTG only)
+#define USB_DEVCTL_SESSION      0x00000001  // Session Start/End (OTG only)
 
 //*****************************************************************************
 //
@@ -724,17 +725,6 @@
 #define USB_ULPIREGCTL_RDWR     0x00000004  // Read/Write Control
 #define USB_ULPIREGCTL_REGCMPLT 0x00000002  // Register Access Complete
 #define USB_ULPIREGCTL_REGACC   0x00000001  // Initiate Register Access
-
-//*****************************************************************************
-//
-// The following are defines for the bit fields in the USB_O_ULPIRAWDATA
-// register.
-//
-//*****************************************************************************
-#define USB_ULPIRAWDATA_WTCON_M 0x000000F0  // Connect Wait
-#define USB_ULPIRAWDATA_WTID_M  0x0000000F  // Wait ID
-#define USB_ULPIRAWDATA_WTCON_S 4
-#define USB_ULPIRAWDATA_WTID_S  0
 
 //*****************************************************************************
 //
@@ -2341,14 +2331,14 @@
 // The following are defines for the bit fields in the USB_O_DMAINTR register.
 //
 //*****************************************************************************
-#define USB_DMAINTR_CH7         0x00000080  // Channel 8 DMA Interrupt
-#define USB_DMAINTR_CH6         0x00000040  // Channel 7 DMA Interrupt
-#define USB_DMAINTR_CH5         0x00000020  // Channel 6 DMA Interrupt
-#define USB_DMAINTR_CH4         0x00000010  // Channel 5 DMA Interrupt
-#define USB_DMAINTR_CH3         0x00000008  // Channel 4 DMA Interrupt
-#define USB_DMAINTR_CH2         0x00000004  // Channel 3 DMA Interrupt
-#define USB_DMAINTR_CH1         0x00000002  // Channel 2 DMA Interrupt
-#define USB_DMAINTR_CH0         0x00000001  // Channel 1 DMA Interrupt
+#define USB_DMAINTR_CH7         0x00000080  // Channel 7 DMA Interrupt
+#define USB_DMAINTR_CH6         0x00000040  // Channel 6 DMA Interrupt
+#define USB_DMAINTR_CH5         0x00000020  // Channel 5 DMA Interrupt
+#define USB_DMAINTR_CH4         0x00000010  // Channel 4 DMA Interrupt
+#define USB_DMAINTR_CH3         0x00000008  // Channel 3 DMA Interrupt
+#define USB_DMAINTR_CH2         0x00000004  // Channel 2 DMA Interrupt
+#define USB_DMAINTR_CH1         0x00000002  // Channel 1 DMA Interrupt
+#define USB_DMAINTR_CH0         0x00000001  // Channel 0 DMA Interrupt
 
 //*****************************************************************************
 //
@@ -2764,7 +2754,7 @@
 // The following are defines for the bit fields in the USB_O_HHSRTN register.
 //
 //*****************************************************************************
-#define USB_HHSRTN_HHSRTN_M     0x0000FFFF  // High Speed to UTM Operating
+#define USB_HHSRTN_HHSRTN_M     0x0000FFFF  // HIgh Speed to UTM Operating
                                             // Delay
 #define USB_HHSRTN_HHSRTN_S     0
 
@@ -2831,10 +2821,9 @@
 // The following are defines for the bit fields in the USB_O_LPMRIS register.
 //
 //*****************************************************************************
-#define USB_LPMRIS_ERR          0x00000020  // LPM Error Interrupt Status
+#define USB_LPMRIS_ERR          0x00000020  // LPM Interrupt Status
 #define USB_LPMRIS_RES          0x00000010  // LPM Resume Interrupt Status
-#define USB_LPMRIS_NC           0x00000008  // LPM No Completion Interrupt
-                                            // Status
+#define USB_LPMRIS_NC           0x00000008  // LPM NC Interrupt Status
 #define USB_LPMRIS_ACK          0x00000004  // LPM ACK Interrupt Status
 #define USB_LPMRIS_NY           0x00000002  // LPM NY Interrupt Status
 #define USB_LPMRIS_LPMST        0x00000001  // LPM STALL Interrupt Status
@@ -2866,7 +2855,9 @@
 #define USB_EPC_EPEN_LOW        0x00000000  // Power Enable Active Low
 #define USB_EPC_EPEN_HIGH       0x00000001  // Power Enable Active High
 #define USB_EPC_EPEN_VBLOW      0x00000002  // Power Enable High if VBUS Low
+                                            // (OTG only)
 #define USB_EPC_EPEN_VBHIGH     0x00000003  // Power Enable High if VBUS High
+                                            // (OTG only)
 
 //*****************************************************************************
 //

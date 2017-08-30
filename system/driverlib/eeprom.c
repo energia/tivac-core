@@ -2,7 +2,7 @@
 //
 // eeprom.c - Driver for programming the on-chip EEPROM.
 //
-// Copyright (c) 2010-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2010-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Peripheral Driver Library.
+// This is part of revision 2.1.4.178 of the Tiva Peripheral Driver Library.
 //
 //*****************************************************************************
 
@@ -154,27 +154,22 @@ _EEPROMWaitForDone(void)
 //!
 //! This function \b must be called after SysCtlPeripheralEnable() and before
 //! the EEPROM is accessed.  It is used to check for errors in the EEPROM state
-//! such as from power fail during a previous write operation.  The function
-//! detects these errors and performs as much recovery as possible before
-//! returning information to the caller on whether or not a previous data write
-//! was lost and must be retried.
+//! such as from power failure during a previous write operation.  The function
+//! detects these errors and performs as much recovery as possible.
 //!
-//! In cases where \b EEPROM_INIT_RETRY is returned, the application is
-//! responsible for determining which data write may have been lost and
-//! rewriting this data.  If \b EEPROM_INIT_ERROR is returned, the EEPROM was
-//! unable to recover its state.  This condition may or may not be resolved on
-//! future resets depending upon the cause of the fault.  For example, if the
-//! supply voltage is unstable, retrying the operation once the voltage is
-//! stabilized may clear the error.
+//! If \b EEPROM_INIT_ERROR is returned, the EEPROM was unable to recover its
+//! state.  If power is stable when this occurs, this indicates a fatal
+//! error and is likely an indication that the EEPROM memory has exceeded its
+//! specified lifetime write/erase specification.  If the supply voltage is
+//! unstable when this return code is observed, retrying the operation once the
+//! voltage is stabilized may clear the error.
 //!
 //! Failure to call this function after a reset may lead to incorrect operation
 //! or permanent data loss if the EEPROM is later written.
 //!
-//! \return Returns \b EEPROM_INIT_OK if no errors were detected,
-//! \b EEPROM_INIT_RETRY if a previous write operation may have been
-//! interrupted by a power or reset event or \b EEPROM_INIT_ERROR if the EEPROM
-//! peripheral cannot currently recover from an interrupted write or erase
-//! operation.
+//! \return Returns \b EEPROM_INIT_OK if no errors were detected or \b
+//! EEPROM_INIT_ERROR if the EEPROM peripheral cannot currently recover from
+//! an interrupted write or erase operation.
 //
 //*****************************************************************************
 uint32_t
@@ -192,7 +187,7 @@ EEPROMInit(void)
     SysCtlDelay(2);
 
     //
-    // Make sure the EEPROM has finished its reset processing.
+    // Make sure the EEPROM has finished any ongoing processing.
     //
     _EEPROMWaitForDone();
 
@@ -202,36 +197,35 @@ EEPROMInit(void)
     ui32Status = HWREG(EEPROM_EESUPP);
 
     //
-    // Did an error of some sort occur during a previous attempt to write to
-    // the EEPROM?
+    // Did an error of some sort occur during initialization?
     //
     if(ui32Status & (EEPROM_EESUPP_PRETRY | EEPROM_EESUPP_ERETRY))
     {
-        //
-        // Perform a second reset to allow the EEPROM a chance to correct
-        // the errors.
-        //
-        SysCtlPeripheralReset(SYSCTL_PERIPH_EEPROM0);
+        return(EEPROM_INIT_ERROR);
+    }
 
-        //
-        // Wait for the EEPROM to complete it's reset processing once again.
-        //
-        SysCtlDelay(2);
-        _EEPROMWaitForDone();
+    //
+    // Perform a second EEPROM reset.
+    //
+    SysCtlPeripheralReset(SYSCTL_PERIPH_EEPROM0);
 
-        //
-        // Read EESUPP once again to determine if the error conditions are
-        // cleared.
-        //
-        ui32Status = HWREG(EEPROM_EESUPP);
-        if(ui32Status & (EEPROM_EESUPP_PRETRY | EEPROM_EESUPP_ERETRY))
-        {
-            return(EEPROM_INIT_ERROR);
-        }
-        else
-        {
-            return(EEPROM_INIT_RETRY);
-        }
+    //
+    // Wait for the EEPROM to complete its reset processing once again.
+    //
+    SysCtlDelay(2);
+    _EEPROMWaitForDone();
+
+    //
+    // Read EESUPP once again to determine if any error occurred.
+    //
+    ui32Status = HWREG(EEPROM_EESUPP);
+
+    //
+    // Was an error reported following the second reset?
+    //
+    if(ui32Status & (EEPROM_EESUPP_PRETRY | EEPROM_EESUPP_ERETRY))
+    {
+        return(EEPROM_INIT_ERROR);
     }
 
     //
@@ -239,6 +233,7 @@ EEPROMInit(void)
     //
     return(EEPROM_INIT_OK);
 }
+
 
 //*****************************************************************************
 //
@@ -378,9 +373,8 @@ EEPROMRead(uint32_t *pui32Data, uint32_t ui32Address, uint32_t ui32Count)
 //! all data has been written or an error occurs.
 //!
 //! \return Returns 0 on success or non-zero values on failure.  Failure codes
-//! are logical OR combinations of \b EEPROM_RC_INVPL, \b EEPROM_RC_WRBUSY,
-//! \b EEPROM_RC_NOPERM, \b EEPROM_RC_WKCOPY, \b EEPROM_RC_WKERASE, and
-//! \b EEPROM_RC_WORKING.
+//! are logical OR combinations of \b EEPROM_RC_WRBUSY, \b EEPROM_RC_NOPERM,
+//! \b EEPROM_RC_WKCOPY, \b EEPROM_RC_WKERASE, and \b EEPROM_RC_WORKING.
 //
 //*****************************************************************************
 uint32_t
@@ -431,7 +425,7 @@ EEPROMProgram(uint32_t *pui32Data, uint32_t ui32Address, uint32_t ui32Count)
         // need to do this before every word write to ensure that we don't
         // have problems in multi-word writes that span multiple flash sectors.
         //
-        if(CLASS_IS_BLIZZARD && REVISION_IS_A0)
+        if(CLASS_IS_TM4C123 && REVISION_IS_A0)
         {
             _EEPROMSectorMaskSet(ui32Address);
         }
@@ -440,6 +434,13 @@ EEPROMProgram(uint32_t *pui32Data, uint32_t ui32Address, uint32_t ui32Count)
         // Write the next word through the autoincrementing register.
         //
         HWREG(EEPROM_EERDWRINC) = *pui32Data;
+
+        //
+        // Wait a few cycles.  In some cases, the WRBUSY bit is not set
+        // immediately and this prevents us from dropping through the polling
+        // loop before the bit is set.
+        //
+        SysCtlDelay(10);
 
         //
         // Wait for the write to complete.
@@ -458,13 +459,13 @@ EEPROMProgram(uint32_t *pui32Data, uint32_t ui32Address, uint32_t ui32Count)
         // must check this per-word because write permission can be set per
         // block resulting in only a section of the write not being performed.
         //
-        if(ui32Status & (EEPROM_EEDONE_NOPERM | EEPROM_EEDONE_INVPL))
+        if(ui32Status & EEPROM_EEDONE_NOPERM)
         {
             //
             // An error was reported that would prevent the values from
             // being written correctly.
             //
-            if(CLASS_IS_BLIZZARD && REVISION_IS_A0)
+            if(CLASS_IS_TM4C123 && REVISION_IS_A0)
             {
                 _EEPROMSectorMaskClear();
             }
@@ -495,7 +496,7 @@ EEPROMProgram(uint32_t *pui32Data, uint32_t ui32Address, uint32_t ui32Count)
     // Clear the sector protection bits to prevent possible problems when
     // programming the main flash array later.
     //
-    if(CLASS_IS_BLIZZARD && REVISION_IS_A0)
+    if(CLASS_IS_TM4C123 && REVISION_IS_A0)
     {
         _EEPROMSectorMaskClear();
     }
@@ -523,11 +524,10 @@ EEPROMProgram(uint32_t *pui32Data, uint32_t ui32Address, uint32_t ui32Count)
 //! interrupt vector with the flash memory subsystem, \b INT_FLASH.
 //!
 //! \return Returns status and error information in the form of a logical OR
-//! combinations of \b EEPROM_RC_INVPL, \b EEPROM_RC_WRBUSY,
-//! \b EEPROM_RC_NOPERM, \b EEPROM_RC_WKCOPY, \b EEPROM_RC_WKERASE and
-//! \b EEPROM_RC_WORKING.  Flags \b EEPROM_RC_WKCOPY, \b EEPROM_RC_WKERASE, and
-//! \b EEPROM_RC_WORKING are expected in normal operation and do not indicate
-//! an error.
+//! combinations of \b EEPROM_RC_WRBUSY, \b EEPROM_RC_NOPERM,
+//! \b EEPROM_RC_WKCOPY, \b EEPROM_RC_WKERASE and \b EEPROM_RC_WORKING.  Flags
+//! \b EEPROM_RC_WKCOPY, \b EEPROM_RC_WKERASE, and \b EEPROM_RC_WORKING are
+//! expected in normal operation and do not indicate an error.
 //
 //*****************************************************************************
 uint32_t
@@ -542,7 +542,7 @@ EEPROMProgramNonBlocking(uint32_t ui32Data, uint32_t ui32Address)
     //
     // This is a workaround for a silicon problem on Blizzard rev A.
     //
-    if(CLASS_IS_BLIZZARD && REVISION_IS_A0)
+    if(CLASS_IS_TM4C123 && REVISION_IS_A0)
     {
         _EEPROMSectorMaskSet(ui32Address);
     }
@@ -579,9 +579,8 @@ EEPROMProgramNonBlocking(uint32_t ui32Data, uint32_t ui32Address)
 //! has completed.
 //!
 //! \return Returns 0 on success or non-zero values on failure.  Failure codes
-//! are logical OR combinations of \b EEPROM_RC_INVPL, \b EEPROM_RC_WRBUSY,
-//! \b EEPROM_RC_NOPERM, \b EEPROM_RC_WKCOPY, \b EEPROM_RC_WKERASE, and
-//! \b EEPROM_RC_WORKING.
+//! are logical OR combinations of \b EEPROM_RC_WRBUSY, \b EEPROM_RC_NOPERM,
+//! \b EEPROM_RC_WKCOPY, \b EEPROM_RC_WKERASE, and \b EEPROM_RC_WORKING.
 //
 //*****************************************************************************
 uint32_t
@@ -590,7 +589,7 @@ EEPROMMassErase(void)
     //
     // This is a workaround for a silicon problem on Blizzard rev A.
     //
-    if(CLASS_IS_BLIZZARD && REVISION_IS_A0)
+    if(CLASS_IS_TM4C123 && REVISION_IS_A0)
     {
         _EEPROMSectorMaskClear();
     }
@@ -698,10 +697,9 @@ EEPROMBlockProtectGet(uint32_t ui32Block)
 //! is set or if a password is set and the block is unlocked.  If the block is
 //! password protected and locked, neither read nor write access is permitted.
 //!
-//! \return Returns a logical OR combination of \b EEPROM_RC_INVPL,
-//! \b EEPROM_RC_WRBUSY, \b EEPROM_RC_NOPERM, \b EEPROM_RC_WKCOPY,
-//! \b EEPROM_RC_WKERASE, and \b EEPROM_RC_WORKING to indicate status and error
-//! conditions.
+//! \return Returns a logical OR combination of \b EEPROM_RC_WRBUSY, \b
+//! EEPROM_RC_NOPERM, \b EEPROM_RC_WKCOPY, \b EEPROM_RC_WKERASE, and \b
+//! EEPROM_RC_WORKING to indicate status and error conditions.
 //
 //*****************************************************************************
 uint32_t
@@ -764,10 +762,9 @@ EEPROMBlockProtectSet(uint32_t ui32Block, uint32_t ui32Protect)
 //! become accessible according to any passwords set on those blocks and the
 //! protection set for that block via a call to EEPROMBlockProtectSet().
 //!
-//! \return Returns a logical OR combination of \b EEPROM_RC_INVPL,
-//! \b EEPROM_RC_WRBUSY, \b EEPROM_RC_NOPERM, \b EEPROM_RC_WKCOPY,
-//! \b EEPROM_RC_WKERASE, and \b EEPROM_RC_WORKING to indicate status and error
-//! conditions.
+//! \return Returns a logical OR combination of \b EEPROM_RC_WRBUSY, \b
+//! EEPROM_RC_NOPERM, \b EEPROM_RC_WKCOPY, \b EEPROM_RC_WKERASE, and \b
+//! EEPROM_RC_WORKING to indicate status and error conditions.
 //
 //*****************************************************************************
 uint32_t
@@ -1123,7 +1120,7 @@ EEPROMIntClear(uint32_t ui32IntFlags)
     // Clear the sector protection bits to prevent possible problems when
     // programming the main flash array later.
     //
-    if(CLASS_IS_BLIZZARD && REVISION_IS_A0)
+    if(CLASS_IS_TM4C123 && REVISION_IS_A0)
     {
         _EEPROMSectorMaskClear();
     }
@@ -1140,9 +1137,9 @@ EEPROMIntClear(uint32_t ui32IntFlags)
 //!
 //! \return Returns 0 if the last program or erase operation completed without
 //! any errors.  If an operation is ongoing or an error occurred, the return
-//! value is a logical OR combination of \b EEPROM_RC_INVPL,
-//! \b EEPROM_RC_WRBUSY, \b EEPROM_RC_NOPERM, \b EEPROM_RC_WKCOPY,
-//! \b EEPROM_RC_WKERASE, and \b EEPROM_RC_WORKING.
+//! value is a logical OR combination of \b EEPROM_RC_WRBUSY, \b
+//! EEPROM_RC_NOPERM, \b EEPROM_RC_WKCOPY, \b EEPROM_RC_WKERASE, and \b
+//! EEPROM_RC_WORKING.
 //!
 //*****************************************************************************
 uint32_t

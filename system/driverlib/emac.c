@@ -3,7 +3,7 @@
 // emac.c - Driver for the Integrated Ethernet Controller on Snowflake-class
 //          Tiva devices.
 //
-// Copyright (c) 2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2013-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -34,7 +34,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Peripheral Driver Library.
+// This is part of revision 2.1.4.178 of the Tiva Peripheral Driver Library.
 //
 //*****************************************************************************
 
@@ -161,7 +161,8 @@
 // masked (or enabled) via the DMAIM register.
 //
 //*****************************************************************************
-#define EMAC_NON_MASKED_INTS    (EMAC_DMARIS_TT |                             \
+#define EMAC_NON_MASKED_INTS    (EMAC_DMARIS_LPI |                            \
+                                 EMAC_DMARIS_TT |                             \
                                  EMAC_DMARIS_PMT |                            \
                                  EMAC_DMARIS_MMC)
 
@@ -209,6 +210,14 @@ g_pi16MIIClockDiv[] =
 
 //*****************************************************************************
 //
+// The define for accessing PHY registers in the MMD address space.
+//
+//*****************************************************************************
+#define DEV_ADDR(x) ((x & 0xF000) >> 12)
+#define REG_ADDR(x) ((x & 0x0FFF))
+
+//*****************************************************************************
+//
 //! Initializes the Ethernet MAC and sets bus-related DMA parameters.
 //!
 //! \param ui32Base is the base address of the Ethernet controller.
@@ -234,7 +243,7 @@ g_pi16MIIClockDiv[] =
 //!
 //! The second field sets the receive and transmit priorities used when
 //! arbitrating between the Rx and Tx DMA.  The priorities are Rx:Tx unless
-//! \b EMAC_BCONFIG_TX_PRIORITY is also specified in which case they become
+//! \b EMAC_BCONFIG_TX_PRIORITY is also specified, in which case they become
 //! Tx:Rx.  The priority provided here is ignored if
 //! \b EMAC_BCONFIG_PRIORITY_FIXED is specified.
 //!
@@ -247,17 +256,17 @@ g_pi16MIIClockDiv[] =
 //!
 //! - \b EMAC_BCONFIG_TX_PRIORITY indicates that the transmit DMA should be
 //! higher priority in all arbitration for the system-side bus.  If this is not
-//! defined, the receive DMA will have higher priority.
+//! defined, the receive DMA has higher priority.
 //! - \b EMAC_BCONFIG_ADDR_ALIGNED works in tandem with
 //! \b EMAC_BCONFIG_FIXED_BURST to control address alignment of AHB bursts.
 //! When both flags are specified, all bursts are aligned to the start address
 //! least significant bits.  If \b EMAC_BCONFIG_FIXED_BURST is not specified,
-//! the first burst will be unaligned but subsequent bursts are aligned to the
+//! the first burst is unaligned but subsequent bursts are aligned to the
 //! address.
 //! - \b EMAC_BCONFIG_ALT_DESCRIPTORS indicates that the DMA engine should
 //! use the alternate descriptor format as defined in type
 //! \b tEMACDMADescriptor.  If absent, the basic descriptor type is used.
-//! Alternate descriptors are required if using IEEE1588-2008 advanced
+//! Alternate descriptors are required if using IEEE 1588-2008 advanced
 //! timestamping, VLAN or TCP/UDP/ICMP CRC insertion features.  Note that,
 //! for clarity, emac.h does not contain type definitions for the basic
 //! descriptor type.  Please see the part datasheet for information on basic
@@ -265,7 +274,7 @@ g_pi16MIIClockDiv[] =
 //! - \b EMAC_BCONFIG_PRIORITY_FIXED indicates that a fixed priority scheme
 //! should be employed when arbitrating between the transmit and receive DMA
 //! for system-side bus access.  In this case, the receive channel always has
-//! priority unless \b EMAC_BCONFIG_TX_PRIORITY is set in which case the
+//! priority unless \b EMAC_BCONFIG_TX_PRIORITY is set, in which case the
 //! transmit channel has priority.  If \b EMAC_BCONFIG_PRIORITY_FIXED is not
 //! specified, a weighted round-robin arbitration scheme is used with the
 //! weighting defined using \b EMAC_BCONFIG_PRIORITY_1_1,
@@ -274,27 +283,27 @@ g_pi16MIIClockDiv[] =
 //! - \b EMAC_BCONFIG_FIXED_BURST indicates that fixed burst transfers should
 //! be used.
 //! - \b EMAC_BCONFIG_MIXED_BURST indicates that the DMA engine should use
-//! mixed burst types depending upon the length of data to be transferred
+//! mixed burst types depending on the length of data to be transferred
 //! across the system bus.
 //!
 //! The \e ui32RxBurst and \e ui32TxBurst parameters indicate the maximum
 //! number of words that the relevant DMA should transfer in a single
 //! transaction.  Valid values are 1, 2, 4, 8, 16 and 32.  Any other value
-//! will result in undefined behavior.
+//! results in undefined behavior.
 //!
 //! The \e ui32DescSkipSize parameter is used when the descriptor lists are
 //! using ring mode (where descriptors are contiguous in memory with the last
 //! descriptor marked with the \b END_OF_RING flag) rather than chained mode
-//! (where each descriptor includes a field which points to the next descriptor
-//! in the list).  In this case, the hardware uses the \e ui32DescSkipSize to
-//! skip past any application-defined fields after the end the hardware-defined
-//! descriptor fields.  The parameter value indicates the number of 32-bit
-//! words to skip after the last field of the hardware-defined descriptor to
-//! get to the first field of the next descriptor.  When using arrays of either
-//! the \b tEMACDMADescriptor or \b tEMACAltDMADescriptor types defined for
-//! this driver, \e ui32DescSkipSize must be set to 1 to skip the \e pvNext
-//! pointer added to the end of each of these structures.  Applications may
-//! modify these structure definitions to include their own
+//! (where each descriptor includes a field that points to the next descriptor
+//! in the list).  In ring mode, the hardware uses the \e ui32DescSkipSize to
+//! skip past any application-defined fields after the end of the hardware-
+//! defined descriptor fields.  The parameter value indicates the number of 
+//! 32-bit words to skip after the last field of the hardware-defined 
+//! descriptor to get to the first field of the next descriptor.  When using 
+//! arrays of either the \b tEMACDMADescriptor or \b tEMACAltDMADescriptor 
+//! types defined for this driver, \e ui32DescSkipSize must be set to 1 to skip
+//!  the \e pvNext pointer added to the end of each of these structures.  
+//! Applications may modify these structure definitions to include their own
 //! application-specific data and modify \e ui32DescSkipSize appropriately if
 //! desired.
 //!
@@ -410,13 +419,13 @@ EMACInit(uint32_t ui32Base, uint32_t ui32SysClk, uint32_t ui32BusConfig,
 //!
 //! \param ui32Base is the base address of the Ethernet controller.
 //!
-//! This function performs a reset of the Ethernet MAC, resets all logic and
-//! sets all registers to their default values.  The function returns only
-//! once the hardware indicates that the reset has completed.
+//! This function performs a reset of the Ethernet MAC by resetting all logic 
+//! and returning all registers to their default values.  The function returns 
+//! only after the hardware indicates that the reset has completed.
 //!
 //! \note To ensure that the reset completes, the selected PHY clock must be
 //! enabled when this function is called.  If the PHY clock is absent, this
-//! function will hang.
+//! function does not return.
 //!
 //! \return None.
 //
@@ -448,9 +457,9 @@ EMACReset(uint32_t ui32Base)
 //! This function must be called prior to EMACInit() and EMACConfigSet() to
 //! select the Ethernet PHY to be used.  If the internal PHY is selected, the
 //! function also allows configuration of various PHY parameters.  Note that
-//! the Ethernet MAC is reset during this function call since parameters set
-//! here are latched by the hardware only on a MAC reset.  The call sequence to
-//! select and configure the PHY, therefore, must be as follows:
+//! the Ethernet MAC is reset during this function call because parameters used
+//! by this function are latched by the hardware only on a MAC reset.  The call
+//! sequence to select and configure the PHY, therefore, must be as follows:
 //!
 //! \verbatim
 //!     // Enable and reset the MAC.
@@ -486,89 +495,89 @@ EMACReset(uint32_t ui32Base)
 //! RMII interface.
 //!
 //! If \b EMAC_PHY_TYPE_INTERNAL is selected, the following flags may be ORed
-//! into \e ui32Config to control various PHY features and modes.  These are
-//! ignored if an external PHY is selected.
+//! into \e ui32Config to control various PHY features and modes.  These flags 
+//! are ignored if an external PHY is selected.
 //!
 //! - \b EMAC_PHY_INT_NIB_TXERR_DET_DIS disables odd nibble transmit error
-//! detection (sets the default value of PHY register 0x0A, bit 1).
+//! detection (sets the default value of PHY register MR10, bit 1).
 //! - \b EMAC_PHY_INT_RX_ER_DURING_IDLE enables receive error detection during
-//! idle  (sets the default value of PHY register 0x0A, bit 2).
+//! idle  (sets the default value of PHY register MR10, bit 2).
 //! - \b EMAC_PHY_INT_ISOLATE_MII_LLOSS ties the MII outputs low if no link is
-//! established in 100B-T and full duplex modes(sets the default value of PHY
-//! register 0x0A, bit 3).
+//! established in 100B-T and full duplex modes (sets the default value of PHY
+//! register MR10, bit 3).
 //! - \b EMAC_PHY_INT_LINK_LOSS_RECOVERY enables link loss recovery (sets the
-//! default value of PHY register 0x09, bit 7).
+//! default value of PHY register MR9, bit 7).
 //! - \b EMAC_PHY_INT_TDRRUN enables execution of the TDR procedure after a link
-//! down event (sets the default value of PHY register 0x09, bit 8).
+//! down event (sets the default value of PHY register MR9, bit 8).
 //! - \b EMAC_PHY_INT_LD_ON_RX_ERR_COUNT enables link down if the receiver
-//! error count reaches 32 within a 10uS interval (sets the default value of
-//! PHY register 0x0B bit 3).
+//! error count reaches 32 within a 10-us interval (sets the default value of
+//! PHY register MR11 bit 3).
 //! - \b EMAC_PHY_INT_LD_ON_MTL3_ERR_COUNT enables link down if the MTL3 error
-//! count reaches 20 in a 10uS interval (sets the default value of PHY register
-//! 0x0B bit 2).
+//! count reaches 20 in a 10 us-interval (sets the default value of PHY register
+//! MR11 bit 2).
 //! - \b EMAC_PHY_INT_LD_ON_LOW_SNR enables link down if the low SNR threshold
-//! is crossed 20 times in a 10uS interval (sets the default value of PHY
-//! register 0x0B bit 1).
+//! is crossed 20 times in a 10 us-interval (sets the default value of PHY
+//! register MR11 bit 1).
 //! - \b EMAC_PHY_INT_LD_ON_SIGNAL_ENERGY enables link down if energy detector
-//! indicates Energy Loss (sets the default value of PHY register 0x0B bit 0).
+//! indicates Energy Loss (sets the default value of PHY register MR11 bit 0).
 //! - \b EMAC_PHY_INT_POLARITY_SWAP inverts the polarity on both TPTD and TPRD
-//! pairs (sets the default value of PHY register 0x0B bit 5).
+//! pairs (sets the default value of PHY register MR11 bit 5).
 //! - \b EMAC_PHY_INT_MDI_SWAP swaps the MDI pairs putting receive on the TPTD
-//! pair and transmit on TPRD (sets the default value of PHY register 0x0B bit
+//! pair and transmit on TPRD (sets the default value of PHY register MR11 bit
 //! 6).
 //! - \b EMAC_PHY_INT_ROBUST_MDIX enables robust auto MDI-X resolution (sets the
-//! default value of PHY register 0x09 bit 5).
+//! default value of PHY register MR9 bit 5).
 //! - \b EMAC_PHY_INT_FAST_MDIX enables fast auto-MDI/MDIX resolution (sets the
-//! default value of PHY register 0x09 bit 6).
+//! default value of PHY register MR9 bit 6).
 //! - \b EMAC_PHY_INT_MDIX_EN enables auto-MDI/MDIX crossover (sets the
-//! default value of PHY register 0x09 bit 14).
+//! default value of PHY register MR9 bit 14).
 //! - \b EMAC_PHY_INT_FAST_RXDV_DETECT enables fast RXDV detection (set the
-//! default value of PHY register 0x09 bit 1).
+//! default value of PHY register MR9 bit 1).
 //! - \b EMAC_PHY_INT_FAST_L_UP_DETECT enables fast link-up time during parallel
-//! detection (sets the default value of PHY register 0x0A bit 6)
+//! detection (sets the default value of PHY register MR10 bit 6)
 //! - \b EMAC_PHY_INT_EXT_FULL_DUPLEX forces full-duplex while working with a
 //! link partner in forced 100B-TX (sets the default value of PHY register
-//! 0x0A bit 5).
+//! MR10 bit 5).
 //! - \b EMAC_PHY_INT_FAST_AN_80_50_35 enables fast auto-negotiation using
 //! break link, link fail inhibit and wait timers set to 80, 50 and 35
-//! respectively (sets the default value of PHY register 9 bits [4:2] to
+//! respectively (sets the default value of PHY register MR9 bits [4:2] to
 //! 3b100).
 //! - \b EMAC_PHY_INT_FAST_AN_120_75_50 enables fast auto-negotiation using
 //! break link, link fail inhibit and wait timers set to 120, 75 and 50
-//! respectively (sets the default value of PHY register 9 bits [4:2] to
+//! respectively (sets the default value of PHY register MR9 bits [4:2] to
 //! 3b101).
 //! - \b EMAC_PHY_INT_FAST_AN_140_150_100 enables fast auto-negotiation using
 //! break link, link fail inhibit and wait timers set to 140, 150 and 100
-//! respectively (sets the default value of PHY register 9 bits [4:2] to
+//! respectively (sets the default value of PHY register MR9 bits [4:2] to
 //! 3b110).
 //! - \b EMAC_PHY_FORCE_10B_T_HALF_DUPLEX disables auto-negotiation and forces
 //! operation in 10Base-T, half duplex mode (sets the default value of PHY
-//! register 9 bits [13:11] to 3b000).
+//! register MR9 bits [13:11] to 3b000).
 //! - \b EMAC_PHY_FORCE_10B_T_FULL_DUPLEX disables auto-negotiation and forces
 //! operation in 10Base-T, full duplex mode (sets the default value of PHY
-//! register 9 bits [13:11] to 3b001).
+//! register MR9 bits [13:11] to 3b001).
 //! - \b EMAC_PHY_FORCE_100B_T_HALF_DUPLEX disables auto-negotiation and forces
 //! operation in 100Base-T, half duplex mode (sets the default value of PHY
-//! register 9 bits [13:11] to 3b010).
+//! register MR9 bits [13:11] to 3b010).
 //! - \b EMAC_PHY_FORCE_100B_T_FULL_DUPLEX disables auto-negotiation and forces
 //! operation in 100Base-T, full duplex mode (sets the default value of PHY
-//! register 9 bits [13:11] to 3b011).
+//! register MR9 bits [13:11] to 3b011).
 //! - \b EMAC_PHY_AN_10B_T_HALF_DUPLEX enables auto-negotiation and advertises
-//! 10Base-T, half duplex mode (sets the default value of PHY register 9 bits
+//! 10Base-T, half duplex mode (sets the default value of PHY register MR9 bits
 //! [13:11] to 3b100).
 //! - \b EMAC_PHY_AN_10B_T_FULL_DUPLEX enables auto-negotiation and advertises
 //! 10Base-T half or full duplex modes (sets the default value of PHY register
-//! 9 bits [13:11] to 3b101).
+//! MR9 bits [13:11] to 3b101).
 //! - \b EMAC_PHY_AN_100B_T_HALF_DUPLEX enables auto-negotiation and advertises
 //! 10Base-T half or full duplex, and 100Base-T half duplex modes (sets the
-//! default value of PHY register 9 bits [13:11] to 3b110).
+//! default value of PHY register MR9 bits [13:11] to 3b110).
 //! - \b EMAC_PHY_AN_100B_T_FULL_DUPLEX enables auto-negotiation and advertises
 //! 10Base-T half or full duplex, and 100Base-T half or full duplex modes (sets
-//! the default value of PHY register 9 bits [13:11] to 3b111).
+//! the default value of PHY register MR9 bits [13:11] to 3b111).
 //! - \b EMAC_PHY_INT_HOLD prevents the PHY from transmitting energy on the
 //! line.
 //!
-//! As a side-effect of this function, the Ethernet MAC is reset so any
+//! As a side effect of this function, the Ethernet MAC is reset so any
 //! previous MAC configuration is lost.
 //!
 //! \return None.
@@ -577,13 +586,6 @@ EMACReset(uint32_t ui32Base)
 void
 EMACPHYConfigSet(uint32_t ui32Base, uint32_t ui32Config)
 {
-    uint32_t ui32Val;
-
-    //
-    // Remember the current configuration.
-    //
-    ui32Val = HWREG(ui32Base + EMAC_O_PC) & EMAC_PHY_TYPE_MASK;
-
     //
     // Write the Ethernet PHY configuration to the peripheral configuration
     // register.
@@ -607,7 +609,7 @@ EMACPHYConfigSet(uint32_t ui32Base, uint32_t ui32Config)
         //
         // Delay a bit longer to ensure that the PHY reset has completed.
         //
-        SysCtlDelay(1000);
+        SysCtlDelay(10000);
     }
 
     //
@@ -619,28 +621,22 @@ EMACPHYConfigSet(uint32_t ui32Base, uint32_t ui32Config)
         //
         // Select and enable the external clock from the RMII PHY.
         //
-        HWREG(EMAC0_BASE + EMAC_O_CC) |= (EMAC_CC_ECEXT | EMAC_CC_CLKEN);
+        HWREG(EMAC0_BASE + EMAC_O_CC) |= EMAC_CC_CLKEN;
     }
     else
     {
         //
         // Disable the external clock.
         //
-        HWREG(EMAC0_BASE + EMAC_O_CC) &= ~(EMAC_CC_ECEXT | EMAC_CC_CLKEN);
+        HWREG(EMAC0_BASE + EMAC_O_CC) &= ~EMAC_CC_CLKEN;
     }
 
     //
-    // If the PHY connection changed, reset the MAC.
+    // Reset the MAC regardless of whether the PHY connection changed or not.
     //
-    if(ui32Val != (ui32Config & EMAC_PHY_TYPE_MASK))
-    {
-        //
-        // Reset the MAC.
-        //
-        EMACReset(EMAC0_BASE);
+    EMACReset(EMAC0_BASE);
 
-        SysCtlDelay(1000);
-    }
+    SysCtlDelay(1000);
 }
 
 //*****************************************************************************
@@ -652,7 +648,7 @@ EMACPHYConfigSet(uint32_t ui32Base, uint32_t ui32Config)
 //! \param ui32ModeFlags provides configuration relating to the transmit and
 //! receive DMA engines.
 //! \param ui32RxMaxFrameSize sets the maximum receive frame size above which
-//! an error will be reported.
+//! an error is reported.
 //!
 //! This function is called to configure basic operating parameters for the
 //! MAC and its DMA engines.
@@ -686,8 +682,8 @@ EMACPHYConfigSet(uint32_t ui32Base, uint32_t ui32Config)
 //! The back-off limit determines the range of the random time that the MAC
 //! delays after a collision and before attempting to retransmit a frame.  One
 //! of the following values must be used to select this limit.  In each case,
-//! the retransmission delay in terms of 512 bit time slots, will be the lower
-//! of (2 ** N) and a random number between 0 and the selected backoff-limit.
+//! the retransmission delay in terms of 512 bit time slots, is the lower of 
+//! (2 ** N) and a random number between 0 and the selected backoff-limit.
 //!
 //! - \b EMAC_CONFIG_BO_LIMIT_1024
 //! - \b EMAC_CONFIG_BO_LIMIT_256
@@ -698,7 +694,7 @@ EMACPHYConfigSet(uint32_t ui32Base, uint32_t ui32Config)
 //! transmitted frames is provided by using one of the following fields:
 //!
 //! - \b EMAC_CONFIG_SA_INSERT causes the MAC address (0 or 1 depending
-//! upon whether \b EMAC_CONFIG_USE_MACADDR0 or \b EMAC_CONFIG_USE_MACADDR1
+//! on whether \b EMAC_CONFIG_USE_MACADDR0 or \b EMAC_CONFIG_USE_MACADDR1
 //! was specified) to be inserted into all transmitted frames.
 //! - \b EMAC_CONFIG_SA_REPLACE causes the MAC address to be replaced with
 //! the selected address in all transmitted frames.
@@ -719,7 +715,7 @@ EMACPHYConfigSet(uint32_t ui32Base, uint32_t ui32Config)
 //! normal packets.  When \b EMAC_CONFIG_JUMBO_ENABLE is not specified, all
 //! frames larger than 2000 bytes are treated as Giant frames.  This flag is
 //! ignored if \b EMAC_CONFIG_JUMBO_ENABLE is specified.
-//! - \b EMAC_CONFIG_STRIP_CRC causes the 4 byte CRC of all Ethernet type
+//! - \b EMAC_CONFIG_STRIP_CRC causes the 4-byte CRC of all Ethernet type
 //! frames to be stripped and dropped before the frame is forwarded to the
 //! application.
 //! - \b EMAC_CONFIG_JABBER_DISABLE disables the jabber timer on the
@@ -731,12 +727,12 @@ EMACPHYConfigSet(uint32_t ui32Base, uint32_t ui32Config)
 //! up to 9018 (or 9022 if using VLAN tagging) to be handled without reporting
 //! giant frame errors.
 //! - \b EMAC_CONFIG_100MBPS forces the MAC to communicate with the PHY using
-//! 100Mbps signaling.  If this option is not specified, the MAC will use
-//! 10Mbps signaling.  This speed setting is important when using an external
-//! RMII PHY where the selected rate must match the PHY's setting which may
-//! have been made as a result of auto-negotiation.  When using the internal
-//! PHY or an external MII PHY, the signaling rate is controlled by the
-//! PHY-provided transmit and receive clocks.
+//! 100Mbps signaling.  If this option is not specified, the MAC uses 10Mbps 
+//! signaling.  This speed setting is important when using an external RMII 
+//! PHY where the selected rate must match the PHY's setting which may have 
+//! been made as a result of auto-negotiation.  When using the internal PHY 
+//! or an external MII PHY, the signaling rate is controlled by the PHY-
+//! provided transmit and receive clocks.
 //! - \b EMAC_CONFIG_CS_DISABLE disables Carrier Sense during transmission
 //! when operating in half-duplex mode.
 //! - \b EMAC_CONFIG_RX_OWN_DISABLE disables reception of transmitted frames
@@ -747,17 +743,17 @@ EMACPHYConfigSet(uint32_t ui32Base, uint32_t ui32Config)
 //! of the checksum calculations are reported via status fields in the DMA
 //! receive descriptors.
 //! - \b EMAC_CONFIG_RETRY_DISABLE disables retransmission in cases where
-//! half-duplex mode is in use and a collision occurs.  This causes the current
-//! frame to be ignored and a frame abort to be reported in the transmit frame
-//! status.
+//! half-duplex mode is in use and a collision occurs.  This condition causes 
+//! the current frame to be ignored and a frame abort to be reported in the 
+//! transmit frame status.
 //! - \b EMAC_CONFIG_AUTO_CRC_STRIPPING strips the last 4 bytes (frame check
 //! sequence) from all Ether type frames before forwarding the frames to the
 //! application.
 //! - \b EMAC_CONFIG_DEFERRAL_CHK_ENABLE enables transmit deferral checking
-//! in half-duplex mode.  When enabled, the transmitter will report an error
-//! if it is unable to transmit a frame for more than 24288 bit times (or
-//! 155680 bit times in Jumbo frame mode) due to an active carrier sense signal
-//! on the MII.
+//! in half-duplex mode.  When enabled, the transmitter reports an error if it 
+//! is unable to transmit a frame for more than 24288 bit times (or 155680 
+//! bit times in Jumbo frame mode) due to an active carrier sense signal on
+//! the MII.
 //!
 //! The \e ui32ModeFlags parameter sets operating parameters related to the
 //! internal MAC FIFOs.  It comprises a logical OR of the following fields.
@@ -822,7 +818,7 @@ EMACPHYConfigSet(uint32_t ui32Base, uint32_t ui32Config)
 //! before that frame is flagged as being in error.  If the parameter is set
 //! to 0, the default hardware settings are applied.  If non-zero, any frame
 //! received which is longer than the \e ui32RxMaxFrameSize, regardless of
-//! whether the MAC is configured for normal or Jumbo frame operation, will be
+//! whether the MAC is configured for normal or Jumbo frame operation, is
 //! flagged as an error.
 //!
 //! \return None.
@@ -833,9 +829,13 @@ EMACConfigSet(uint32_t ui32Base, uint32_t ui32Config, uint32_t ui32ModeFlags,
               uint32_t ui32RxMaxFrameSize)
 {
     //
-    // Parameter sanity check.
+    // Parameter sanity check.  Note that we allow TX_ENABLED and RX_ENABLED
+    // here because we'll mask them off before writing the value and this
+    // makes back-to-back EMACConfigGet/EMACConfigSet calls work without the
+    // caller needing to explicitly remove these bits from the parameter.
     //
-    ASSERT((ui32Config & ~VALID_CONFIG_FLAGS) == 0);
+    ASSERT((ui32Config & ~(VALID_CONFIG_FLAGS |  EMAC_CONFIG_TX_ENABLED |
+                           EMAC_CONFIG_RX_ENABLED)) == 0);
     ASSERT(!ui32RxMaxFrameSize || ((ui32RxMaxFrameSize < 0x4000) &&
                                    (ui32RxMaxFrameSize > 1522)));
 
@@ -926,7 +926,7 @@ EMACConfigSet(uint32_t ui32Base, uint32_t ui32Config, uint32_t ui32ModeFlags,
 //! transmitted frames is described by one of the following fields:
 //!
 //! - \b EMAC_CONFIG_SA_INSERT causes the MAC address (0 or 1 depending
-//! upon whether \b EMAC_CONFIG_USE_MACADDR0 or \b EMAC_CONFIG_USE_MACADDR1
+//! on whether \b EMAC_CONFIG_USE_MACADDR0 or \b EMAC_CONFIG_USE_MACADDR1
 //! was specified) to be inserted into all transmitted frames.
 //! - \b EMAC_CONFIG_SA_REPLACE causes the MAC address to be replaced with
 //! the selected address in all transmitted frames.
@@ -948,7 +948,7 @@ EMACConfigSet(uint32_t ui32Base, uint32_t ui32Config, uint32_t ui32ModeFlags,
 //! not reported, all frames larger than 2000 bytes are treated as Giant
 //! frames.  The value of this flag should be ignored if
 //! \b EMAC_CONFIG_JUMBO_ENABLE is also reported.
-//! - \b EMAC_CONFIG_STRIP_CRC indicates that the 4 byte CRC of all Ethernet
+//! - \b EMAC_CONFIG_STRIP_CRC indicates that the 4-byte CRC of all Ethernet
 //! type frames is being stripped and dropped before the frame is forwarded to
 //! the application.
 //! - \b EMAC_CONFIG_JABBER_DISABLE indicates that the the jabber timer on the
@@ -971,15 +971,15 @@ EMACConfigSet(uint32_t ui32Base, uint32_t ui32Config, uint32_t ui32ModeFlags,
 //! fields in the DMA receive descriptors.
 //! - \b EMAC_CONFIG_RETRY_DISABLE indicates that retransmission is disabled
 //! in cases where half-duplex mode is in use and a collision occurs.  This
-//! causes the current frame to be ignored and a frame abort to be reported in
-//! the transmit frame status.
+//! condition causes the current frame to be ignored and a frame abort to be 
+//! reported in the transmit frame status.
 //! - \b EMAC_CONFIG_AUTO_CRC_STRIPPING indicates that the last 4 bytes
 //! (frame check sequence) from all Ether type frames are being stripped before
 //! frames are forwarded to the application.
 //! - \b EMAC_CONFIG_DEFERRAL_CHK_ENABLE indicates that transmit deferral
 //! checking is disabled in half-duplex mode.  When enabled, the transmitter
-//! will report an error if it is unable to transmit a frame for more than
-//! 24288 bit times (or 155680 bit times in Jumbo frame mode) due to an active
+//! reports an error if it is unable to transmit a frame for more than 24288 
+//! bit times (or 155680 bit times in Jumbo frame mode) due to an active
 //! carrier sense signal on the MII.
 //! - \b EMAC_CONFIG_TX_ENABLED indicates that the MAC transmitter is
 //! currently enabled.
@@ -988,7 +988,7 @@ EMACConfigSet(uint32_t ui32Base, uint32_t ui32Config, uint32_t ui32ModeFlags,
 //!
 //! The \e pui32ModeFlags parameter is written with operating parameters
 //! related to the internal MAC FIFOs.  It comprises a logical OR of the
-//! following fields.  The first reports the transmit FIFO threshold.
+//! following fields.  The first field reports the transmit FIFO threshold.
 //! Transmission of a frame begins when this amount of data or a full frame
 //! exists in the transmit FIFO.  This field should be ignored if
 //! \b EMAC_MODE_TX_STORE_FORWARD is also reported.  One of the following
@@ -1053,7 +1053,7 @@ EMACConfigSet(uint32_t ui32Base, uint32_t ui32Config, uint32_t ui32ModeFlags,
 //! currently enabled.
 //!
 //! The \e pui32RxMaxFrameSize is written with the currently configured maximum
-//! receive packet size.  Packets larger than this will be flagged as being in
+//! receive packet size.  Packets larger than this are flagged as being in
 //! error.
 //!
 //! \return None.
@@ -1169,9 +1169,9 @@ EMACConfigGet(uint32_t ui32Base, uint32_t *pui32Config, uint32_t *pui32Mode,
 //!
 //! uint8_t g_pui8MACAddr[] = { 0xAC, 0xDE, 0x48, 0x00, 0x00, 0x80 };
 //!
-//! If the MAC address set by this function is currently enabled, it will
-//! remain enabled following this call.  Similarly, any filter configured for
-//! the MAC address will remain unaffected by a change in the address.
+//! If the MAC address set by this function is currently enabled, it remains
+//! enabled following this call.  Similarly, any filter configured for
+//! the MAC address remains unaffected by a change in the address.
 //!
 //! \return None.
 //
@@ -1216,7 +1216,7 @@ EMACAddrSet(uint32_t ui32Base, uint32_t ui32Index, const uint8_t *pui8MACAddr)
 //! hardware's MAC addresses to return.  The number of MAC addresses supported
 //! by the controller may be queried using a call to EMACNumAddrGet().
 //! Index 0 refers to the MAC address of the local node.  Other indices are
-//! used to MAC addresses when filtering incoming packets.
+//! used to define MAC addresses when filtering incoming packets.
 //!
 //! The address is written to the pui8MACAddr array ordered with the first byte
 //! to be transmitted in the first array entry.  For example, if the address
@@ -1225,8 +1225,8 @@ EMACAddrSet(uint32_t ui32Base, uint32_t ui32Index, const uint8_t *pui8MACAddr)
 //!
 //! AC-DE-48-00-00-80
 //!
-//! the data would be returned with 0xAC in the first byte of the array, 0xDE
-//! in the second, 0x48 in the third and so on.
+//! the data is returned with 0xAC in the first byte of the array, 0xDE in 
+//! the second, 0x48 in the third and so on.
 //!
 //! \return None.
 //
@@ -1287,18 +1287,18 @@ EMACNumAddrGet(uint32_t ui32Base)
 //! addresses.
 //!
 //! \param ui32Base is the base address of the controller.
-//! \param ui32Index is the index of the MAC address slot whose filter is to be
-//!        set.
+//! \param ui32Index is the index of the MAC address slot for which the filter 
+//!        is to be set.
 //! \param ui32Config sets the filter parameters for the given MAC address.
 //!
 //! This function sets filtering parameters associated with one of the MAC
 //! address slots that the controller supports.  This configuration is used
 //! when perfect filtering (rather than hash table filtering) is selected.
 //!
-//! Valid values for \e ui32Index are from 1 to (number of MAC address slots
-//! - 1). The number of supported MAC address slots may be found by calling
-//! EMACNumAddrGet().  MAC index 0 is the local MAC address and does not
-//! have filtering parameters associated with it.
+//! Valid values for \e ui32Index are from 1 to (number of MAC address 
+//! slots - 1). The number of supported MAC address slots may be found by 
+//! calling EMACNumAddrGet().  MAC index 0 is the local MAC address and does 
+//! not have filtering parameters associated with it.
 //!
 //! The \e ui32Config parameter determines how the given MAC address is used
 //! when filtering incoming Ethernet frames.  It is comprised of a logical OR
@@ -1306,10 +1306,10 @@ EMACNumAddrGet(uint32_t ui32Base)
 //!
 //! - \b EMAC_FILTER_ADDR_ENABLE indicates that this MAC address is enabled
 //! and should be used when performing perfect filtering.  If this flag is
-//! absent, the MAC address at the given index is disabled and will not take
-//! part in filtering.
+//! absent, the MAC address at the given index is disabled and is not used
+//! in filtering.
 //! - \b EMAC_FILTER_SOURCE_ADDR indicates that the MAC address at the given
-//! index will be compared to the source address of incoming frames while
+//! index is compared to the source address of incoming frames while
 //! performing perfect filtering.  If absent, the MAC address is compared
 //! against the destination address.
 //! - \b EMAC_FILTER_MASK_BYTE_6 indicates that the MAC should ignore the
@@ -1362,24 +1362,24 @@ EMACAddrFilterSet(uint32_t ui32Base, uint32_t ui32Index, uint32_t ui32Config)
 //! addresses.
 //!
 //! \param ui32Base is the base address of the controller.
-//! \param ui32Index is the index of the MAC address slot whose filter is to be
-//!        queried.
+//! \param ui32Index is the index of the MAC address slot for which the filter 
+//!        is to be queried.
 //!
 //! This function returns filtering parameters associated with one of the MAC
 //! address slots that the controller supports.  This configuration is used
 //! when perfect filtering (rather than hash table filtering) is selected.
 //!
-//! Valid values for \e ui32Index are from 1 to (number of MAC address slots
-//! - 1). The number of supported MAC address slots may be found by calling
-//! EMACNumAddrGet().  MAC index 0 is the local MAC address and does not
-//! have filtering parameters associated with it.
+//! Valid values for \e ui32Index are from 1 to (number of MAC address 
+//! slots - 1). The number of supported MAC address slots may be found by 
+//! calling EMACNumAddrGet().  MAC index 0 is the local MAC address and does 
+//! not have filtering parameters associated with it.
 //!
 //! \return Returns the filter configuration as the logical OR of the
 //! following labels:
 //!
 //! - \b EMAC_FILTER_ADDR_ENABLE indicates that this MAC address is enabled
 //! and is used when performing perfect filtering.  If this flag is absent,
-//! the MAC address at the given index is disabled and does not take part in
+//! the MAC address at the given index is disabled and is not used in
 //! filtering.
 //! - \b EMAC_FILTER_SOURCE_ADDR indicates that the MAC address at the given
 //! index is compared to the source address of incoming frames while performing
@@ -1425,7 +1425,7 @@ EMACAddrFilterGet(uint32_t ui32Base, uint32_t ui32Index)
 //! address filtering options.
 //!
 //! This function allows various filtering options to be defined and allows
-//! an application to control which frames are received based upon various
+//! an application to control which frames are received based on various
 //! criteria related to the frame source and destination MAC addresses or VLAN
 //! tagging.
 //!
@@ -1437,12 +1437,12 @@ EMACAddrFilterGet(uint32_t ui32Base, uint32_t ui32Index)
 //! configured.  The receive status word in the relevant DMA descriptor is
 //! updated to indicate whether the configured filter passed or failed for
 //! the frame.
-//! - \b EMAC_FRMFILTER_VLAN configures the MAC to drop any frames which do
+//! - \b EMAC_FRMFILTER_VLAN configures the MAC to drop any frames that do
 //! not pass the VLAN tag comparison.
 //! - \b EMAC_FRMFILTER_HASH_AND_PERFECT configures the MAC to filter frames
 //! based on both any perfect filters set and the hash filter if enabled using
 //! \b EMAC_FRMFILTER_HASH_UNICAST or \b EMAC_FRMFILTER_HASH_MULTICAST.  In
-//! this case, only of both filters fail will the packet be rejected.  If this
+//! this case, only if both filters fail is the packet rejected.  If this
 //! option is absent, only one of the filter types is used, as controlled by
 //! \b EMAC_FRMFILTER_HASH_UNICAST and \b EMAC_FRMFILTER_HASH_MULTICAST
 //! for unicast and multicast frames respectively.
@@ -1450,8 +1450,8 @@ EMACAddrFilterGet(uint32_t ui32Base, uint32_t ui32Index)
 //! when the source address field in the frame does not match the values
 //! programmed into the enabled SA registers.
 //! - \b EMAC_FRMFILTER_INV_SADDR enables inverse source address filtering.
-//! When this option is specified, frames whose SA does not match the SA
-//! registers are marked as passing the source address filter.
+//! When this option is specified, frames for which the SA does not match the 
+//! SA registers are marked as passing the source address filter.
 //! - \b EMAC_FRMFILTER_BROADCAST configures the MAC to discard all incoming
 //! broadcast frames.
 //! - \b EMAC_FRMFILTER_PASS_MULTICAST configures the MAC to pass all
@@ -1530,8 +1530,8 @@ EMACFrameFilterSet(uint32_t ui32Base, uint32_t ui32FilterOpts)
 //! received frames when the source address field in the frame does not match
 //! the values programmed into the enabled SA registers.
 //! - \b EMAC_FRMFILTER_INV_SADDR enables inverse source address filtering.
-//! When this option is specified, frames whose SA does not match the SA
-//! registers are marked as passing the source address filter.
+//! When this option is specified, frames for which the SA does not match the 
+//! SA registers are marked as passing the source address filter.
 //! - \b EMAC_FRMFILTER_BROADCAST indicates that the MAC is configured to
 //! discard all incoming broadcast frames.
 //! - \b EMAC_FRMFILTER_PASS_MULTICAST indicates that the MAC is configured
@@ -1591,7 +1591,7 @@ EMACFrameFilterGet(uint32_t ui32Base)
 //! This function may be used to set the current 64-bit hash filter table
 //! used by the MAC to filter incoming packets when hash filtering is enabled.
 //! Hash filtering is enabled by passing \b EMAC_FRMFILTER_HASH_UNICAST
-//! and/or EMAC_FRMFILTER_HASH_MULTICAST in the \e ui32FilterOpts parameter
+//! and/or \b EMAC_FRMFILTER_HASH_MULTICAST in the \e ui32FilterOpts parameter
 //! to EMACFrameFilterSet().  The current hash filter may be retrieved
 //! by calling EMACHashFilterGet().
 //!
@@ -1599,7 +1599,7 @@ EMACFrameFilterGet(uint32_t ui32Base)
 //! simultaneously at the cost of some false-positive results (in the form of
 //! packets passing the filter when their MAC address was not one of those
 //! required).  A CRC of the packet source or destination MAC address is
-//! calculated and the bottom 6 bits used as a bit index into the 64-bit
+//! calculated and the bottom 6 bits are used as a bit index into the 64-bit
 //! hash filter table.  If the bit in the hash table is set, the filter is
 //! considered to have passed.  If the bit is clear, the filter fails and the
 //! packet is rejected (assuming normal rather than inverse filtering is
@@ -1621,10 +1621,10 @@ EMACHashFilterSet(uint32_t ui32Base, uint32_t ui32HashHi, uint32_t ui32HashLo)
 //! Returns the current MAC address hash filter table.
 //!
 //! \param ui32Base is the base address of the controller.
-//! \param pui32HashHi points to storage which will be written with the upper
-//! 32 bits of the current 64-bit hash filter table.
-//! \param pui32HashLo points to storage which will be written with the lower
-//! 32 bits of the current 64-bit hash filter table.
+//! \param pui32HashHi points to storage to be written with the upper 32 bits 
+//! of the current 64-bit hash filter table.
+//! \param pui32HashLo points to storage to be written with the lower 32 bits 
+//! of the current 64-bit hash filter table.
 //!
 //! This function may be used to retrieve the current 64-bit hash filter table
 //! from the MAC prior to making changes and setting the new hash filter via a
@@ -1634,7 +1634,7 @@ EMACHashFilterSet(uint32_t ui32Base, uint32_t ui32HashHi, uint32_t ui32HashLo)
 //! simultaneously at the cost of some false-positive results in the form of
 //! packets passing the filter when their MAC address was not one of those
 //! required.  A CRC of the packet source or destination MAC address is
-//! calculated and the bottom 6 bits used as a bit index into the 64-bit
+//! calculated and the bottom 6 bits are used as a bit index into the 64-bit
 //! hash filter table.  If the bit in the hash table is set, the filter is
 //! considered to have passed.  If the bit is clear, the filter fails and the
 //! packet is rejected (assuming normal rather than inverse filtering is
@@ -1662,12 +1662,12 @@ EMACHashFilterGet(uint32_t ui32Base, uint32_t *pui32HashHi,
 //! Returns the bit number to set in the MAC hash filter corresponding to a
 //! given MAC address.
 //!
-//! \param pui8MACAddr points to a buffer containing the 6 byte MAC address
-//!  whose hash filter bit is to be determined.
+//! \param pui8MACAddr points to a buffer containing the 6-byte MAC address
+//!  for which the hash filter bit is to be determined.
 //!
 //! This function may be used to determine which bit in the MAC address hash
-//! filter to set to describe a given 6 byte MAC address.  The returned value is
-//! a 6 bit number where bit 5 indicates which of the two hash table words is
+//! filter to set to describe a given 6-byte MAC address.  The returned value is
+//! a 6-bit number where bit 5 indicates which of the two hash table words is
 //! affected and the bottom 5 bits indicate the bit number to set within that
 //! word.  For example, if 0x22 (100010b) is returned, this indicates that bit
 //! 2 of word 1 (\e ui32HashHi as passed to EMACHashFilterSet()) must be set
@@ -1726,11 +1726,11 @@ EMACHashFilterBitCalculate(uint8_t *pui8MACAddr)
 //!
 //! This function configures the receive interrupt watchdog timer.
 //! The \e uiTimeout parameter specifies the number of 256 system clock periods
-//! that will elapse before the timer expires.  In cases where the DMA has
-//! transferred a frame using a descriptor which has
-//! \b DES1_RX_CTRL_DISABLE_INT set, the watchdog will cause a receive
-//! interrupt to be triggered when it times out.  The watchdog timer is reset
-//! whenever a packet is transferred to memory using a DMA descriptor which
+//! that elapse before the timer expires.  In cases where the DMA has
+//! transferred a frame using a descriptor that has
+//! \b DES1_RX_CTRL_DISABLE_INT set, the watchdog causes a receive
+//! interrupt to be generated when it times out.  The watchdog timer is reset
+//! whenever a packet is transferred to memory using a DMA descriptor that
 //! does not disable the receive interrupt.
 //!
 //! To disable the receive interrupt watchdog function, set \e ui8Timeout to 0.
@@ -1766,38 +1766,38 @@ EMACRxWatchdogTimerSet(uint32_t ui32Base, uint8_t ui8Timeout)
 //! - \b EMAC_STATUS_RWC_ACTIVE
 //! - \b EMAC_STATUS_RPE_ACTIVE
 //!
-//! The transmit frame controller status will be one of the following.  This
-//! can be extracted from the returned value by ANDing with
-//! \b EMAC_STATUS_TFC_STATE_MASK:
+//! The transmit frame controller status can be extracted from the returned 
+//! value by ANDing with \b EMAC_STATUS_TFC_STATE_MASK and is one of the 
+//! following:
 //!
 //! - \b EMAC_STATUS_TFC_STATE_IDLE
 //! - \b EMAC_STATUS_TFC_STATE_WAITING
 //! - \b EMAC_STATUS_TFC_STATE_PAUSING
 //! - \b EMAC_STATUS_TFC_STATE_WRITING
 //!
-//! The transmit FIFO read controller status will be one of the following.
-//! This can be extracted from the returned value by ANDing with
-//! \b EMAC_STATUS_TRC_STATE_MASK:
+//! The transmit FIFO read controller status can be extracted from the returned 
+//! value by ANDing with \b EMAC_STATUS_TRC_STATE_MASK and is one of the 
+//! following:
 //!
 //! - \b EMAC_STATUS_TRC_STATE_IDLE
 //! - \b EMAC_STATUS_TRC_STATE_READING
 //! - \b EMAC_STATUS_TRC_STATE_WAITING
 //! - \b EMAC_STATUS_TRC_STATE_STATUS
 //!
-//! The current receive FIFO level will be one of the following.  This can be
-//! extracted from the returned value by ANDing with
-//! \b EMAC_STATUS_RX_FIFO_LEVEL_MASK:
+//! The current receive FIFO levels can be extracted from the returned value
+//! by ANDing with \b EMAC_STATUS_RX_FIFO_LEVEL_MASK and is one of the 
+//! following:
 //!
 //! - \b EMAC_STATUS_RX_FIFO_EMPTY indicating that the FIFO is empty.
 //! - \b EMAC_STATUS_RX_FIFO_BELOW indicating that the FIFO fill level is
 //! below the flow-control deactivate threshold.
 //! - \b EMAC_STATUS_RX_FIFO_ABOVE indicating that the FIFO fill level is
-//! above the flow=control activate threshold.
+//! above the flow-control activate threshold.
 //! - \b EMAC_STATUS_RX_FIFO_FULL indicating that the FIFO is full.
 //!
-//! The current receive FIFO state will be one of the following.  This can be
-//! extracted from the returned value by ANDing with
-//! \b EMAC_STATUS_RX_FIFO_STATE_MASK:
+//! The current receive FIFO state can be extracted from the returned value
+//! by ANDing with \b EMAC_STATUS_RX_FIFO_STATE_MASK and is one of the 
+//! following:
 //!
 //! - \b EMAC_STATUS_RX_FIFO_IDLE
 //! - \b EMAC_STATUS_RX_FIFO_READING
@@ -1824,7 +1824,7 @@ EMACStatusGet(uint32_t ui32Base)
 //! This function must be called to restart the transmitter if it has been
 //! suspended due to the current transmit DMA descriptor being owned by the
 //! host.  Once the application writes new values to the descriptor and marks
-//! it as being owned by the MAC DMA, this function will cause the hardware to
+//! it as being owned by the MAC DMA, this function causes the hardware to
 //! attempt to acquire the descriptor and start transmission of the new
 //! data.
 //!
@@ -1851,7 +1851,7 @@ EMACTxDMAPollDemand(uint32_t ui32Base)
 //! This function must be called to restart the receiver if it has been
 //! suspended due to the current receive DMA descriptor being owned by the
 //! host.  Once the application reads any data from the descriptor and marks
-//! it as being owned by the MAC DMA, this function will cause the hardware to
+//! it as being owned by the MAC DMA, this function causes the hardware to
 //! attempt to acquire the descriptor before writing the next received packet
 //! into its buffer(s).
 //!
@@ -1881,8 +1881,8 @@ EMACRxDMAPollDemand(uint32_t ui32Base)
 //! structures.
 //!
 //! When multiple descriptors are provided, they can be either chained or
-//! unchained.  Chained descriptors are indicated by setting the flag
-//! \b DES0_TX_CTRL_CHAINED or \b DES1_RX_CTRL_CHAINED bits in the relevant
+//! unchained.  Chained descriptors are indicated by setting the
+//! \b DES0_TX_CTRL_CHAINED or \b DES1_RX_CTRL_CHAINED bit in the relevant
 //! word of the transmit or receive descriptor.  If this bit is clear,
 //! unchained descriptors are assumed.
 //!
@@ -1929,8 +1929,8 @@ EMACRxDMADescriptorListSet(uint32_t ui32Base, tEMACDMADescriptor *pDescriptor)
 //! \param ui32Base is the base address of the controller.
 //!
 //! This function returns a pointer to the head of the Ethernet MAC's receive
-//! DMA descriptor list.  This value will correspond to the pointer originally
-//! set using a call to EMACRxDMADescriptorListSet().
+//! DMA descriptor list.  This value corresponds to the pointer originally set
+//! using a call to EMACRxDMADescriptorListSet().
 //!
 //! \return Returns a pointer to the start of the DMA receive descriptor list.
 //
@@ -2001,8 +2001,8 @@ EMACRxDMACurrentBufferGet(uint32_t ui32Base)
 //! structures.
 //!
 //! When multiple descriptors are provided, they can be either chained or
-//! unchained.  Chained descriptors are indicated by setting the flag
-//! \b DES0_TX_CTRL_CHAINED or \b DES1_RX_CTRL_CHAINED bits in the relevant
+//! unchained.  Chained descriptors are indicated by setting the
+//! \b DES0_TX_CTRL_CHAINED or \b DES1_RX_CTRL_CHAINED bit in the relevant
 //! word of the transmit or receive descriptor.  If this bit is clear,
 //! unchained descriptors are assumed.
 //!
@@ -2049,8 +2049,8 @@ EMACTxDMADescriptorListSet(uint32_t ui32Base, tEMACDMADescriptor *pDescriptor)
 //! \param ui32Base is the base address of the controller.
 //!
 //! This function returns a pointer to the head of the Ethernet MAC's transmit
-//! DMA descriptor list.  This value will correspond to the pointer originally
-//! set using a call to EMACTxDMADescriptorListSet().
+//! DMA descriptor list.  This value corresponds to the pointer originally set 
+//! using a call to EMACTxDMADescriptorListSet().
 //!
 //! \return Returns a pointer to the start of the DMA transmit descriptor list.
 //
@@ -2195,9 +2195,9 @@ EMACDMAStateGet(uint32_t ui32Base)
 //!
 //! \param ui32Base is the base address of the controller.
 //!
-//! This function will flush any data currently held in the Ethernet transmit
-//! FIFO.  Data which has already been passed to the MAC for transmission will
-//! be transmitted possibly resulting in a transmit underflow or runt frame
+//! This function flushes any data currently held in the Ethernet transmit
+//! FIFO.  Data that has already been passed to the MAC for transmission is
+//! transmitted, possibly resulting in a transmit underflow or runt frame
 //! transmission.
 //!
 //! \return None.
@@ -2362,12 +2362,12 @@ EMACIntRegister(uint32_t ui32Base, void (*pfnHandler)(void))
     //
     // Register the interrupt handler.
     //
-    IntRegister(INT_EMAC0_SNOWFLAKE, pfnHandler);
+    IntRegister(INT_EMAC0_TM4C129, pfnHandler);
 
     //
     // Enable the Ethernet interrupt.
     //
-    IntEnable(INT_EMAC0_SNOWFLAKE);
+    IntEnable(INT_EMAC0_TM4C129);
 }
 
 //*****************************************************************************
@@ -2392,12 +2392,12 @@ EMACIntUnregister(uint32_t ui32Base)
     //
     // Disable the interrupt.
     //
-    IntDisable(INT_EMAC0_SNOWFLAKE);
+    IntDisable(INT_EMAC0_TM4C129);
 
     //
     // Unregister the interrupt handler.
     //
-    IntUnregister(INT_EMAC0_SNOWFLAKE);
+    IntUnregister(INT_EMAC0_TM4C129);
 }
 
 //*****************************************************************************
@@ -2438,9 +2438,9 @@ EMACIntUnregister(uint32_t ui32Base)
 //! - \b EMAC_INT_RX_OVERFLOW indicates that an overflow was experienced
 //! during reception.
 //! - \b EMAC_INT_TX_JABBER indicates that the transmit jabber timer expired.
-//! This happens when the frame size exceeds 2048 bytes (or 10240 bytes in
-//! Jumbo Frame mode) and causes the transmit process to abort and enter the
-//! Stopped state.
+//! This condition occurs when the frame size exceeds 2048 bytes (or 10240 
+//! bytes in Jumbo Frame mode) and causes the transmit process to abort and 
+//! enter the Stopped state.
 //! - \b EMAC_INT_TX_NO_BUFFER indicates that the host owns the next buffer
 //! in the DMA's transmit descriptor list and that the DMA cannot, therefore,
 //! acquire a buffer.  Transmission is suspended and can be resumed by changing
@@ -2454,7 +2454,7 @@ EMACIntUnregister(uint32_t ui32Base)
 //! of their constituent sources are enabled.  Applications do not need to
 //! explicitly enable these bits.
 //!
-//! \note Timestamp-related interrupts from the IEEE-1588 module must be
+//! \note Timestamp-related interrupts from the IEEE 1588 module must be
 //! enabled independently by using a call to EMACTimestampTargetIntEnable().
 //!
 //! \return None.
@@ -2540,9 +2540,9 @@ EMACIntEnable(uint32_t ui32Base, uint32_t ui32IntFlags)
 //! - \b EMAC_INT_RX_OVERFLOW indicates that an overflow was experienced
 //! during reception.
 //! - \b EMAC_INT_TX_JABBER indicates that the transmit jabber timer expired.
-//! This happens when the frame size exceeds 2048 bytes (or 10240 bytes in
-//! Jumbo Frame mode) and causes the transmit process to abort and enter the
-//! Stopped state.
+//! This condition occurs when the frame size exceeds 2048 bytes (or 10240 
+//! bytes in Jumbo Frame mode) and causes the transmit process to abort and 
+//! enter the Stopped state.
 //! - \b EMAC_INT_TX_NO_BUFFER indicates that the host owns the next buffer
 //! in the DMA's transmit descriptor list and that the DMA cannot, therefore,
 //! acquire a buffer.  Transmission is suspended and can be resumed by changing
@@ -2552,15 +2552,15 @@ EMACIntEnable(uint32_t ui32Base, uint32_t ui32IntFlags)
 //! completed and that all requested status has been updated in the descriptor.
 //! - \b EMAC_INT_TIMESTAMP indicates that an interrupt from the timestamp
 //! module has occurred.  This precise source of the interrupt can be
-//! determined by calling EMACTimestampIntStatus() which will also clear
-//! this bit.
+//! determined by calling EMACTimestampIntStatus(), which also clears this
+//! bit.
 //!
 //! Summary interrupt bits \b EMAC_INT_NORMAL_INT and
 //! \b EMAC_INT_ABNORMAL_INT are disabled automatically by the driver if none
 //! of their constituent sources are enabled.  Applications do not need to
 //! explicitly disable these bits.
 //!
-//! \note Timestamp-related interrupts from the IEEE-1588 module must be
+//! \note Timestamp-related interrupts from the IEEE 1588 module must be
 //! disabled independently by using a call to EMACTimestampTargetIntDisable().
 //!
 //! \return None.
@@ -2660,9 +2660,9 @@ EMACIntDisable(uint32_t ui32Base, uint32_t ui32IntFlags)
 //! - \b EMAC_INT_RX_OVERFLOW indicates that an overflow was experienced
 //! during reception.
 //! - \b EMAC_INT_TX_JABBER indicates that the transmit jabber timer expired.
-//! This happens when the frame size exceeds 2048 bytes (or 10240 bytes in
-//! Jumbo Frame mode) and causes the transmit process to abort and enter the
-//! Stopped state.
+//! This condition occurs when the frame size exceeds 2048 bytes (or 10240 
+//! bytes in Jumbo Frame mode) and causes the transmit process to abort and 
+//! enter the Stopped state.
 //! - \b EMAC_INT_TX_NO_BUFFER indicates that the host owns the next buffer
 //! in the DMA's transmit descriptor list and that the DMA cannot, therefore,
 //! acquire a buffer.  Transmission is suspended and can be resumed by changing
@@ -2767,9 +2767,9 @@ EMACIntStatus(uint32_t ui32Base, bool bMasked)
 //! - \b EMAC_INT_RX_OVERFLOW indicates that an overflow was experienced
 //! during reception.
 //! - \b EMAC_INT_TX_JABBER indicates that the transmit jabber timer expired.
-//! This happens when the frame size exceeds 2048 bytes (or 10240 bytes in
-//! Jumbo Frame mode) and causes the transmit process to abort and enter the
-//! Stopped state.
+//! This condition occurs when the frame size exceeds 2048 bytes (or 10240 
+//! bytes in Jumbo Frame mode) and causes the transmit process to abort and 
+//! enter the Stopped state.
 //! - \b EMAC_INT_TX_NO_BUFFER indicates that the host owns the next buffer
 //! in the DMA's transmit descriptor list and that the DMA cannot, therefore,
 //! acquire a buffer.  Transmission is suspended and can be resumed by changing
@@ -3029,8 +3029,8 @@ EMACPHYExtendedWrite(uint32_t ui32Base, uint8_t ui8PhyAddr,
 //! \param ui8PhyAddr is the physical address of the PHY to power down.
 //!
 //! This function powers off the Ethernet PHY, reducing the current
-//! consumption of the device.  While in the powered off state, the Ethernet
-//! controller is unable to connect to the Ethernet.
+//! consumption of the device.  While in the powered-off state, the Ethernet
+//! controller is unable to connect to Ethernet.
 //!
 //! \return None.
 //
@@ -3075,36 +3075,36 @@ EMACPHYPowerOn(uint32_t ui32Base, uint8_t ui8PhyAddr)
 
 //*****************************************************************************
 //
-//! Configures the Ethernet MAC's IEEE-1588 timestamping options.
+//! Configures the Ethernet MAC's IEEE 1588 timestamping options.
 //!
 //! \param ui32Base is the base address of the controller.
 //! \param ui32Config contains flags selecting particular configuration
 //! options.
-//! \param ui32SubSecondInc is the number that the IEEE-1588 subsecond clock
+//! \param ui32SubSecondInc is the number that the IEEE 1588 subsecond clock
 //! should increment on each tick.
 //!
 //! This function is used to configure the operation of the Ethernet MAC's
 //! internal timestamping clock.  This clock is used to timestamp incoming
 //! and outgoing packets and as an accurate system time reference when
-//! IEEE-1588 Precision Time Protocol is in use.
+//! IEEE 1588 Precision Time Protocol is in use.
 //!
 //! The \e ui32Config parameter contains a collection of flags selecting the
 //! desired options.  Valid flags are:
 //!
-//! One of the following to determine whether IEEE-1588 version 1 or version 2
-//! packet format is to be processed.
+//! One of the following to determine whether IEEE 1588 version 1 or version 2
+//! packet format is to be processed:
 //!
 //! - \b EMAC_TS_PTP_VERSION_2
 //! - \b EMAC_TS_PTP_VERSION_1
 //!
-//! One or other of the following to determine how the IEEE-1588 clock's
-//! subsecond value should be interpreted and handled.
+//! One of the following to determine how the IEEE 1588 clock's subsecond
+//! value should be interpreted and handled:
 //!
 //! - \b EMAC_TS_DIGITAL_ROLLOVER causes the clock's subsecond value to roll
 //! over at 0x3BA9C9FF (999999999 decimal). In this mode, it can be considered
-//! as a nanosecond counter with each digit representing 1nS.
+//! as a nanosecond counter with each digit representing 1 ns.
 //! - \b EMAC_TS_BINARY_ROLLOVER causes the clock's subsecond value to roll
-//! over at 0x7FFFFFFF.  In this mode, the subsecond value counts 0.465nS
+//! over at 0x7FFFFFFF.  In this mode, the subsecond value counts 0.465 ns
 //! periods.
 //!
 //! One of the following to enable or disable MAC address filtering. When
@@ -3114,22 +3114,22 @@ EMACPHYPowerOn(uint32_t ui32Base, uint8_t ui8PhyAddr)
 //! - \b EMAC_TS_MAC_FILTER_ENABLE
 //! - \b EMAC_TS_MAC_FILTER_DISABLE
 //!
-//! One of the following to determine how the clock is updated.
-//! - \b EMAC_TS_UPDATE_COARSE causes the IEEE-1588 clock to advance by
+//! One of the following to determine how the clock is updated:
+//! - \b EMAC_TS_UPDATE_COARSE causes the IEEE 1588 clock to advance by
 //! the value supplied in the \e ui32SubSecondInc parameter on each main
 //! oscillator clock cycle.
 //! - \b EMAC_TS_UPDATE_FINE selects the fine update method which causes the
-//! IEEE-1588 clock to advance by the the value supplied in the
+//! IEEE 1588 clock to advance by the the value supplied in the
 //! \e ui32SubSecondInc parameter each time a carry is generated from the
 //! addend accumulator register.
 //!
-//! One of the following determines which IEEE-1588 messages are timestamped:
+//! One of the following to determine which IEEE 1588 messages are timestamped:
 //!
 //! - \b EMAC_TS_SYNC_FOLLOW_DREQ_DRESP timestamps SYNC, Follow_Up, Delay_Req
 //!   and Delay_Resp messages.
 //! - \b EMAC_TS_SYNC_ONLY timestamps only SYNC messages.
 //! - \b EMAC_TS_DELAYREQ_ONLY timestamps only Delay_Req messages.
-//! - \b EMAC_TS_ALL timestamps all IEEE-1588 messages.
+//! - \b EMAC_TS_ALL timestamps all IEEE 1588 messages.
 //! - \b EMAC_TS_SYNC_PDREQ_PDRESP timestamps only SYNC, Pdelay_Req and
 //!   Pdelay_Resp messages.
 //! - \b EMAC_TS_DREQ_PDREQ_PDRESP timestamps only Delay_Req, Pdelay_Req and
@@ -3150,43 +3150,43 @@ EMACPHYPowerOn(uint32_t ui32Base, uint8_t ui8PhyAddr)
 //!   by the MAC, regardless of type.
 //!
 //! The \e ui32SubSecondInc controls the rate at which the timestamp clock's
-//! subsecond count increments.  Its meaning depends upon which of \b
+//! subsecond count increments.  Its meaning depends on which of \b
 //! EMAC_TS_DIGITAL_ROLLOVER or \b EMAC_TS_BINARY_ROLLOVER and
-//! \b EMAC_TS_UPDATE_FINE or \b EMAC_TS_UPDATE_COARSE was included
+//! \b EMAC_TS_UPDATE_FINE or \b EMAC_TS_UPDATE_COARSE were included
 //! in \e ui32Config.
 //!
 //! The timestamp second counter is incremented each time the subsecond counter
 //! rolls over.  In digital rollover mode, the subsecond counter acts as a
 //! simple 31-bit counter, rolling over to 0 after reaching 0x7FFFFFFF.  In
-//! this case, each lsb of the subsecond counter represents 0.465nS (assuming
-//! that we maintain the definition of 1 second resolution for the seconds
-//! counter).  When binary rollover mode is selected, the subsecond counter
-//! acts as a nanosecond counter and rolls over to 0 after reaching 999,999,999
-//! making each lsb represent 1 nanosecond.
+//! this case, each lsb of the subsecond counter represents 0.465 ns (assuming
+//! the definition of 1 second resolution for the seconds counter).  When
+//! binary rollover mode is selected, the subsecond counter acts as a 
+//! nanosecond counter and rolls over to 0 after reaching 999,999,999 making
+//! each lsb represent 1 nanosecond.
 //!
-//! In course update mode, the timestamp subsecond counter is incremented by
+//! In coarse update mode, the timestamp subsecond counter is incremented by
 //! \e ui32SubSecondInc on each main oscillator clock tick.  Setting
-//! \e ui32SubSecondInc to the main oscillator clock period in either 1nS or
-//! 0.465nS units will ensure that the time stamp, read as seconds and
+//! \e ui32SubSecondInc to the main oscillator clock period in either 1 ns or
+//! 0.465 ns units ensures that the time stamp, read as seconds and
 //! subseconds, increments at the same rate as the main oscillator clock.  For
-//! example, if the main oscillator is 25MHz, \e ui32SubSecondInc would be set
-//! to 40 if digital rollover mode was selected or (40 / 0.465) = 86 in binary
+//! example, if the main oscillator is 25 MHz, \e ui32SubSecondInc is set to 40
+//! if digital rollover mode is selected or (40 / 0.465) = 86 in binary
 //! rollover mode.
 //!
 //! In fine update mode, the subsecond increment value must be set according
-//! to the desired accuracy of the recovered IEEE-1588 clock which must be
+//! to the desired accuracy of the recovered IEEE 1588 clock which must be
 //! lower than the system clock rate.  Fine update mode is typically used when
-//! synchronizing the local clock to the IEEE-1588 master clock.  The subsecond
+//! synchronizing the local clock to the IEEE 1588 master clock.  The subsecond
 //! counter is incremented by \e ui32SubSecondInc counts each time a 32-bit
 //! accumulator register generates a carry.  The accumulator register is
-//! incremented by the "addend" value on each main oscillator tick and this
+//! incremented by the addend value on each main oscillator tick and this
 //! addend value is modified to allow fine control over the rate of change of
 //! the timestamp counter.  The addend value is calculated using the ratio of
-//! the main oscillator clock rate and the desired IEEE-1588 clock rate and the
-//! \e ui32SubSecondInc value is set to correspond to the desired IEEE-1588
-//! clock rate.  As an example, using digital rollover mode and a 25MHz
-//! main oscillator clock with a desired IEEE-1588 clock accuracy of 12.5MHz,
-//! we would set \e ui32SubSecondInc to the 12.5MHz clock period of 80nS and
+//! the main oscillator clock rate and the desired IEEE 1588 clock rate and the
+//! \e ui32SubSecondInc value is set to correspond to the desired IEEE 1588
+//! clock rate.  As an example, using digital rollover mode and a 25-MHz
+//! main oscillator clock with a desired IEEE 1588 clock accuracy of 12.5 MHz,
+//! we would set \e ui32SubSecondInc to the 12.5-MHz clock period of 80 ns and
 //! set the initial addend value to 0x80000000 to generate a carry on every
 //! second system clock.
 //!
@@ -3224,11 +3224,11 @@ EMACTimestampConfigSet(uint32_t ui32Base, uint32_t ui32Config,
 
 //*****************************************************************************
 //
-//! Returns the current IEEE1588 timestamping configuration.
+//! Returns the current IEEE 1588 timestamping configuration.
 //!
 //! \param ui32Base is the base address of the controller.
-//! \param pui32SubSecondInc points to storage which is written with the
-//! current subsecond increment value for the IEEE-1588 clock.
+//! \param pui32SubSecondInc points to storage that is written with the
+//! current subsecond increment value for the IEEE 1588 clock.
 //!
 //! This function may be used to retreive the current MAC timestamping
 //! configuration.
@@ -3243,18 +3243,17 @@ EMACTimestampConfigSet(uint32_t ui32Base, uint32_t ui32Config,
 //! expected.
 //! - \b EMAC_TS_DIGITAL_ROLLOVER causes the clock's subsecond value to roll
 //! over at 0x3BA9C9FF (999999999 decimal). In this mode, it can be considered
-//! as a nanosecond counter with each digit representing 1nS.  If this flag is
-//! absent, the subsecond value rolls over at 0x7FFFFFFF effectively counting
-//! increments of 0.465nS.
+//! as a nanosecond counter with each digit representing 1 ns.  If this flag is
+//! absent, the subsecond value rolls over at 0x7FFFFFFF, effectively counting
+//! increments of 0.465 ns.
 //! - \b EMAC_TS_MAC_FILTER_ENABLE indicates that incoming PTP messages
 //! are filtered using any of the configured MAC addresses.  Messages with a
-//! destination address that has been programmed into the MAC address filter
-//! will be passed, others will be discarded.  If this flag is absent, the MAC
-//! address is ignored
-//! - \b EMAC_TS_UPDATE_FINE indicates that the fine update method which
-//! causes the IEEE-1588 clock to advance by the the value returned in the
+//! destination address programmed into the MAC address filter are passed,
+//! others are discarded.  If this flag is absent, the MAC address is ignored.
+//! - \b EMAC_TS_UPDATE_FINE implements the fine update method that causes the 
+//! IEEE 1588 clock to advance by the the value returned in the
 //! \e *pui32SubSecondInc parameter each time a carry is generated from the
-//! addend accumulator register.  If this flag is absent, the course update
+//! addend accumulator register.  If this flag is absent, the coarse update
 //! method is in use and the clock is advanced by the \e *pui32SubSecondInc
 //! value on each system clock tick.
 //! - \b EMAC_TS_SYNC_ONLY indicates that timestamps are only generated for
@@ -3262,7 +3261,7 @@ EMACTimestampConfigSet(uint32_t ui32Base, uint32_t ui32Config,
 //! - \b EMAC_TS_DELAYREQ_ONLY indicates that timestamps are only generated
 //! for Delay_Req messages.
 //! - \b EMAC_TS_ALL indicates that timestamps are generated for all
-//! IEEE-1588 messages.
+//! IEEE 1588 messages.
 //! - \b EMAC_TS_SYNC_PDREQ_PDRESP timestamps only SYNC, Pdelay_Req and
 //! Pdelay_Resp messages.
 //! - \b EMAC_TS_DREQ_PDREQ_PDRESP indicates that timestamps are only
@@ -3315,7 +3314,7 @@ EMACTimestampConfigGet(uint32_t ui32Base, uint32_t *pui32SubSecondInc)
 //!
 //! \param ui32Base is the base address of the controller.
 //!
-//! This function may be used to enable the system clock used to timestamp
+//! This function is used to enable the system clock used to timestamp
 //! Ethernet frames and to enable that timestamping.
 //!
 //! \return None.
@@ -3330,7 +3329,7 @@ EMACTimestampEnable(uint32_t ui32Base)
     ASSERT(ui32Base == EMAC0_BASE);
 
     //
-    // Enable IEEE1588 timestamping.
+    // Enable IEEE 1588 timestamping.
     //
     HWREG(ui32Base + EMAC_O_TIMSTCTRL) |= EMAC_TIMSTCTRL_TSEN;
 
@@ -3351,7 +3350,7 @@ EMACTimestampEnable(uint32_t ui32Base)
 //!
 //! \param ui32Base is the base address of the controller.
 //!
-//! This function may be used to stop the system clock used to timestamp
+//! This function is used to stop the system clock used to timestamp
 //! Ethernet frames and to disable timestamping.
 //!
 //! \return None.
@@ -3366,7 +3365,7 @@ EMACTimestampDisable(uint32_t ui32Base)
     ASSERT(ui32Base == EMAC0_BASE);
 
     //
-    // Disable IEEE1588 timestamping.
+    // Disable IEEE 1588 timestamping.
     //
     HWREG(ui32Base + EMAC_O_TIMSTCTRL) &= ~EMAC_TIMSTCTRL_TSEN;
 }
@@ -3381,14 +3380,14 @@ EMACTimestampDisable(uint32_t ui32Base)
 //! setting.
 //!
 //! This function may be used to set the current system time.  The system
-//! clock us set to the value passed in the \e ui32Seconds and
+//! clock is set to the value passed in the \e ui32Seconds and
 //! \e ui32SubSeconds parameters.
 //!
-//! The meaning of \e ui32SubSeconds depends upon the current system time
+//! The meaning of \e ui32SubSeconds depends on the current system time
 //! configuration.  If EMACTimestampConfigSet() was previously called with
 //! the \e EMAC_TS_DIGITAL_ROLLOVER configuration option, each bit in the
-//! \e ui32SubSeconds value represents 1nS. If \e EMAC_TS_BINARY_ROLLOVER was
-//! specified instead, a \e ui32SubSeconds bit represents 0.46nS.
+//! \e ui32SubSeconds value represents 1 ns. If \e EMAC_TS_BINARY_ROLLOVER was
+//! specified instead, a \e ui32SubSeconds bit represents 0.46 ns.
 //!
 //! \return None.
 //
@@ -3434,11 +3433,11 @@ EMACTimestampSysTimeSet(uint32_t ui32Base, uint32_t ui32Seconds,
 //!
 //! This function may be used to get the current system time.
 //!
-//! The meaning of \e ui32SubSeconds depends upon the current system time
+//! The meaning of \e ui32SubSeconds depends on the current system time
 //! configuration.  If EMACTimestampConfigSet() was previously called with
 //! the \e EMAC_TS_DIGITAL_ROLLOVER configuration option, each bit in the
-//! \e ui32SubSeconds value represents 1nS. If \e EMAC_TS_BINARY_ROLLOVER was
-//! specified instead, a \e ui32SubSeconds bit represents 0.46nS.
+//! \e ui32SubSeconds value represents 1 ns. If \e EMAC_TS_BINARY_ROLLOVER was
+//! specified instead, a \e ui32SubSeconds bit represents 0.46 ns.
 //!
 //! \return None.
 //
@@ -3483,11 +3482,11 @@ EMACTimestampSysTimeGet(uint32_t ui32Base, uint32_t *pui32Seconds,
 //! advanced by the interval given.  When it is \e false, the time is retarded
 //! by the interval.
 //!
-//! The meaning of \e ui32SubSeconds depends upon the current system time
+//! The meaning of \e ui32SubSeconds depends on the current system time
 //! configuration.  If EMACTimestampConfigSet() was previously called with
 //! the \e EMAC_TS_DIGITAL_ROLLOVER configuration option, each bit in the
-//! subsecond value represents 1nS. If \e EMAC_TS_BINARY_ROLLOVER was
-//! specified instead, a subsecond bit represents 0.46nS.
+//! subsecond value represents 1 ns. If \e EMAC_TS_BINARY_ROLLOVER was
+//! specified instead, a subsecond bit represents 0.46 ns.
 //!
 //! \return None.
 //
@@ -3530,27 +3529,27 @@ EMACTimestampSysTimeUpdate(uint32_t ui32Base, uint32_t ui32Seconds,
 //!
 //! \param ui32Base is the base address of the controller.
 //! \param ui32Increment is the number to add to the accumulator register on
-//! each tick of the 25MHz main oscillator.
+//! each tick of the 25-MHz main oscillator.
 //!
 //! This function is used to control the rate of update of the system time
 //! when in fine update mode.  Fine correction mode is selected if
 //! \e EMAC_TS_UPDATE_FINE is supplied in the \e ui32Config parameter passed
 //! to a previous call to EMACTimestampConfigSet().  Fine update mode is
-//! typically used when synchronizing the local clock to the IEEE-1588 master
+//! typically used when synchronizing the local clock to the IEEE 1588 master
 //! clock.  The subsecond counter is incremented by the number passed to
-//! EMACTimestampConfigSet() in teh \e ui32SubSecondInc parameter each time a
+//! EMACTimestampConfigSet() in the \e ui32SubSecondInc parameter each time a
 //! 32-bit accumulator register generates a carry.  The accumulator register is
-//! incremented by the "addend" value on each main oscillator tick and this
+//! incremented by the "addend" value on each main oscillator tick, and this
 //! addend value is modified to allow fine control over the rate of change of
 //! the timestamp counter.  The addend value is calculated using the ratio of
-//! the main oscillator clock rate and the desired IEEE-1588 clock rate and the
-//! \e ui32SubSecondInc value is set to correspond to the desired IEEE-1588
+//! the main oscillator clock rate and the desired IEEE 1588 clock rate and the
+//! \e ui32SubSecondInc value is set to correspond to the desired IEEE 1588
 //! clock rate.
 //!
-//! As an example, using digital rollover mode and a 25MHz main oscillator
-//! clock with a desired IEEE-1588 clock accuracy of 12.5MHz, and having made
+//! As an example, using digital rollover mode and a 25-MHz main oscillator
+//! clock with a desired IEEE 1588 clock accuracy of 12.5 MHz, and having made
 //! a previous call to EMACTimestampConfigSet() with \e ui32SubSecondInc set to
-//! the 12.5MHz clock period of 80nS and, the initial \e ui32Increment value
+//! the 12.5-MHz clock period of 80 ns, the initial \e ui32Increment value
 //! would be set to 0x80000000 to generate a carry on every second main
 //! oscillator tick.  Because the system time updates each time the accumulator
 //! overflows, small changes in the \e ui32Increment value can be used to very
@@ -3589,24 +3588,24 @@ EMACTimestampAddendSet(uint32_t ui32Base, uint32_t ui32Increment)
 
 //*****************************************************************************
 //
-//! Sets the target system time at which the next Ethernet timer interrupt will
-//! fire.
+//! Sets the target system time at which the next Ethernet timer interrupt is
+//! generated.
 //!
 //! \param ui32Base is the base address of the controller.
 //! \param ui32Seconds is the second value of the desired target time.
 //! \param ui32SubSeconds is the subseconds value of the desired target time.
 //!
 //! This function may be used to schedule an interrupt at some future time.
-//! The time reference for the function is the IEEE1588 time as returned by
+//! The time reference for the function is the IEEE 1588 time as returned by
 //! EMACTimestampSysTimeGet().  To generate an interrupt when the system
-//! time exceeds a given value, call this function to set the desired time
+//! time exceeds a given value, call this function to set the desired time,
 //! then EMACTimestampTargetIntEnable() to enable the interrupt.  When the
 //! system time increments past the target time, an Ethernet interrupt with
-//! status EMAC_INT_TIMESTAMP will be generated.
+//! status \b EMAC_INT_TIMESTAMP is generated.
 //!
-//! The accuracy of the interrupt timing depends upon the Ethernet timer
+//! The accuracy of the interrupt timing depends on the Ethernet timer
 //! update frequency and the subsecond increment value currently in use.  The
-//! interrupt is generated on the first timer increment which causes the
+//! interrupt is generated on the first timer increment that causes the
 //! system time to be greater than or equal to the target time set.
 //!
 //! \return None.
@@ -3643,11 +3642,11 @@ EMACTimestampTargetSet(uint32_t ui32Base, uint32_t ui32Seconds,
 //!
 //! This function may be used after EMACTimestampTargetSet() to schedule an
 //! interrupt at some future time.  The time reference for the function is
-//! the IEEE1588 time as returned by EMACTimestampSysTimeGet().  To generate
+//! the IEEE 1588 time as returned by EMACTimestampSysTimeGet().  To generate
 //! an interrupt when the system time exceeds a given value, call this function
-//! to set the desired time then EMACTimestampTargetIntEnable() to enable the
+//! to set the desired time, then EMACTimestampTargetIntEnable() to enable the
 //! interrupt.  When the system time increments past the target time, an
-//! Ethernet interrupt with status \b EMAC_INT_TIMESTAMP will be generated.
+//! Ethernet interrupt with status \b EMAC_INT_TIMESTAMP is generated.
 //!
 //! \return None.
 //
@@ -3661,9 +3660,9 @@ EMACTimestampTargetIntEnable(uint32_t ui32Base)
     ASSERT(ui32Base == EMAC0_BASE);
 
     //
-    // Set the bit to enable the timestamp target interrupt.  This bit will
-    // clear automatically when the interrupt fires after which point, you
-    // need to set a new target time and re-enable the interrupts.
+    // Set the bit to enable the timestamp target interrupt.  This bit clears
+    // automatically when the interrupt fires after which point, you must
+    // set a new target time and re-enable the interrupts.
     //
     HWREG(ui32Base + EMAC_O_TIMSTCTRL) |= EMAC_TIMSTCTRL_INTTRIG;
 }
@@ -3690,8 +3689,8 @@ EMACTimestampTargetIntDisable(uint32_t ui32Base)
     ASSERT(ui32Base == EMAC0_BASE);
 
     //
-    // Clear the bit to disable the timestamp target interrupt.  This bit will
-    // clear automatically when the interrupt fires so it only needs to be
+    // Clear the bit to disable the timestamp target interrupt.  This bit 
+    // clears automatically when the interrupt fires, so it only must be
     // disabled if you want to cancel a previously-set interrupt.
     //
     HWREG(ui32Base + EMAC_O_TIMSTCTRL) &= ~EMAC_TIMSTCTRL_INTTRIG;
@@ -3745,7 +3744,7 @@ EMACTimestampIntStatus(uint32_t ui32Base)
 //! operate in its simple mode which allows the generation of a few, fixed
 //! frequencies and pulse widths on the PPS pin.  If more complex pulse
 //! train generation is required, the MAC also provides a command-based
-//! PPS control mode which may be selected by calling
+//! PPS control mode that can be selected by calling
 //! EMACTimestampPPSCommandModeSet().
 //!
 //! The \e ui32FreqConfig parameter may take one of the following values:
@@ -3767,12 +3766,12 @@ EMACTimestampIntStatus(uint32_t ui32Base)
 //! configured to operate in digital rollover mode.
 //!
 //! Except when \b EMAC_PPS_SINGLE_PULSE is specified, the signal generated
-//! on PPS will have a duty cycle of 50% when binary rollover mode is used for
-//! the system time subsecond count.  In digital mode, the output frequency
+//! on PPS has a duty cycle of 50% when binary rollover mode is used for the
+//! system time subsecond count.  In digital mode, the output frequency
 //! averages the value requested and is resynchronized each second.  For
 //! example, if \b EMAC_PPS_4HZ is selected in digital rollover mode, the
-//! output will generate three clocks with 50 percent duty cycle and 268ms
-//! period followed by a fourth clock of 195mS period, 134mS low and 61mS high.
+//! output generates three clocks with 50 percent duty cycle and 268 ms
+//! period followed by a fourth clock of 195 ms period, 134 ms low and 61 ms high.
 //!
 //! \return None.
 //
@@ -3831,7 +3830,7 @@ EMACTimestampPPSSimpleModeSet(uint32_t ui32Base, uint32_t ui32FreqConfig)
 //! may be too restrictive for some applications.  The second mode, however,
 //! allows complex pulse trains to be generated using commands that tell the
 //! engine to send individual pulses or start and stop trains if pulses.  In
-//! this mode, the pulse width and period may be set arbitrarily based upon
+//! this mode, the pulse width and period may be set arbitrarily based on
 //! ticks of the clock used to update the system time.  Commands are triggered
 //! at specific times using the target time last set using a call to
 //! EMACTimestampTargetSet().
@@ -3852,8 +3851,8 @@ EMACTimestampPPSSimpleModeSet(uint32_t ui32Base, uint32_t ui32FreqConfig)
 //!
 //! - EMACTimestampPPSPeriodSet() to set the desired pulse width and period
 //! then
-//! - EMACTimestampTargetSet() to set the time at which the next command will
-//! be executed, and finally
+//! - EMACTimestampTargetSet() to set the time at which the next command is
+//! executed, and finally
 //! - EMACTimestampPPSCommand() to send a command to cause the pulse or
 //! pulse train to be started at the required time.
 //!
@@ -3902,7 +3901,7 @@ EMACTimestampPPSCommandModeSet(uint32_t ui32Base, uint32_t ui32Config)
 //!
 //! - \b EMAC_PPS_COMMAND_NONE indicates no command.
 //! - \b EMAC_PPS_COMMAND_START_SINGLE indicates that a single high pulse
-//! should be generate when the system time reaches the current target time.
+//! should be generated when the system time reaches the current target time.
 //! - \b EMAC_PPS_COMMAND_START_TRAIN indicates that a train of pulses
 //! should be started when the system time reaches the current target time.
 //! - \b EMAC_PPS_COMMAND_CANCEL_START cancels any pending start command if
@@ -3965,7 +3964,7 @@ EMACTimestampPPSCommand(uint32_t ui32Base, uint8_t ui8Cmd)
 //! executed.  Command mode is selected by calling
 //! EMACTimestampPPSCommandModeSet().
 //!
-//! In simple mode the PPS output signal frequency is controlled by the
+//! In simple mode, the PPS output signal frequency is controlled by the
 //! \e ui32FreqConfig parameter passed to EMACTimestampPPSSimpleModeSet().
 //!
 //! The \e ui32Period and \e ui32Width parameters are expressed in terms of
@@ -3973,8 +3972,8 @@ EMACTimestampPPSCommand(uint32_t ui32Base, uint8_t ui8Cmd)
 //! update mode, each tick is equivalent to the system clock.  In fine update
 //! mode, a tick occurs every time the 32-bit system time accumulator overflows
 //! and this, in turn, is determined by the value passed to the function
-//! EMACTimestampAddendSet().  Regardless of the tick source, each tick will
-//! increment the actual system time, queried using EMACTimestampSysTimeGet()
+//! EMACTimestampAddendSet().  Regardless of the tick source, each tick
+//! increments the actual system time, queried using EMACTimestampSysTimeGet()
 //! by the subsecond increment value passed in the \e ui32SubSecondInc to
 //! EMACTimestampConfigSet().
 //!
@@ -4016,27 +4015,27 @@ EMACTimestampPPSPeriodSet(uint32_t ui32Base, uint32_t ui32Period,
 //!
 //! - \b EMAC_VLAN_RX_HASH_ENABLE enables hash filtering for VLAN tags.  If
 //! this flag is absent, perfect filtering using the tag supplied in \e ui16Tag
-//! is performed.  The hash filter may be set using EMACVLANHashFilterSet()
+//! is performed.  The hash filter may be set using EMACVLANHashFilterSet(),
 //! and EMACVLANHashFilterBitCalculate() may be used to determine which bits
 //! to set in the filter for given VLAN tags.
 //! - \b EMAC_VLAN_RX_SVLAN_ENABLE causes the receiver to recognize S-VLAN
 //! (Type = 0x88A8) frames as valid VLAN-tagged frames.  If absent, only
 //! frames with type 0x8100 are considered valid VLAN frames.
 //! - \b EMAC_VLAN_RX_INVERSE_MATCH causes the receiver to pass all VLAN
-//! frames whose tags do not match the supplied \e ui16Tag value.  If this
-//! flag is absent, only tagged frames matching \e ui16Tag are passed.
+//! frames for which the tags do not match the supplied \e ui16Tag value.  If 
+//! this flag is absent, only tagged frames matching \e ui16Tag are passed.
 //! - \b EMAC_VLAN_RX_12BIT_TAG causes the receiver to compare only the
 //! bottom 12 bits of \e ui16Tag when performing either perfect or hash
 //! filtering of VLAN frames.  If this flag is absent, all 16 bits of the frame
 //! tag are examined when filtering.  If this flag is set and \e ui16Tag has
-//! all bottom 12 bits clear, the receiver will pass all frames with types
+//! all bottom 12 bits clear, the receiver passes all frames with types
 //! 0x8100 or 0x88A8 regardless of the tag values they contain.
 //!
-//! \note To ensure that VLAN frames which fail the tag filter are dropped
+//! \note To ensure that VLAN frames that fail the tag filter are dropped
 //! by the MAC, EMACFrameFilterSet() must be called with the \b
 //! EMAC_FRMFILTER_VLAN flag set in the \e ui32FilterOpts parameter.  If
-//! this flag is not set, failing VLAN packets will be received by the
-//! application but bit 10 of RDES0 (\b EMAC_FRMFILTER_VLAN) will be clear
+//! this flag is not set, failing VLAN packets are received by the
+//! application, but bit 10 of RDES0 (\b EMAC_FRMFILTER_VLAN) is clear
 //! indicating that the packet did not match the current VLAG tag filter.
 //!
 //! \sa EMACVLANRxConfigGet()
@@ -4074,7 +4073,7 @@ EMACVLANRxConfigSet(uint32_t ui32Base, uint16_t ui16Tag, uint32_t ui32Config)
 //! \sa EMACVLANRxConfigSet()
 //!
 //! \return Returns flags defining how VLAN-tagged frames are handled.  The
-//! value will be a logical OR of the following flags:
+//! value is a logical OR of the following flags:
 //!
 //! - \b EMAC_VLAN_RX_HASH_ENABLE indicates that hash filtering is enabled
 //! for VLAN tags.  If this flag is absent, perfect filtering using the tag
@@ -4083,13 +4082,13 @@ EMACVLANRxConfigSet(uint32_t ui32Base, uint16_t ui16Tag, uint32_t ui32Config)
 //! S-VLAN (Type = 0x88A8) frames as valid VLAN-tagged frames.  If absent, only
 //! frames with type 0x8100 are considered valid VLAN frames.
 //! - \b EMAC_VLAN_RX_INVERSE_MATCH indicates that the receiver passes all
-//! VLAN frames whose tags do not match the \e *pui16Tag value.  If this
-//! flag is absent, only tagged frames matching \e *pui16Tag are passed.
+//! VLAN frames for which the tags do not match the \e *pui16Tag value.  If 
+//! this flag is absent, only tagged frames matching \e *pui16Tag are passed.
 //! - \b EMAC_VLAN_RX_12BIT_TAG indicates that the receiver is comparing only
 //! the bottom 12 bits of \e *pui16Tag when performing either perfect or hash
 //! filtering of VLAN frames.  If this flag is absent, all 16 bits of the frame
 //! tag are examined when filtering.  If this flag is set and \e *pui16Tag has
-//! all bottom 12 bits clear, the receiver will pass all frames with types
+//! all bottom 12 bits clear, the receiver passes all frames with types
 //! 0x8100 or 0x88A8 regardless of the tag values they contain.
 //
 //*****************************************************************************
@@ -4134,9 +4133,9 @@ EMACVLANRxConfigGet(uint32_t ui32Base, uint16_t *pui16Tag)
 //! IEEE 802.1Q VLAN tagging.  The transmitter may be set to insert tagging
 //! into untagged frames or replace existing tags with new values.
 //!
-//! The \e ui16Tag parameter contains the VLAN tag that is to be used in
-//! outgoing tagged frames.  The \e ui32Config parameter is a logical OR of
-//! the following labels:
+//! The \e ui16Tag parameter contains the VLAN tag to be used in outgoing
+//! tagged frames.  The \e ui32Config parameter is a logical OR of the
+//! following labels:
 //!
 //! - \b EMAC_VLAN_TX_SVLAN uses the S-VLAN type (0x88A8) when inserting or
 //! replacing tags in transmitted frames.  If this label is absent, C-VLAN
@@ -4152,8 +4151,8 @@ EMACVLANRxConfigGet(uint32_t ui32Base, uint16_t *pui16Tag)
 //! - \b EMAC_VLAN_TX_VLC_NONE instructs the transmitter to perform no VLAN
 //! tag insertion, deletion or replacement.
 //! - \b EMAC_VLAN_TX_VLC_DELETE instructs the transmitter to remove VLAN
-//! tags from all transmitted frames which contain them.  This removes bytes
-//! 13, 14, 15 and 16 from all frames with types 0x8100 or 0x88A8.
+//! tags from all transmitted frames that contain them.  As a result, bytes
+//! 13, 14, 15 and 16 are removed from all frames with types 0x8100 or 0x88A8.
 //! - \b EMAC_VLAN_TX_VLC_INSERT instructs the transmitter to insert a VLAN
 //! type and tag into all outgoing frames regardless of whether or not they
 //! already contain a VLAN tag.
@@ -4185,7 +4184,7 @@ EMACVLANTxConfigSet(uint32_t ui32Base, uint16_t ui16Tag, uint32_t ui32Config)
 //! frames.
 //!
 //! \param ui32Base is the base address of the controller.
-//! \param pui16Tag points to storage which is written with the VLAN tag
+//! \param pui16Tag points to storage that is written with the VLAN tag
 //! currently being used for insertion or replacement.
 //!
 //! This function returns information on the current settings related to VLAN
@@ -4255,12 +4254,12 @@ EMACVLANTxConfigGet(uint32_t ui32Base, uint16_t *pui16Tag)
 //! Returns the bit number to set in the VLAN hash filter corresponding to a
 //! given tag.
 //!
-//! \param ui16Tag is the VLAN tag whose hash filter bit number is to be
-//! determined.
+//! \param ui16Tag is the VLAN tag for which the hash filter bit number is to 
+//! be determined.
 //!
 //! This function may be used to determine which bit in the VLAN hash filter
 //! to set to describe a given 12- or 16-bit VLAN tag.  The returned value is
-//! a 4 bit value indicating the bit number to set within the 16-bit VLAN
+//! a 4-bit value indicating the bit number to set within the 16-bit VLAN
 //! hash filter. For example, if 0x02 is returned, this indicates that bit
 //! 2 of the hash filter must be set to pass the supplied VLAN tag.
 //!
@@ -4311,11 +4310,11 @@ EMACVLANHashFilterBitCalculate(uint16_t ui16Tag)
 //!
 //! This function allows the VLAG tag hash filter to be set.  By using hash
 //! filtering, several different VLAN tags can be filtered very easily at the
-//! cost of some false positive results which must be removed by software.
+//! cost of some false positive results that must be removed by software.
 //!
 //! The hash filter value passed in \e ui32Hash may be built up by calling
-//! EMACVLANHashFilterBitCalculate() for each VLAN tag which is to pass the
-//! filter and then setting each of the bits whose numbers are returned by
+//! EMACVLANHashFilterBitCalculate() for each VLAN tag that is to pass the
+//! filter and then set each of the bits for which the numbers are returned by
 //! that function.  Care must be taken when clearing bits in the hash filter
 //! due to the fact that there is a many-to-one correspondence between VLAN
 //! tags and hash filter bits.
@@ -4368,21 +4367,21 @@ EMACVLANHashFilterGet(uint32_t ui32Base)
 
 //*****************************************************************************
 //
-//! Sets values defining up to four frames use to trigger a remote wake-up.
+//! Sets values defining up to four frames used to trigger a remote wake-up.
 //!
 //! \param ui32Base is the base address of the controller.
 //! \param pFilter points to the structure containing remote wake-up frame
 //! filter information.
 //!
-//! This function may be used to define up to four different frames which
+//! This function may be used to define up to four different frames that
 //! are considered by the Ethernet MAC to be remote wake-up signals.  The
 //! data passed to the function describes a wake-up frame in terms of a CRC
 //! calculated on up to 31 payload bytes in the frame.  The actual bytes used
 //! in the CRC calculation are defined by means of a bit mask where a ``1''
 //! indicates that a byte in the frame should contribute to the CRC
-//! calculation and a ``0'' indicates that the byte should be skipped, and an
-//! offset from the start of the frame to payload byte which represents the
-//! first byte in the 31-byte CRC-checked sequence.
+//! calculation and a ``0'' indicates that the byte should be skipped, as well 
+//! as an offset from the start of the frame to the payload byte that represents 
+//! the first byte in the 31-byte CRC-checked sequence.
 //!
 //! The \e pFilter parameter points to a structure containing the information
 //! necessary to set up the filters.  This structure contains the following
@@ -4399,9 +4398,9 @@ EMACVLANHashFilterGet(uint32_t ui32Base)
 //! EMAC_RWU_FILTER_UNICAST ORed with one of \b EMAC_RWU_FILTER_ENABLE or
 //! \b EMAC_RWU_FILTER_DISABLE.
 //! - \b pui8Offset defines the zero-based index of the byte within the frame
-//! at which CRC checking defined by \b pui32ByteMask will begin.
+//! at which CRC checking defined by \b pui32ByteMask begins.
 //! Alternatively, this value can be thought of as the number of bytes in the
-//! that the MAC will skip before accumulating the CRC based on the pattern
+//! frame that the MAC skips before accumulating the CRC based on the pattern  
 //! in \b pui32ByteMask.
 //! - \b pui16CRC provides the value of the calculated CRC for a valid remote
 //! wake-up frame.  If the incoming frame is processed according to the filter
@@ -4458,7 +4457,7 @@ EMACRemoteWakeUpFrameFilterSet(uint32_t ui32Base,
 //! Returns the current remote wake-up frame filter configuration.
 //!
 //! \param ui32Base is the base address of the controller.
-//! \param pFilter points to the structure which is written with the current
+//! \param pFilter points to the structure that is written with the current
 //! remote wake-up frame filter information.
 //!
 //! This function may be used to read the current wake-up frame filter
@@ -4467,10 +4466,10 @@ EMACRemoteWakeUpFrameFilterSet(uint32_t ui32Base,
 //! actual bytes used in the CRC calculation are defined by means of a bit mask
 //! where a ``1'' indicates that a byte in the frame should contribute to the
 //! CRC calculation and a ``0'' indicates that the byte should be skipped, and
-//! an offset from the start of the frame to payload byte which represents the
-//! first byte in the 31-byte CRC-checked sequence.
+//! an offset from the start of the frame to the payload byte that represents 
+//! the first byte in the 31-byte CRC-checked sequence.
 //!
-//! The \e pFilter parameter points to storage which is written with a
+//! The \e pFilter parameter points to storage that is written with a
 //! structure containing the information defining the frame filters.  This
 //! structure contains the following fields, each of which is replicated 4
 //! times, once for each possible wake-up frame:
@@ -4485,9 +4484,9 @@ EMACRemoteWakeUpFrameFilterSet(uint32_t ui32Base,
 //! EMAC_RWU_FILTER_UNICAST ORed with one of \b EMAC_RWU_FILTER_ENABLE or
 //! \b EMAC_RWU_FILTER_DISABLE.
 //! - \b pui8Offset defines the zero-based index of the byte within the frame
-//! at which CRC checking defined by \b pui32ByteMask will begin.
+//! at which CRC checking defined by \b pui32ByteMask begins.
 //! Alternatively, this value can be thought of as the number of bytes in the
-//! that the MAC will skip before accumulating the CRC based on the pattern
+//! frame that the MAC skips before accumulating the CRC based on the pattern
 //! in \b pui32ByteMask.
 //! - \b pui16CRC provides the value of the calculated CRC for a valid remote
 //! wake-up frame.  If the incoming frame is processed according to the filter
@@ -4547,9 +4546,9 @@ EMACRemoteWakeUpFrameFilterGet(uint32_t ui32Base,
 //! This function allows the MAC's remote wake-up features to be configured,
 //! determining which types of frame should trigger a wake-up event and
 //! allowing an application to place the MAC in power-down mode.  In this
-//! mode, the MAC will ignore all received frames until one matching a
-//! configured remote wake-up frame is received, at which point the MAC will
-//! automatically exit power-down mode and continue to receive frames.
+//! mode, the MAC ignores all received frames until one matching a
+//! configured remote wake-up frame is received, at which point the MAC
+//! automatically exits power-down mode and continues to receive frames.
 //!
 //! The \e ui32Flags parameter is a logical OR of the following flags:
 //!
@@ -4557,7 +4556,7 @@ EMACRemoteWakeUpFrameFilterGet(uint32_t ui32Base,
 //! unicast frame matching the MAC destination address filter is received.
 //! - \b EMAC_PMT_WAKEUP_PACKET_ENABLE instructs the MAC to wake up when any
 //! received frame matches the remote wake-up filter configured via a call
-//! to EMACRemoteWakeupFrameFilterSet().
+//! to EMACRemoteWakeUpFrameFilterSet().
 //! - \b EMAC_PMT_MAGIC_PACKET_ENABLE instructs the MAC to wake up when a
 //! standard Wake-on-LAN "magic packet" is received.  The magic packet contains
 //! 6 bytes of 0xFF followed immediately by 16 repetitions of the destination
@@ -4571,13 +4570,13 @@ EMACRemoteWakeUpFrameFilterGet(uint32_t ui32Base,
 //! When the MAC is in power-down mode, software may exit the mode by calling
 //! this function with the \b EMAC_PMT_POWER_DOWN flag absent from \e ui32Flags.
 //! If a configured wake-up frame is received while in power-down mode, the
-//! \b EMAC_INT_POWER_MGMNT interrupt will be signaled and this may be cleared
-//! by reading the status using EMACPowerManagementStatusGet().
+//! \b EMAC_INT_POWER_MGMNT interrupt is signaled and may be cleared by reading
+//! the status using EMACPowerManagementStatusGet().
 //!
 //! \note While it is possible to gate the clock to the MAC while it is in
-//! power-down mode, doing so will prevent the reading of the registers
-//! required to determine the interrupt status and will also prevent power-down
-//! mode from exiting via another call to this function.
+//! power-down mode, doing so prevents the reading of the registers required
+//! to determine the interrupt status and also prevents power-down mode from
+//! exiting via another call to this function.
 //!
 //! \return None.
 //
@@ -4623,7 +4622,7 @@ EMACPowerManagementControlSet(uint32_t ui32Base, uint32_t ui32Flags)
 //! any unicast frame matching the MAC destination address filter is received.
 //! - \b EMAC_PMT_WAKEUP_PACKET_ENABLE indicates that the MAC wakes up when any
 //! received frame matches the remote wake-up filter configured via a call
-//! to EMACRemoteWakeupFrameFilterSet().
+//! to EMACRemoteWakeUpFrameFilterSet().
 //! - \b EMAC_PMT_MAGIC_PACKET_ENABLE indicates that the MAC wakes up when a
 //! standard Wake-on-LAN "magic packet" is received.  The magic packet contains
 //! 6 bytes of 0xFF followed immediately by 16 repetitions of the destination
@@ -4659,7 +4658,7 @@ EMACPowerManagementControlGet(uint32_t ui32Base)
 //!
 //! This function returns information on the remote wake-up state of the
 //! Ethernet MAC. If the MAC has been woken up since the last call, the
-//! returned value indicates the type of received frame which caused the MAC
+//! returned value indicates the type of received frame that caused the MAC
 //! to exit power-down state.
 //!
 //! \return Returns a logical OR of the following flags:
@@ -4689,6 +4688,291 @@ EMACPowerManagementStatusGet(uint32_t ui32Base)
     return(HWREG(ui32Base + EMAC_O_PMTCTLSTAT) &
            (EMAC_PMTCTLSTAT_WUPRX | EMAC_PMTCTLSTAT_MGKPRX |
             EMAC_PMTCTLSTAT_PWRDWN));
+}
+
+//*****************************************************************************
+//
+//! Enables the wake-on-LAN feature of the MAC controller.
+//!
+//! \param ui32Base is the base address of the controller.
+//!
+//! This function is used to enable the wake-on-LAN feature of the MAC
+//! controller. It is done by first checking if the transmit path is idle and
+//! disabling the trasnmitter and the transmit DMA controller. Then it checks
+//! if any data from the network is being actively received and if not then it
+//! disables the receive DMA controller.
+//!
+//! \return None.
+//
+//*****************************************************************************
+void
+EMACWoLEnter(uint32_t ui32Base)
+{
+    //
+    // Parameter sanity check.
+    //
+    ASSERT(ui32Base == EMAC0_BASE);
+
+    //
+    // Check if the Transmit interrupt bit is clear.
+    //
+    while(HWREG(ui32Base + EMAC_O_DMARIS) == EMAC_DMARIS_TI)
+    {
+    }
+
+    //
+    // Disable transmission in the MAC configuration register.
+    //
+    HWREG(ui32Base + EMAC_O_CFG) &= ~EMAC_CFG_TE;
+
+    //
+    // Disable the MAC transmit path in the opmode register.
+    //
+    HWREG(ui32Base + EMAC_O_DMAOPMODE) &= ~EMAC_DMAOPMODE_ST;
+
+    //
+    // Check if the Receive FIFO is empty.
+    //
+    while((HWREG(ui32Base + EMAC_O_STATUS) & EMAC_STATUS_RX_FIFO_LEVEL_MASK) ==
+          EMAC_STATUS_RX_FIFO_EMPTY)
+    {
+    }
+
+    //
+    // Disable the MAC receive path.
+    //
+    HWREG(ui32Base + EMAC_O_DMAOPMODE) &= ~EMAC_DMAOPMODE_SR;
+}
+
+//*****************************************************************************
+//
+//! Configures the LPI timers and control register.
+//!
+//! \param ui32Base is the base address of the controller.
+//! \param bLPIConfig is state of LPI trasnmit automate bit.
+//! \param ui16LPILSTimer is the value of LS timer in milli-seconds.
+//! \param ui16LPITWTimer is the value of TW timer in micro-seconds.
+//!
+//! This function is used to configure the LPI timer and control registers when
+//! the link is established as EEE mode or when the link is lost. When the link
+//! is established as EEE, then \e ui16LPILSTimer is programmed as the link
+//! status timer value and \e ui16LPITWTimer is programmed as the transmit wait 
+//! timer value. The parameter \e bLPIConfig is used to decide if the transmit
+//! path must be automated or should be under user control.
+//!
+//! \return None.
+//
+//*****************************************************************************
+void
+EMACLPIConfig(uint32_t ui32Base, bool bLPIConfig, uint16_t ui16LPILSTimer,
+              uint16_t ui16LPITWTimer)
+{
+    uint32_t ui32TimerValue;
+
+    //
+    // Parameter sanity check.
+    //
+    ASSERT(ui32Base == EMAC0_BASE);
+    
+    ui32TimerValue = ((ui16LPILSTimer << EMAC_LPITIMERCTL_LST_S) &
+                       EMAC_LPITIMERCTL_LST_M);
+    ui32TimerValue |= ui16LPITWTimer & EMAC_LPITIMERCTL_TWT_M;
+
+    //
+    // Update the LPI Timer.
+    //
+    HWREG(ui32Base + EMAC_O_LPITIMERCTL) = ui32TimerValue;
+
+    //
+    // Configure the LPI Control registers.
+    //
+    if(bLPIConfig)
+    {
+        HWREG(ui32Base + EMAC_O_LPICTLSTAT) |= EMAC_LPICTLSTAT_LPITXA;
+    }
+    else
+    {
+        HWREG(ui32Base + EMAC_O_LPICTLSTAT) = 0x0;
+    }
+}
+
+//*****************************************************************************
+//
+//! Enables the transmit path for LPI mode entry.
+//!
+//! \param ui32Base is the base address of the controller.
+//!
+//! This function is used to enable the transmit path in LPI mode when there
+//! is no more data to be transmitted by the MAC controller.
+//!
+//! \return None.
+//
+//*****************************************************************************
+void
+EMACLPIEnter(uint32_t ui32Base)
+{
+    //
+    // Parameter sanity check.
+    //
+    ASSERT(ui32Base == EMAC0_BASE);
+
+    HWREG(ui32Base + EMAC_O_LPICTLSTAT) |= EMAC_LPICTLSTAT_LPIEN;
+}
+
+//*****************************************************************************
+//
+//! Returns the status of the LPI link.
+//!
+//! \param ui32Base is the base address of the controller.
+//!
+//! This function may be used to read the status of the transmit and receive
+//! path when the link is configured in LPI mode.
+//!
+//! \return Returns the lower 16 bits of the LPI Control and Status register.
+//
+//*****************************************************************************
+uint16_t
+EMACLPIStatus(uint32_t ui32Base)
+{
+    //
+    // Parameter sanity check.
+    //
+    ASSERT(ui32Base == EMAC0_BASE);
+
+    //
+    // Configure the LPI Control registers.
+    //
+    return(HWREG(ui32Base + EMAC_O_LPICTLSTAT) & 0xFFFF);
+}
+
+//*****************************************************************************
+//
+//! Sets the link status of the external PHY.
+//!
+//! \param ui32Base is the base address of the controller.
+//!
+//! This function is used to set the link status of the external PHY when the
+//! link is established in EEE mode.
+//!
+//! \return None.
+//
+//*****************************************************************************
+void
+EMACLPILinkSet(uint32_t ui32Base)
+{
+    //
+    // Parameter sanity check.
+    //
+    ASSERT(ui32Base == EMAC0_BASE);
+
+    //
+    // Configure the LPI Control registers.
+    //
+    HWREG(ui32Base + EMAC_O_LPICTLSTAT) |= EMAC_LPICTLSTAT_PLS;
+}
+
+//*****************************************************************************
+//
+//! Clears the link status of the external PHY.
+//!
+//! \param ui32Base is the base address of the controller.
+//!
+//! This function is used to clear the link status of the external PHY when the
+//! link is lost due to a disconnect or EEE mode link is not established.
+//!
+//! \return None.
+//
+//*****************************************************************************
+void
+EMACLPILinkClear(uint32_t ui32Base)
+{
+    //
+    // Parameter sanity check.
+    //
+    ASSERT(ui32Base == EMAC0_BASE);
+
+    //
+    // Configure the LPI Control registers.
+    //
+    HWREG(ui32Base + EMAC_O_LPICTLSTAT) &= ~(EMAC_LPICTLSTAT_PLS);
+}
+
+//*****************************************************************************
+//
+//! Writes a value to an extended PHY register in MMD address space.
+//!
+//! \param ui32Base is the base address of the controller.
+//! \param ui8PhyAddr is the physical address of the PHY to access.
+//! \param ui16RegAddr is the address of the PHY extended register to be
+//! accessed.
+//! \param ui16Value is the value to write to the register.
+//!
+//! When uhen connected to an external PHY supporting extended registers in MMD
+//! address space, this function allows a value to be written to the MMD
+//! register specified by \e ui16RegAddr.
+//!
+//! \return None.
+//
+//*****************************************************************************
+void
+EMACPHYMMDWrite(uint32_t ui32Base, uint8_t ui8PhyAddr, uint16_t ui16RegAddr,
+                uint16_t ui16Data)
+{
+    //
+    // Parameter sanity check.
+    //
+    ASSERT(ui8PhyAddr < 32);
+
+    //
+    // Set the address of the register we're about to write.
+    //
+    EMACPHYWrite(ui32Base, ui8PhyAddr, EPHY_REGCTL, DEV_ADDR(ui16RegAddr));
+    EMACPHYWrite(ui32Base, ui8PhyAddr, EPHY_ADDAR,  REG_ADDR(ui16RegAddr));
+
+    //
+    // Write the extended register value.
+    //
+    EMACPHYWrite(ui32Base, ui8PhyAddr, EPHY_REGCTL, 
+                 (0x4000 | DEV_ADDR(ui16RegAddr)));
+    EMACPHYWrite(ui32Base, ui8PhyAddr, EPHY_REGCTL, ui16Data);
+}
+
+//*****************************************************************************
+//
+//! Reads from an extended PHY register in MMD address space.
+//!
+//! \param ui32Base is the base address of the controller.
+//! \param ui8PhyAddr is the physical address of the PHY to access.
+//! \param ui16RegAddr is the address of the PHY extended register to be
+//! accessed.
+//!
+//! When connected to an external PHY supporting extended registers, this
+//! this function returns the contents of the MMD register specified by
+//! \e ui16RegAddr.
+//!
+//! \return Returns the 16-bit value read from the PHY.
+//
+//*****************************************************************************
+uint16_t
+EMACPHYMMDRead(uint32_t ui32Base, uint8_t ui8PhyAddr, uint16_t ui16RegAddr)
+{
+    //
+    // Parameter sanity check.
+    //
+    ASSERT(ui8PhyAddr < 32);
+
+    //
+    // Set the address of the register we're about to read.
+    //
+    EMACPHYWrite(ui32Base, ui8PhyAddr, EPHY_REGCTL, DEV_ADDR(ui16RegAddr));
+    EMACPHYWrite(ui32Base, ui8PhyAddr, EPHY_ADDAR,  REG_ADDR(ui16RegAddr));
+
+    //
+    // Read the extended register value.
+    //
+    EMACPHYWrite(ui32Base, ui8PhyAddr, EPHY_REGCTL, 
+                 (0x4000 | DEV_ADDR(ui16RegAddr)));
+    return(EMACPHYRead(ui32Base, ui8PhyAddr, EPHY_ADDAR));
 }
 
 //*****************************************************************************

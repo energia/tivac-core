@@ -2,7 +2,7 @@
 //
 // hw_lcd.h - Defines and macros used when accessing the LCD controller.
 //
-// Copyright (c) 2011-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2011-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Firmware Development Package.
+// This is part of revision 2.1.4.178 of the Tiva Firmware Development Package.
 //
 //*****************************************************************************
 
@@ -45,7 +45,7 @@
 // The following are defines for the LCD register offsets.
 //
 //*****************************************************************************
-#define LCD_O_PID               0x00000000  // PID Register Format
+#define LCD_O_PID               0x00000000  // LCD PID Register Format
 #define LCD_O_CTL               0x00000004  // LCD Control
 #define LCD_O_LIDDCTL           0x0000000C  // LCD LIDD Control
 #define LCD_O_LIDDCS0CFG        0x00000010  // LCD LIDD CS0 Configuration
@@ -77,7 +77,7 @@
 #define LCD_O_RISSET            0x00000058  // LCD Interrupt Raw Status and Set
                                             // Register
 #define LCD_O_MISCLR            0x0000005C  // LCD Interrupt Status and Clear
-#define LCD_O_IM                0x00000060  // LCD Interrupt Interrupt Mask
+#define LCD_O_IM                0x00000060  // LCD Interrupt Mask
 #define LCD_O_IENC              0x00000064  // LCD Interrupt Enable Clear
 #define LCD_O_CLKEN             0x0000006C  // LCD Clock Enable
 #define LCD_O_CLKRESET          0x00000070  // LCD Clock Resets
@@ -122,15 +122,15 @@
                                             // Polarity Control
 #define LCD_LIDDCTL_MODE_M      0x00000007  // LIDD Mode Select
 #define LCD_LIDDCTL_MODE_SYNCM68                                              \
-                                0x00000000  // Sync MPU68
+                                0x00000000  // Synchronous Motorola 6800 Mode
 #define LCD_LIDDCTL_MODE_ASYNCM68                                             \
-                                0x00000001  // Async MPU68
+                                0x00000001  // Asynchronous Motorola 6800 Mode
 #define LCD_LIDDCTL_MODE_SYNCM80                                              \
-                                0x00000002  // Sync MPU80
+                                0x00000002  // Synchronous Intel 8080 mode
 #define LCD_LIDDCTL_MODE_ASYNCM80                                             \
-                                0x00000003  // Async MPU80
+                                0x00000003  // Asynchronous Intel 8080 mode
 #define LCD_LIDDCTL_MODE_ASYNCHIT                                             \
-                                0x00000004  // Hitachi (Async)
+                                0x00000004  // Asynchronous Hitachi mode
 
 //*****************************************************************************
 //
@@ -146,12 +146,12 @@
 #define LCD_LIDDCS0CFG_RDDUR_M  0x00000FC0  // Read Strobe (RD) Duration cycles
 #define LCD_LIDDCS0CFG_RDHOLD_M 0x0000003C  // Read Strobe (RD) Hold cycles
 #define LCD_LIDDCS0CFG_GAP_M    0x00000003  // Field value defines the number
-                                            // of LCDMCLK (ta+1) cycles between
-                                            // the end of one CS0 (LCDAC)
-                                            // device access and the start of
-                                            // another CS0 (LCDAC) device
-                                            // access unless the two accesses
-                                            // are both Reads
+                                            // of LCDMCLK cycles (GAP +1)
+                                            // between the end of one CS0
+                                            // (LCDAC) device access and the
+                                            // start of another CS0 (LCDAC)
+                                            // device access unless the two
+                                            // accesses are both reads
 #define LCD_LIDDCS0CFG_WRSU_S   27
 #define LCD_LIDDCS0CFG_WRDUR_S  21
 #define LCD_LIDDCS0CFG_WRHOLD_S 17
@@ -167,7 +167,7 @@
 //
 //*****************************************************************************
 #define LCD_LIDDCS0ADDR_CS0ADDR_M                                             \
-                                0x0000FFFF  // LCD Address Bus Initiation
+                                0x0000FFFF  // LCD Address
 #define LCD_LIDDCS0ADDR_CS0ADDR_S                                             \
                                 0
 
@@ -178,7 +178,7 @@
 //
 //*****************************************************************************
 #define LCD_LIDDCS0DATA_CS0DATA_M                                             \
-                                0x0000FFFF  // LCD Data Read/Write Initiation
+                                0x0000FFFF  // LCD Data Read/Write
 #define LCD_LIDDCS0DATA_CS0DATA_S                                             \
                                 0
 
@@ -196,12 +196,12 @@
 #define LCD_LIDDCS1CFG_RDDUR_M  0x00000FC0  // Read Strobe (RD) Duration cycles
 #define LCD_LIDDCS1CFG_RDHOLD_M 0x0000003C  // Read Strobe (RD) Hold cycles
 #define LCD_LIDDCS1CFG_GAP_M    0x00000003  // Field value defines the number
-                                            // of LCDMCLK (ta+1) cycles between
-                                            // the end of one CS1 (LCDAC)
-                                            // device access and the start of
-                                            // another CS0 (LCDAC) device
-                                            // access unless the two accesses
-                                            // are both Reads
+                                            // of LCDMCLK cycles (GAP + 1)
+                                            // between the end of one CS1
+                                            // (LCDAC) device access and the
+                                            // start of another CS0 (LCDAC)
+                                            // device access unless the two
+                                            // accesses are both reads
 #define LCD_LIDDCS1CFG_WRSU_S   27
 #define LCD_LIDDCS1CFG_WRDUR_S  21
 #define LCD_LIDDCS1CFG_WRHOLD_S 17
@@ -217,7 +217,7 @@
 //
 //*****************************************************************************
 #define LCD_LIDDCS1ADDR_CS1ADDR_M                                             \
-                                0x0000FFFF  // LCD Address Bus Initiation
+                                0x0000FFFF  // LCD Address Bus
 #define LCD_LIDDCS1ADDR_CS1ADDR_S                                             \
                                 0
 
@@ -277,6 +277,7 @@
 #define LCD_RASTRTIM0_HFP_S     16
 #define LCD_RASTRTIM0_HSW_S     10
 #define LCD_RASTRTIM0_PPL_S     4
+#define LCD_RASTRTIM0_MSBPPL_S  3
 
 //*****************************************************************************
 //
@@ -317,6 +318,7 @@
 #define LCD_RASTRTIM2_MSBHFP_M  0x00000003  // Bits 9:8 of the horizontal front
                                             // porch field
 #define LCD_RASTRTIM2_HSW_S     27
+#define LCD_RASTRTIM2_MSBLPP_S  26
 #define LCD_RASTRTIM2_ACBI_S    16
 #define LCD_RASTRTIM2_ACBF_S    8
 #define LCD_RASTRTIM2_MSBHBP_S  4
@@ -350,8 +352,6 @@
 // The following are defines for the bit fields in the LCD_O_DMACTL register.
 //
 //*****************************************************************************
-#define LCD_DMACTL_DMAMSTRP_M   0x00070000  // Priority for the L3 OCP Master
-                                            // Bus
 #define LCD_DMACTL_FIFORDY_M    0x00000700  // DMA FIFO threshold
 #define LCD_DMACTL_FIFORDY_8    0x00000000  // 8 words
 #define LCD_DMACTL_FIFORDY_16   0x00000100  // 16 words
@@ -369,12 +369,8 @@
 #define LCD_DMACTL_BYTESWAP     0x00000008  // This bit controls the bytelane
                                             // ordering of the data on the
                                             // output of the DMA module
-#define LCD_DMACTL_BIGDEND      0x00000002  // The BIGEND and BYTESWAP bits
-                                            // control the bytelane ordering of
-                                            // the data on the output of the
-                                            // DMA module
+#define LCD_DMACTL_BIGDEND      0x00000002  // Big Endian Enable
 #define LCD_DMACTL_FMODE        0x00000001  // Frame Mode
-#define LCD_DMACTL_DMAMSTRP_S   16
 
 //*****************************************************************************
 //
@@ -417,8 +413,7 @@
 // The following are defines for the bit fields in the LCD_O_SYSCFG register.
 //
 //*****************************************************************************
-#define LCD_SYSCFG_STDBY_M      0x00000030  // Configuration of the local
-                                            // initiator state management mode
+#define LCD_SYSCFG_STDBY_M      0x00000030  // Standby Mode
 #define LCD_SYSCFG_STDBY_FORCE  0x00000000  // Force-standby mode: local
                                             // initiator is unconditionally
                                             // placed in standby state. Backup
@@ -429,28 +424,21 @@
                                             // debug only
 #define LCD_SYSCFG_STDBY_SMART  0x00000020  // Smart-standby mode: local
                                             // initiator standby status depends
-                                            // on local conditions, i.e. the
-                                            // module's functional requirement
-                                            // from the initiator. IP module
-                                            // shall not generate
+                                            // on local conditions, that is,
+                                            // the module's functional
+                                            // requirement from the initiator.
+                                            // IP module shall not generate
                                             // (initiator-related) wakeup
                                             // events
-#define LCD_SYSCFG_STDBY_SMWAKE 0x00000030  // Smart-Standby wakeup-capable
-                                            // mode: local initiator standby
-                                            // status depends on local
-                                            // conditions, i.e. the module's
-                                            // functional requirement from the
-                                            // initiator
-#define LCD_SYSCFG_IDLEMODE_M   0x0000000C  // Configuration of the local
-                                            // target state management mode
+#define LCD_SYSCFG_IDLEMODE_M   0x0000000C  // Idle Mode
 #define LCD_SYSCFG_IDLEMODE_FORCE                                             \
                                 0x00000000  // Force-idle mode: local target's
                                             // idle state follows
                                             // (acknowledges) the system's idle
-                                            // requests unconditionally, i.e.
-                                            // regardless of the IP module's
-                                            // internal requirements. Backup
-                                            // mode, for debug only
+                                            // requests unconditionally, that
+                                            // is, regardless of the IP
+                                            // module's internal requirements.
+                                            // Backup mode, for debug only
 #define LCD_SYSCFG_IDLEMODE_NONE                                              \
                                 0x00000004  // No-idle mode: local target never
                                             // enters idle state. Backup mode,
@@ -464,13 +452,6 @@
                                             // IP module shall not generate
                                             // (IRQ- or DMA-requestrelated)
                                             // wakeup events
-#define LCD_SYSCFG_IDLEMODE_SMWAKE                                            \
-                                0x0000000C  // Smart-idle wakeup-capable mode:
-                                            // local target's idle state
-                                            // eventually follows
-                                            // (acknowledges) the system's idle
-                                            // requests, depending on the IP
-                                            // module's internal requirements
 
 //*****************************************************************************
 //
@@ -571,15 +552,9 @@
 // The following are defines for the bit fields in the LCD_O_CLKEN register.
 //
 //*****************************************************************************
-#define LCD_CLKEN_DMA           0x00000004  // Software Clock Enable for the
-                                            // DMA submodule
-#define LCD_CLKEN_LIDD          0x00000002  // Software Clock Enable for the
-                                            // LIDD submodule (character
-                                            // displays)
-#define LCD_CLKEN_CORE          0x00000001  // Software Clock Enable for the
-                                            // Core, which encompasses the
-                                            // Raster Active Matrix and Passive
-                                            // Matrix logic
+#define LCD_CLKEN_DMA           0x00000004  // DMA Clock Enable
+#define LCD_CLKEN_LIDD          0x00000002  // LIDD Submodule Clock Enable
+#define LCD_CLKEN_CORE          0x00000001  // LCD Core Clock Enable
 
 //*****************************************************************************
 //

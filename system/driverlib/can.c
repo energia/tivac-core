@@ -2,7 +2,7 @@
 //
 // can.c - Driver for the CAN module.
 //
-// Copyright (c) 2006-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2006-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Peripheral Driver Library.
+// This is part of revision 2.1.4.178 of the Tiva Peripheral Driver Library.
 //
 //*****************************************************************************
 
@@ -178,26 +178,26 @@ _CANIntNumberGet(uint32_t ui32Base)
     //
     // Find the valid interrupt number for this CAN controller.
     //
-    if(CLASS_IS_BLIZZARD)
+    if(CLASS_IS_TM4C123)
     {
         if(ui32Base == CAN0_BASE)
         {
-            ui8Int = INT_CAN0_BLIZZARD;
+            ui8Int = INT_CAN0_TM4C123;
         }
         else if(ui32Base == CAN1_BASE)
         {
-            ui8Int = INT_CAN1_BLIZZARD;
+            ui8Int = INT_CAN1_TM4C123;
         }
     }
-    else if(CLASS_IS_SNOWFLAKE)
+    else if(CLASS_IS_TM4C129)
     {
         if(ui32Base == CAN0_BASE)
         {
-            ui8Int = INT_CAN0_SNOWFLAKE;
+            ui8Int = INT_CAN0_TM4C129;
         }
         else if(ui32Base == CAN1_BASE)
         {
-            ui8Int = INT_CAN1_SNOWFLAKE;
+            ui8Int = INT_CAN1_TM4C129;
         }
     }
 
@@ -242,7 +242,7 @@ _CANDataRegWrite(uint8_t *pui8Data, uint32_t *pui32Register, uint32_t ui32Size)
         ui32Value = pui8Data[ui32Idx++];
 
         //
-        // Only write the second byte if needed otherwise it will be zero.
+        // Only write the second byte if needed otherwise the value is zero.
         //
         if(ui32Idx < ui32Size)
         {
@@ -333,7 +333,7 @@ CANInit(uint32_t ui32Base)
 
     //
     // Place CAN controller in init state, regardless of previous state.  This
-    // will put controller in idle, and allow the message object RAM to be
+    // puts controller in idle, and allow the message object RAM to be
     // programmed.
     //
     HWREG(ui32Base + CAN_O_CTL) = CAN_CTL_INIT;
@@ -413,8 +413,8 @@ CANInit(uint32_t ui32Base)
 //! Enables the CAN controller for message processing.  Once enabled, the
 //! controller automatically transmits any pending frames, and processes any
 //! received frames.  The controller can be stopped by calling CANDisable().
-//! Prior to calling CANEnable(), CANInit() should have been called to
-//! initialize the controller and the CAN bus clock should be configured by
+//! Prior to calling CANEnable(), CANInit() must have been called to
+//! initialize the controller and the CAN bus clock must be configured by
 //! calling CANBitTimingSet().
 //!
 //! \return None.
@@ -532,10 +532,10 @@ CANBitTimingGet(uint32_t ui32Base, tCANBitClkParms *psClkParms)
 //! This function sets the CAN bit timing for the bit rate passed in the
 //! \e ui32BitRate parameter based on the \e ui32SourceClock parameter.
 //! Because the CAN clock is based off of the system clock, the calling
-//! function should pass in the source clock rate either by retrieving it from
+//! function must pass in the source clock rate either by retrieving it from
 //! SysCtlClockGet() or using a specific value in Hz.  The CAN bit timing is
 //! calculated assuming a minimal amount of propagation delay, which works for
-//! most cases where the network length is int16_t.  If tighter timing
+//! most cases where the network length is short.  If tighter timing
 //! requirements or longer network lengths are needed, then the
 //! CANBitTimingSet() function is available for full customization of all of
 //! the CAN bit timing values.  Because not all bit rates can be matched
@@ -543,7 +543,7 @@ CANBitTimingGet(uint32_t ui32Base, tCANBitClkParms *psClkParms)
 //! without being higher than the \e ui32BitRate value.
 //!
 //! \note On some devices the source clock is fixed at 8MHz so the
-//! \e ui32SourceClock should be set to 8000000.
+//! \e ui32SourceClock must be set to 8000000.
 //!
 //! \return This function returns the bit rate that the CAN controller was
 //! configured to use or it returns 0 to indicate that the bit rate was not
@@ -620,7 +620,7 @@ CANBitRateSet(uint32_t ui32Base, uint32_t ui32SourceClock,
                 //
                 // To set the bit timing register, the controller must be
                 // placed in init mode (if not already), and also configuration
-                // change bit enabled.  The state of the register should be
+                // change bit enabled.  The state of the register must be
                 // saved so it can be restored.
                 //
                 ui16CANCTL = HWREG(ui32Base + CAN_O_CTL);
@@ -746,7 +746,7 @@ CANBitTimingSet(uint32_t ui32Base, tCANBitClkParms *psClkParms)
     //
     // To set the bit timing register, the controller must be placed in init
     // mode (if not already), and also configuration change bit enabled.  State
-    // of the init bit should be saved so it can be restored at the end.
+    // of the init bit must be saved so it can be restored at the end.
     //
     ui32SavedInit = HWREG(ui32Base + CAN_O_CTL);
     HWREG(ui32Base + CAN_O_CTL) = ui32SavedInit | CAN_CTL_INIT | CAN_CTL_CCE;
@@ -800,7 +800,7 @@ CANBitTimingSet(uint32_t ui32Base, tCANBitClkParms *psClkParms)
 //!
 //! If the application is using a static interrupt vector table stored in
 //! flash, then it is not necessary to register the interrupt handler this way.
-//! Instead, IntEnable() should be used to enable CAN interrupts on the
+//! Instead, IntEnable() is used to enable CAN interrupts on the
 //! interrupt controller.
 //!
 //! \sa IntRegister() for important information about registering interrupt
@@ -898,7 +898,7 @@ CANIntUnregister(uint32_t ui32Base)
 //! In order to generate any interrupts, \b CAN_INT_MASTER must be enabled.
 //! Further, for any particular transaction from a message object to generate
 //! an interrupt, that message object must have interrupts enabled (see
-//! CANMessageSet()).  \b CAN_INT_ERROR will generate an interrupt if the
+//! CANMessageSet()).  \b CAN_INT_ERROR generates an interrupt if the
 //! controller enters the ``bus off'' condition, or if the error counters reach
 //! a limit.  \b CAN_INT_STATUS generates an interrupt under quite a few
 //! status conditions and may provide more interrupts than the application
@@ -973,7 +973,7 @@ CANIntDisable(uint32_t ui32Base, uint32_t ui32IntFlags)
 //! \b CAN_INT_STS_CAUSE returns the value of the controller interrupt register
 //! and indicates the cause of the interrupt.  The value returned is
 //! \b CAN_INT_INTID_STATUS if the cause is a status interrupt.  In this case,
-//! the status register should be read with the CANStatusGet() function.
+//! the status register is read with the CANStatusGet() function.
 //! Calling this function to read the status also clears the status
 //! interrupt.  If the value of the interrupt register is in the range 1-32,
 //! then this indicates the number of the highest priority message object that
@@ -1055,13 +1055,13 @@ CANIntStatus(uint32_t ui32Base, tCANIntStsReg eIntStsReg)
 //! \param ui32IntClr is a value indicating which interrupt source to clear.
 //!
 //! This function can be used to clear a specific interrupt source.  The
-//! \e ui32IntClr parameter should be one of the following values:
+//! \e ui32IntClr parameter must be one of the following values:
 //!
 //! - \b CAN_INT_INTID_STATUS - Clears a status interrupt.
 //! - 1-32 - Clears the specified message object interrupt
 //!
 //! It is not necessary to use this function to clear an interrupt.  This
-//! function should only be used if the application wants to clear an interrupt
+//! function is only used if the application wants to clear an interrupt
 //! source without taking the normal interrupt action.
 //!
 //! Normally, the status interrupt is cleared by reading the controller status
@@ -1231,7 +1231,7 @@ CANRetryGet(uint32_t ui32Base)
 //! - \b CAN_STS_MSGVAL - bit mask of objects with valid configuration
 //!
 //! When reading the main controller status register, a pending status
-//! interrupt is cleared.  This parameter should be used in the interrupt
+//! interrupt is cleared.  This parameter is used in the interrupt
 //! handler for the CAN controller if the cause is a status interrupt.  The
 //! controller status register fields are as follows:
 //!
@@ -1429,7 +1429,7 @@ CANErrCntrGet(uint32_t ui32Base, uint32_t *pui32RxCount,
 //!   - Set \b MSG_OBJ_USE_ID_FILTER flag to enable filtering based on the
 //!     identifier mask specified by \e ui32MsgIDMask.
 //! - \e ui32MsgLen - the number of bytes in the message data.  This parameter
-//!   should be non-zero even for a remote frame; it should match the expected
+//!   must be non-zero even for a remote frame; it must match the expected
 //!   bytes of data in the responding data frame.
 //! - \e pui8MsgData - points to a buffer containing up to 8 bytes of data for
 //!   a data frame.
@@ -1453,7 +1453,7 @@ CANErrCntrGet(uint32_t ui32Base, uint32_t *pui32RxCount,
 //! -# Set \e eMsgObjType to \b MSG_OBJ_TYPE_RX.
 //! -# Set \e psMsgObject->ui32MsgID to the full message ID, or a partial mask
 //!    to use partial ID matching.
-//! -# Set \e psMsgObject->ui32MsgIDMask bits that should be used for masking
+//! -# Set \e psMsgObject->ui32MsgIDMask bits that are used for masking
 //!    during comparison.
 //! -# Set \e psMsgObject->ui32Flags as follows:
 //!    - Set \b MSG_OBJ_RX_INT_ENABLE flag to be interrupted when the data
@@ -1520,8 +1520,8 @@ CANMessageSet(uint32_t ui32Base, uint32_t ui32ObjID,
 
     //
     // This is always a write to the Message object as this call is setting a
-    // message object.  This call will also always set all size bits so it sets
-    // both data bits.  The call will use the CONTROL register to set control
+    // message object.  This call always sets all size bits so it sets
+    // both data bits.  The call uses the CONTROL register to set control
     // bits so this bit needs to be set as well.
     //
     ui16CmdMaskReg = (CAN_IF1CMSK_WRNRD | CAN_IF1CMSK_DATAA |
@@ -1633,7 +1633,7 @@ CANMessageSet(uint32_t ui32Base, uint32_t ui32ObjID,
         }
 
         //
-        // This case should never happen due to the ASSERT statement at the
+        // This case never happens due to the ASSERT statement at the
         // beginning of this function.
         //
         default:

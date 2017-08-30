@@ -2,7 +2,7 @@
 //
 // lcd.h - Defines and Macros for the LCD Controller module.
 //
-// Copyright (c) 2012-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2012-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Peripheral Driver Library.
+// This is part of revision 2.1.4.178 of the Tiva Peripheral Driver Library.
 //
 //*****************************************************************************
 
@@ -361,14 +361,6 @@ tLCDRasterTiming;
 // Configuration values used with LCDDMAConfigSet().
 //
 //*****************************************************************************
-#define LCD_DMA_PRIORITY_0      0x00000000
-#define LCD_DMA_PRIORITY_1      0x00010000
-#define LCD_DMA_PRIORITY_2      0x00020000
-#define LCD_DMA_PRIORITY_3      0x00030000
-#define LCD_DMA_PRIORITY_4      0x00040000
-#define LCD_DMA_PRIORITY_5      0x00050000
-#define LCD_DMA_PRIORITY_6      0x00060000
-#define LCD_DMA_PRIORITY_7      0x00070000
 #define LCD_DMA_FIFORDY_8_WORDS 0x00000000
 #define LCD_DMA_FIFORDY_16_WORDS                                              \
                                 0x00000100

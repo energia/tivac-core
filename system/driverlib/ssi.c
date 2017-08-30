@@ -2,7 +2,7 @@
 //
 // ssi.c - Driver for Synchronous Serial Interface.
 //
-// Copyright (c) 2005-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2005-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Peripheral Driver Library.
+// This is part of revision 2.1.4.178 of the Tiva Peripheral Driver Library.
 //
 //*****************************************************************************
 
@@ -62,20 +62,20 @@
 //*****************************************************************************
 static const uint32_t g_ppui32SSIIntMap[][2] =
 {
-    { SSI0_BASE, INT_SSI0_BLIZZARD },
-    { SSI1_BASE, INT_SSI1_BLIZZARD },
-    { SSI2_BASE, INT_SSI2_BLIZZARD },
-    { SSI3_BASE, INT_SSI3_BLIZZARD },
+    { SSI0_BASE, INT_SSI0_TM4C123 },
+    { SSI1_BASE, INT_SSI1_TM4C123 },
+    { SSI2_BASE, INT_SSI2_TM4C123 },
+    { SSI3_BASE, INT_SSI3_TM4C123 },
 };
 static const uint_fast8_t g_ui8SSIIntMapRows =
     sizeof(g_ppui32SSIIntMap) / sizeof(g_ppui32SSIIntMap[0]);
 
 static const uint32_t g_ppui32SSIIntMapSnowflake[][2] =
 {
-    { SSI0_BASE, INT_SSI0_SNOWFLAKE },
-    { SSI1_BASE, INT_SSI1_SNOWFLAKE },
-    { SSI2_BASE, INT_SSI2_SNOWFLAKE },
-    { SSI3_BASE, INT_SSI3_SNOWFLAKE },
+    { SSI0_BASE, INT_SSI0_TM4C129 },
+    { SSI1_BASE, INT_SSI1_TM4C129 },
+    { SSI2_BASE, INT_SSI2_TM4C129 },
+    { SSI3_BASE, INT_SSI3_TM4C129 },
 };
 static const uint_fast8_t g_ui8SSIIntMapSnowflakeRows =
     sizeof(g_ppui32SSIIntMapSnowflake) / sizeof(g_ppui32SSIIntMapSnowflake[0]);
@@ -129,7 +129,7 @@ _SSIIntNumberGet(uint32_t ui32Base)
     ppui32SSIIntMap = g_ppui32SSIIntMap;
     ui8Rows = g_ui8SSIIntMapRows;
 
-    if(CLASS_IS_SNOWFLAKE)
+    if(CLASS_IS_TM4C129)
     {
         ppui32SSIIntMap = g_ppui32SSIIntMapSnowflake;
         ui8Rows = g_ui8SSIIntMapSnowflakeRows;
@@ -176,8 +176,11 @@ _SSIIntNumberGet(uint32_t ui32Base)
 //! The \e ui32Protocol parameter defines the data frame format.  The
 //! \e ui32Protocol parameter can be one of the following values:
 //! \b SSI_FRF_MOTO_MODE_0, \b SSI_FRF_MOTO_MODE_1, \b SSI_FRF_MOTO_MODE_2,
-//! \b SSI_FRF_MOTO_MODE_3, \b SSI_FRF_TI, or \b SSI_FRF_NMW.  The Motorola
-//! frame formats encode the following polarity and phase configurations:
+//! \b SSI_FRF_MOTO_MODE_3, \b SSI_FRF_TI, or \b SSI_FRF_NMW. Note that 
+//! the \b SSI_FRF_NMW option is only available on some devices. Refer to the
+//! device data sheet to determine if the Microwire format is supported on 
+//! a particular device.  The Motorola  frame formats encode the following
+//! polarity and phase configurations:
 //!
 //! <pre>
 //! Polarity Phase       Mode
@@ -196,19 +199,22 @@ _SSIIntNumberGet(uint32_t ui32Base)
 //! The \e ui32BitRate parameter defines the bit rate for the SSI.  This bit
 //! rate must satisfy the following clock ratio criteria:
 //!
-//! - FSSI >= 2 * bit rate (master mode); this speed cannot exceed 25 MHz.
-//! - FSSI >= 12 * bit rate or 6 * bit rate (slave modes), depending on the
-//! capability of the specific microcontroller
+//! - FSSI >= 2 * bit rate (master mode)
+//! - FSSI >= 12 * bit rate (slave modes)
 //!
-//! where FSSI is the frequency of the clock supplied to the SSI module.
+//! where FSSI is the frequency of the clock supplied to the SSI module. Note
+//! that there are frequency limits for FSSI that are described in the Bit Rate
+//! Generation section of the SSI chapter in the data sheet.
 //!
 //! The \e ui32DataWidth parameter defines the width of the data transfers and
 //! can be a value between 4 and 16, inclusive.
 //!
-//! The peripheral clock is the same as the processor clock.  This value is
-//! returned by SysCtlClockGet(), or it can be explicitly hard coded if it is
-//! constant and known (to save the code/execution overhead of a call to
-//! SysCtlClockGet()).
+//! The peripheral clock is the same as the processor clock.  The frequency of
+//! the system clock is the value returned by SysCtlClockGet() for TM4C123x
+//! devices or the value returned by SysCtlClockFreqSet() for TM4C129x devices,
+//! or it can be explicitly hard coded if it is constant and known (to save the
+//! code/execution overhead of a call to SysCtlClockGet() or fetch of the 
+//! variable call holding the return value of SysCtlClockFreqSet()).
 //!
 //! \return None.
 //
@@ -235,8 +241,7 @@ SSIConfigSetExpClk(uint32_t ui32Base, uint32_t ui32SSIClk,
            (ui32Protocol == SSI_FRF_TI) ||
            (ui32Protocol == SSI_FRF_NMW));
     ASSERT((ui32Mode == SSI_MODE_MASTER) ||
-           (ui32Mode == SSI_MODE_SLAVE) ||
-           (ui32Mode == SSI_MODE_SLAVE_OD));
+           (ui32Mode == SSI_MODE_SLAVE));
     ASSERT(((ui32Mode == SSI_MODE_MASTER) &&
             (ui32BitRate <= (ui32SSIClk / 2))) ||
            ((ui32Mode != SSI_MODE_MASTER) &&
@@ -247,8 +252,7 @@ SSIConfigSetExpClk(uint32_t ui32Base, uint32_t ui32SSIClk,
     //
     // Set the mode.
     //
-    ui32RegVal = (ui32Mode == SSI_MODE_SLAVE_OD) ? SSI_CR1_SOD : 0;
-    ui32RegVal |= (ui32Mode == SSI_MODE_MASTER) ? 0 : SSI_CR1_MS;
+    ui32RegVal = (ui32Mode == SSI_MODE_MASTER) ? 0 : SSI_CR1_MS;
     HWREG(ui32Base + SSI_O_CR1) = ui32RegVal;
 
     //
@@ -356,7 +360,7 @@ SSIIntRegister(uint32_t ui32Base, void (*pfnHandler)(void))
     ASSERT(_SSIBaseValid(ui32Base));
 
     //
-    // Determine the interrupt number based on the SSI port.
+    // Determine the interrupt number based on the SSI module.
     //
     ui32Int = _SSIIntNumberGet(ui32Base);
 
@@ -400,7 +404,7 @@ SSIIntUnregister(uint32_t ui32Base)
     ASSERT(_SSIBaseValid(ui32Base));
 
     //
-    // Determine the interrupt number based on the SSI port.
+    // Determine the interrupt number based on the SSI module.
     //
     ui32Int = _SSIIntNumberGet(ui32Base);
 
@@ -728,7 +732,7 @@ SSIDataGetNonBlocking(uint32_t ui32Base, uint32_t *pui32Data)
 //
 //! Enables SSI DMA operation.
 //!
-//! \param ui32Base is the base address of the SSI port.
+//! \param ui32Base is the base address of the SSI module.
 //! \param ui32DMAFlags is a bit mask of the DMA features to enable.
 //!
 //! This function enables the specified SSI DMA features.  The SSI can be
@@ -763,7 +767,7 @@ SSIDMAEnable(uint32_t ui32Base, uint32_t ui32DMAFlags)
 //
 //! Disables SSI DMA operation.
 //!
-//! \param ui32Base is the base address of the SSI port.
+//! \param ui32Base is the base address of the SSI module.
 //! \param ui32DMAFlags is a bit mask of the DMA features to disable.
 //!
 //! This function is used to disable SSI DMA features that were enabled
@@ -794,7 +798,7 @@ SSIDMADisable(uint32_t ui32Base, uint32_t ui32DMAFlags)
 //
 //! Determines whether the SSI transmitter is busy or not.
 //!
-//! \param ui32Base is the base address of the SSI port.
+//! \param ui32Base is the base address of the SSI module.
 //!
 //! This function allows the caller to determine whether all transmitted bytes
 //! have cleared the transmitter hardware.  If \b false is returned, then the
@@ -823,7 +827,7 @@ SSIBusy(uint32_t ui32Base)
 //
 //! Sets the data clock source for the specified SSI peripheral.
 //!
-//! \param ui32Base is the base address of the SSI port.
+//! \param ui32Base is the base address of the SSI module.
 //! \param ui32Source is the baud clock source for the SSI.
 //!
 //! This function allows the baud clock source for the SSI to be selected.
@@ -861,7 +865,7 @@ SSIClockSourceSet(uint32_t ui32Base, uint32_t ui32Source)
 //
 //! Gets the data clock source for the specified SSI peripheral.
 //!
-//! \param ui32Base is the base address of the SSI port.
+//! \param ui32Base is the base address of the SSI module.
 //!
 //! This function returns the data clock source for the specified SSI.
 //!
@@ -869,7 +873,7 @@ SSIClockSourceSet(uint32_t ui32Base, uint32_t ui32Source)
 //! Tiva part and SSI in use.  Please consult the data sheet for the part
 //! in use to determine whether this support is available.
 //!
-//! \return Returns the current clock source, which will be either
+//! \return Returns the current clock source, which is either
 //! \b SSI_CLOCK_SYSTEM or \b SSI_CLOCK_PIOSC.
 //
 //*****************************************************************************
@@ -891,7 +895,7 @@ SSIClockSourceGet(uint32_t ui32Base)
 //
 //! Selects the advanced mode of operation for the SSI module.
 //!
-//! \param ui32Base is the base address of the SSI port.
+//! \param ui32Base is the base address of the SSI module.
 //! \param ui32Mode is the mode of operation to use.
 //!
 //! This function selects the mode of operation for the SSI module, which is
@@ -1073,15 +1077,15 @@ SSIAdvDataPutFrameEndNonBlocking(uint32_t ui32Base, uint32_t ui32Data)
 
 //*****************************************************************************
 //
-//! Configures the SSI advanced mode to hold \b SSIFss during the full
+//! Configures the SSI advanced mode to hold the SSIFss signal during the full
 //! transfer.
 //!
-//! \param ui32Base is the base address of the SSI port.
+//! \param ui32Base is the base address of the SSI module.
 //!
-//! This function configures the SSI module to de-assert the \b SSIFss signal
+//! This function configures the SSI module to de-assert the SSIFss signal
 //! during the entire data transfer when using one of the advanced modes
 //! (instead of briefly de-asserting it after every byte).  When using this
-//! mode, \b SSIFss can be directly controlled via SSIAdvDataPutFrameEnd() and
+//! mode, SSIFss can be directly controlled via SSIAdvDataPutFrameEnd() and
 //! SSIAdvDataPutFrameEndNonBlocking().
 //!
 //! \note The availability of the advanced mode of SSI operation varies with
@@ -1107,12 +1111,12 @@ SSIAdvFrameHoldEnable(uint32_t ui32Base)
 
 //*****************************************************************************
 //
-//! Configures the SSI advanced mode to de-assert \b SSIFss after every byte
-//! transfer.
+//! Configures the SSI advanced mode to de-assert the SSIFss signal after every 
+//! byte transfer.
 //!
-//! \param ui32Base is the base address of the SSI port.
+//! \param ui32Base is the base address of the SSI module.
 //!
-//! This function configures the SSI module to de-assert the \b SSIFss signal
+//! This function configures the SSI module to de-assert the SSIFss signal
 //! for one SSI clock cycle after every byte is transferred using one of the
 //! advanced modes (instead of leaving it asserted for the entire transfer).
 //! This mode is the default operation.

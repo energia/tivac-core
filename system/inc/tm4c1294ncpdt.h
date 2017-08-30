@@ -2,7 +2,7 @@
 //
 // tm4c1294ncpdt.h - TM4C1294NCPDT Register Definitions
 //
-// Copyright (c) 2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2013-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Firmware Development Package.
+// This is part of revision 2.1.4.178 of the Tiva Firmware Development Package.
 //
 //*****************************************************************************
 
@@ -86,7 +86,7 @@
 #define INT_CAN0                54          // CAN 0
 #define INT_CAN1                55          // CAN1
 #define INT_EMAC0               56          // Ethernet MAC
-#define INT_HIBERNATE           57          // HIB (Power Island)
+#define INT_HIBERNATE           57          // HIB
 #define INT_USB0                58          // USB MAC
 #define INT_PWM0_3              59          // PWM Generator 3
 #define INT_UDMA                60          // uDMA 0 Software
@@ -1173,7 +1173,6 @@
 #define USB0_ULPIREGDATA_R      (*((volatile uint8_t *)0x40050074))
 #define USB0_ULPIREGADDR_R      (*((volatile uint8_t *)0x40050075))
 #define USB0_ULPIREGCTL_R       (*((volatile uint8_t *)0x40050076))
-#define USB0_ULPIRAWDATA_R      (*((volatile uint8_t *)0x40050077))
 #define USB0_EPINFO_R           (*((volatile uint8_t *)0x40050078))
 #define USB0_RAMINFO_R          (*((volatile uint8_t *)0x40050079))
 #define USB0_CONTIM_R           (*((volatile uint8_t *)0x4005007A))
@@ -2430,7 +2429,7 @@
 #define EPHY_LEDCR              0x00000018  // Ethernet PHY LED Control
 #define EPHY_CTL                0x00000019  // Ethernet PHY Control
 #define EPHY_10BTSC             0x0000001A  // Ethernet PHY 10Base-T
-                                            // Status/Control
+                                            // Status/Control - MR26
 #define EPHY_BICSR1             0x0000001B  // Ethernet PHY BIST Control and
                                             // Status 1
 #define EPHY_BICSR2             0x0000001C  // Ethernet PHY BIST Control and
@@ -2439,33 +2438,6 @@
                                             // Control
 #define EPHY_RCR                0x0000001F  // Ethernet PHY Reset Control
 #define EPHY_LEDCFG             0x00000025  // Ethernet PHY LED Configuration
-#define EPHY_ALCDCR             0x00000155  // Ethernet PHY ALCD Control and
-                                            // Results
-#define EPHY_CDSCR              0x00000170  // Ethernet PHY Cable Diagnostic
-                                            // Control
-#define EPHY_CDLR1              0x00000180  // Ethernet PHY Cable Diagnostic
-                                            // Location Result 1
-#define EPHY_CDLR2              0x00000181  // Ethernet PHY Cable Diagnostic
-                                            // Location Result 2
-#define EPHY_CDLR3              0x00000182  // Ethernet PHY Cable Diagnostic
-                                            // Location Result 3
-#define EPHY_CDLR4              0x00000183  // Ethernet PHY Cable Diagnostic
-                                            // Location Result 4
-#define EPHY_CDLR5              0x00000184  // Ethernet PHY Cable Diagnostic
-                                            // Location Result 5
-#define EPHY_CDLAR1             0x00000185  // Ethernet PHY Cable Diagnostic
-                                            // Amplitude Result 1
-#define EPHY_CDLAR2             0x00000186  // Ethernet PHY Cable Diagnostic
-                                            // Amplitude Result 2
-#define EPHY_CDLAR3             0x00000187  // Ethernet PHY Cable Diagnostic
-                                            // Amplitude Result 3
-#define EPHY_CDLAR4             0x00000188  // Ethernet PHY Cable Diagnostic
-                                            // Amplitude Result 4
-#define EPHY_CDLAR5             0x00000189  // Ethernet PHY Cable Diagnostic
-                                            // Amplitude Result 5
-#define EPHY_CDGRR              0x0000018A  // Ethernet PHY Cable Diagnostic
-                                            // General Result
-#define EPHY_ALCDR2             0x00000215  // Ethernet PHY ALCD Results 2
 
 //*****************************************************************************
 //
@@ -2539,7 +2511,6 @@
 #define FLASH_DMAST_R           (*((volatile uint32_t *)0x400FDFD4))
 #define FLASH_RVP_R             (*((volatile uint32_t *)0x400FE0D4))
 #define FLASH_BOOTCFG_R         (*((volatile uint32_t *)0x400FE1D0))
-#define FLASH_USRPWRUP_R        (*((volatile uint32_t *)0x400FE1DC))
 #define FLASH_USERREG0_R        (*((volatile uint32_t *)0x400FE1E0))
 #define FLASH_USERREG1_R        (*((volatile uint32_t *)0x400FE1E4))
 #define FLASH_USERREG2_R        (*((volatile uint32_t *)0x400FE1E8))
@@ -2594,7 +2565,6 @@
 #define SYSCTL_MOSCCTL_R        (*((volatile uint32_t *)0x400FE07C))
 #define SYSCTL_RSCLKCFG_R       (*((volatile uint32_t *)0x400FE0B0))
 #define SYSCTL_MEMTIM0_R        (*((volatile uint32_t *)0x400FE0C0))
-#define SYSCTL_DSMEMTIM0_R      (*((volatile uint32_t *)0x400FE0C8))
 #define SYSCTL_ALTCLKCFG_R      (*((volatile uint32_t *)0x400FE138))
 #define SYSCTL_DSCLKCFG_R       (*((volatile uint32_t *)0x400FE144))
 #define SYSCTL_DIVSCLK_R        (*((volatile uint32_t *)0x400FE148))
@@ -2607,6 +2577,7 @@
 #define SYSCTL_SLPPWRCFG_R      (*((volatile uint32_t *)0x400FE188))
 #define SYSCTL_DSLPPWRCFG_R     (*((volatile uint32_t *)0x400FE18C))
 #define SYSCTL_NVMSTAT_R        (*((volatile uint32_t *)0x400FE1A0))
+#define SYSCTL_LDOSPCTL_R       (*((volatile uint32_t *)0x400FE1B4))
 #define SYSCTL_LDODPCTL_R       (*((volatile uint32_t *)0x400FE1BC))
 #define SYSCTL_RESBEHAVCTL_R    (*((volatile uint32_t *)0x400FE1D8))
 #define SYSCTL_HSSR_R           (*((volatile uint32_t *)0x400FE1F4))
@@ -2682,6 +2653,7 @@
 #define SYSCTL_SCGCWD_R         (*((volatile uint32_t *)0x400FE700))
 #define SYSCTL_SCGCTIMER_R      (*((volatile uint32_t *)0x400FE704))
 #define SYSCTL_SCGCGPIO_R       (*((volatile uint32_t *)0x400FE708))
+#define SYSCTL_SCGCDMA_R        (*((volatile uint32_t *)0x400FE70C))
 #define SYSCTL_SCGCEPI_R        (*((volatile uint32_t *)0x400FE710))
 #define SYSCTL_SCGCHIB_R        (*((volatile uint32_t *)0x400FE714))
 #define SYSCTL_SCGCUART_R       (*((volatile uint32_t *)0x400FE718))
@@ -2700,6 +2672,7 @@
 #define SYSCTL_DCGCWD_R         (*((volatile uint32_t *)0x400FE800))
 #define SYSCTL_DCGCTIMER_R      (*((volatile uint32_t *)0x400FE804))
 #define SYSCTL_DCGCGPIO_R       (*((volatile uint32_t *)0x400FE808))
+#define SYSCTL_DCGCDMA_R        (*((volatile uint32_t *)0x400FE80C))
 #define SYSCTL_DCGCEPI_R        (*((volatile uint32_t *)0x400FE810))
 #define SYSCTL_DCGCHIB_R        (*((volatile uint32_t *)0x400FE814))
 #define SYSCTL_DCGCUART_R       (*((volatile uint32_t *)0x400FE818))
@@ -2972,8 +2945,7 @@
 #define SSI_CR0_SPO             0x00000040  // SSI Serial Clock Polarity
 #define SSI_CR0_FRF_M           0x00000030  // SSI Frame Format Select
 #define SSI_CR0_FRF_MOTO        0x00000000  // Freescale SPI Frame Format
-#define SSI_CR0_FRF_TI          0x00000010  // Texas Instruments Synchronous
-                                            // Serial Frame Format
+#define SSI_CR0_FRF_TI          0x00000010  // Synchronous Serial Frame Format
 #define SSI_CR0_DSS_M           0x0000000F  // SSI Data Size Select
 #define SSI_CR0_DSS_4           0x00000003  // 4-bit data
 #define SSI_CR0_DSS_5           0x00000004  // 5-bit data
@@ -3003,9 +2975,9 @@
 #define SSI_CR1_MODE_LEGACY     0x00000000  // Legacy SSI mode
 #define SSI_CR1_MODE_BI         0x00000040  // Bi-SSI mode
 #define SSI_CR1_MODE_QUAD       0x00000080  // Quad-SSI Mode
-#define SSI_CR1_MODE_ADVANCED   0x000000C0  // Advanced SSI Mode
+#define SSI_CR1_MODE_ADVANCED   0x000000C0  // Advanced SSI Mode with 8-bit
+                                            // packet size
 #define SSI_CR1_EOT             0x00000010  // End of Transmission
-#define SSI_CR1_SOD             0x00000008  // SSI Slave Mode Output Disable
 #define SSI_CR1_MS              0x00000004  // SSI Master/Slave Select
 #define SSI_CR1_SSE             0x00000002  // SSI Synchronous Serial Port
                                             // Enable
@@ -3122,8 +3094,10 @@
 #define SSI_PP_FSSHLDFRM        0x00000008  // FSS Hold Frame Capability
 #define SSI_PP_MODE_M           0x00000006  // Mode of Operation
 #define SSI_PP_MODE_LEGACY      0x00000000  // Legacy SSI mode
-#define SSI_PP_MODE_ADVBI       0x00000002  // Advanced SSI and Bi-SSI
-#define SSI_PP_MODE_ADVBIQUAD   0x00000004  // Advanced, Bi- and Quad-SSI
+#define SSI_PP_MODE_ADVBI       0x00000002  // Legacy mode, Advanced SSI mode
+                                            // and Bi-SSI mode enabled
+#define SSI_PP_MODE_ADVBIQUAD   0x00000004  // Legacy mode, Advanced mode,
+                                            // Bi-SSI and Quad-SSI mode enabled
 #define SSI_PP_HSCLK            0x00000001  // High Speed Capability
 
 //*****************************************************************************
@@ -3132,9 +3106,8 @@
 //
 //*****************************************************************************
 #define SSI_CC_CS_M             0x0000000F  // SSI Baud Clock Source
-#define SSI_CC_CS_SYSPLL        0x00000000  // Either the system clock (if the
-                                            // PLL bypass is in effect) or the
-                                            // PLL output (default)
+#define SSI_CC_CS_SYSPLL        0x00000000  // System clock (based on clock
+                                            // source and divisor factor)
 #define SSI_CC_CS_PIOSC         0x00000005  // PIOSC
 
 //*****************************************************************************
@@ -3431,7 +3404,8 @@
 //
 //*****************************************************************************
 #define UART_CC_CS_M            0x0000000F  // UART Baud Clock Source
-#define UART_CC_CS_SYSCLK       0x00000000  // The system clock (default)
+#define UART_CC_CS_SYSCLK       0x00000000  // System clock (based on clock
+                                            // source and divisor factor)
 #define UART_CC_CS_PIOSC        0x00000005  // PIOSC
 
 //*****************************************************************************
@@ -3471,7 +3445,8 @@
 // The following are defines for the bit fields in the I2C_O_MDR register.
 //
 //*****************************************************************************
-#define I2C_MDR_DATA_M          0x000000FF  // Data Transferred
+#define I2C_MDR_DATA_M          0x000000FF  // This byte contains the data
+                                            // transferred during a transaction
 #define I2C_MDR_DATA_S          0
 
 //*****************************************************************************
@@ -3487,7 +3462,7 @@
 #define I2C_MTPR_PULSEL_4       0x00040000  // 4 clocks
 #define I2C_MTPR_PULSEL_8       0x00050000  // 8 clocks
 #define I2C_MTPR_PULSEL_16      0x00060000  // 16 clocks
-#define I2C_MTPR_PULSEL_32      0x00070000  // 32 clocks
+#define I2C_MTPR_PULSEL_31      0x00070000  // 31 clocks
 #define I2C_MTPR_HS             0x00000080  // High-Speed Enable
 #define I2C_MTPR_TPR_M          0x0000007F  // Timer Period
 #define I2C_MTPR_TPR_S          0
@@ -3759,7 +3734,7 @@
 // The following are defines for the bit fields in the I2C_O_FIFODATA register.
 //
 //*****************************************************************************
-#define I2C_FIFODATA_DATA_M     0x000000FF  // I2C FIFO Data Byte
+#define I2C_FIFODATA_DATA_M     0x000000FF  // I2C TX FIFO Write Data Byte
 #define I2C_FIFODATA_DATA_S     0
 
 //*****************************************************************************
@@ -3832,42 +3807,42 @@
 // The following are defines for the bit fields in the PWM_O_ENABLE register.
 //
 //*****************************************************************************
-#define PWM_ENABLE_PWM7EN       0x00000080  // PWM7 Output Enable
-#define PWM_ENABLE_PWM6EN       0x00000040  // PWM6 Output Enable
-#define PWM_ENABLE_PWM5EN       0x00000020  // PWM5 Output Enable
-#define PWM_ENABLE_PWM4EN       0x00000010  // PWM4 Output Enable
-#define PWM_ENABLE_PWM3EN       0x00000008  // PWM3 Output Enable
-#define PWM_ENABLE_PWM2EN       0x00000004  // PWM2 Output Enable
-#define PWM_ENABLE_PWM1EN       0x00000002  // PWM1 Output Enable
-#define PWM_ENABLE_PWM0EN       0x00000001  // PWM0 Output Enable
+#define PWM_ENABLE_PWM7EN       0x00000080  // MnPWM7 Output Enable
+#define PWM_ENABLE_PWM6EN       0x00000040  // MnPWM6 Output Enable
+#define PWM_ENABLE_PWM5EN       0x00000020  // MnPWM5 Output Enable
+#define PWM_ENABLE_PWM4EN       0x00000010  // MnPWM4 Output Enable
+#define PWM_ENABLE_PWM3EN       0x00000008  // MnPWM3 Output Enable
+#define PWM_ENABLE_PWM2EN       0x00000004  // MnPWM2 Output Enable
+#define PWM_ENABLE_PWM1EN       0x00000002  // MnPWM1 Output Enable
+#define PWM_ENABLE_PWM0EN       0x00000001  // MnPWM0 Output Enable
 
 //*****************************************************************************
 //
 // The following are defines for the bit fields in the PWM_O_INVERT register.
 //
 //*****************************************************************************
-#define PWM_INVERT_PWM7INV      0x00000080  // Invert PWM7 Signal
-#define PWM_INVERT_PWM6INV      0x00000040  // Invert PWM6 Signal
-#define PWM_INVERT_PWM5INV      0x00000020  // Invert PWM5 Signal
-#define PWM_INVERT_PWM4INV      0x00000010  // Invert PWM4 Signal
-#define PWM_INVERT_PWM3INV      0x00000008  // Invert PWM3 Signal
-#define PWM_INVERT_PWM2INV      0x00000004  // Invert PWM2 Signal
-#define PWM_INVERT_PWM1INV      0x00000002  // Invert PWM1 Signal
-#define PWM_INVERT_PWM0INV      0x00000001  // Invert PWM0 Signal
+#define PWM_INVERT_PWM7INV      0x00000080  // Invert MnPWM7 Signal
+#define PWM_INVERT_PWM6INV      0x00000040  // Invert MnPWM6 Signal
+#define PWM_INVERT_PWM5INV      0x00000020  // Invert MnPWM5 Signal
+#define PWM_INVERT_PWM4INV      0x00000010  // Invert MnPWM4 Signal
+#define PWM_INVERT_PWM3INV      0x00000008  // Invert MnPWM3 Signal
+#define PWM_INVERT_PWM2INV      0x00000004  // Invert MnPWM2 Signal
+#define PWM_INVERT_PWM1INV      0x00000002  // Invert MnPWM1 Signal
+#define PWM_INVERT_PWM0INV      0x00000001  // Invert MnPWM0 Signal
 
 //*****************************************************************************
 //
 // The following are defines for the bit fields in the PWM_O_FAULT register.
 //
 //*****************************************************************************
-#define PWM_FAULT_FAULT7        0x00000080  // PWM7 Fault
-#define PWM_FAULT_FAULT6        0x00000040  // PWM6 Fault
-#define PWM_FAULT_FAULT5        0x00000020  // PWM5 Fault
-#define PWM_FAULT_FAULT4        0x00000010  // PWM4 Fault
-#define PWM_FAULT_FAULT3        0x00000008  // PWM3 Fault
-#define PWM_FAULT_FAULT2        0x00000004  // PWM2 Fault
-#define PWM_FAULT_FAULT1        0x00000002  // PWM1 Fault
-#define PWM_FAULT_FAULT0        0x00000001  // PWM0 Fault
+#define PWM_FAULT_FAULT7        0x00000080  // MnPWM7 Fault
+#define PWM_FAULT_FAULT6        0x00000040  // MnPWM6 Fault
+#define PWM_FAULT_FAULT5        0x00000020  // MnPWM5 Fault
+#define PWM_FAULT_FAULT4        0x00000010  // MnPWM4 Fault
+#define PWM_FAULT_FAULT3        0x00000008  // MnPWM3 Fault
+#define PWM_FAULT_FAULT2        0x00000004  // MnPWM2 Fault
+#define PWM_FAULT_FAULT1        0x00000002  // MnPWM1 Fault
+#define PWM_FAULT_FAULT0        0x00000001  // MnPWM0 Fault
 
 //*****************************************************************************
 //
@@ -3926,49 +3901,49 @@
 // The following are defines for the bit fields in the PWM_O_FAULTVAL register.
 //
 //*****************************************************************************
-#define PWM_FAULTVAL_PWM7       0x00000080  // PWM7 Fault Value
-#define PWM_FAULTVAL_PWM6       0x00000040  // PWM6 Fault Value
-#define PWM_FAULTVAL_PWM5       0x00000020  // PWM5 Fault Value
-#define PWM_FAULTVAL_PWM4       0x00000010  // PWM4 Fault Value
-#define PWM_FAULTVAL_PWM3       0x00000008  // PWM3 Fault Value
-#define PWM_FAULTVAL_PWM2       0x00000004  // PWM2 Fault Value
-#define PWM_FAULTVAL_PWM1       0x00000002  // PWM1 Fault Value
-#define PWM_FAULTVAL_PWM0       0x00000001  // PWM0 Fault Value
+#define PWM_FAULTVAL_PWM7       0x00000080  // MnPWM7 Fault Value
+#define PWM_FAULTVAL_PWM6       0x00000040  // MnPWM6 Fault Value
+#define PWM_FAULTVAL_PWM5       0x00000020  // MnPWM5 Fault Value
+#define PWM_FAULTVAL_PWM4       0x00000010  // MnPWM4 Fault Value
+#define PWM_FAULTVAL_PWM3       0x00000008  // MnPWM3 Fault Value
+#define PWM_FAULTVAL_PWM2       0x00000004  // MnPWM2 Fault Value
+#define PWM_FAULTVAL_PWM1       0x00000002  // MnPWM1 Fault Value
+#define PWM_FAULTVAL_PWM0       0x00000001  // MnPWM0 Fault Value
 
 //*****************************************************************************
 //
 // The following are defines for the bit fields in the PWM_O_ENUPD register.
 //
 //*****************************************************************************
-#define PWM_ENUPD_ENUPD7_M      0x0000C000  // PWM7 Enable Update Mode
+#define PWM_ENUPD_ENUPD7_M      0x0000C000  // MnPWM7 Enable Update Mode
 #define PWM_ENUPD_ENUPD7_IMM    0x00000000  // Immediate
 #define PWM_ENUPD_ENUPD7_LSYNC  0x00008000  // Locally Synchronized
 #define PWM_ENUPD_ENUPD7_GSYNC  0x0000C000  // Globally Synchronized
-#define PWM_ENUPD_ENUPD6_M      0x00003000  // PWM6 Enable Update Mode
+#define PWM_ENUPD_ENUPD6_M      0x00003000  // MnPWM6 Enable Update Mode
 #define PWM_ENUPD_ENUPD6_IMM    0x00000000  // Immediate
 #define PWM_ENUPD_ENUPD6_LSYNC  0x00002000  // Locally Synchronized
 #define PWM_ENUPD_ENUPD6_GSYNC  0x00003000  // Globally Synchronized
-#define PWM_ENUPD_ENUPD5_M      0x00000C00  // PWM5 Enable Update Mode
+#define PWM_ENUPD_ENUPD5_M      0x00000C00  // MnPWM5 Enable Update Mode
 #define PWM_ENUPD_ENUPD5_IMM    0x00000000  // Immediate
 #define PWM_ENUPD_ENUPD5_LSYNC  0x00000800  // Locally Synchronized
 #define PWM_ENUPD_ENUPD5_GSYNC  0x00000C00  // Globally Synchronized
-#define PWM_ENUPD_ENUPD4_M      0x00000300  // PWM4 Enable Update Mode
+#define PWM_ENUPD_ENUPD4_M      0x00000300  // MnPWM4 Enable Update Mode
 #define PWM_ENUPD_ENUPD4_IMM    0x00000000  // Immediate
 #define PWM_ENUPD_ENUPD4_LSYNC  0x00000200  // Locally Synchronized
 #define PWM_ENUPD_ENUPD4_GSYNC  0x00000300  // Globally Synchronized
-#define PWM_ENUPD_ENUPD3_M      0x000000C0  // PWM3 Enable Update Mode
+#define PWM_ENUPD_ENUPD3_M      0x000000C0  // MnPWM3 Enable Update Mode
 #define PWM_ENUPD_ENUPD3_IMM    0x00000000  // Immediate
 #define PWM_ENUPD_ENUPD3_LSYNC  0x00000080  // Locally Synchronized
 #define PWM_ENUPD_ENUPD3_GSYNC  0x000000C0  // Globally Synchronized
-#define PWM_ENUPD_ENUPD2_M      0x00000030  // PWM2 Enable Update Mode
+#define PWM_ENUPD_ENUPD2_M      0x00000030  // MnPWM2 Enable Update Mode
 #define PWM_ENUPD_ENUPD2_IMM    0x00000000  // Immediate
 #define PWM_ENUPD_ENUPD2_LSYNC  0x00000020  // Locally Synchronized
 #define PWM_ENUPD_ENUPD2_GSYNC  0x00000030  // Globally Synchronized
-#define PWM_ENUPD_ENUPD1_M      0x0000000C  // PWM1 Enable Update Mode
+#define PWM_ENUPD_ENUPD1_M      0x0000000C  // MnPWM1 Enable Update Mode
 #define PWM_ENUPD_ENUPD1_IMM    0x00000000  // Immediate
 #define PWM_ENUPD_ENUPD1_LSYNC  0x00000008  // Locally Synchronized
 #define PWM_ENUPD_ENUPD1_GSYNC  0x0000000C  // Globally Synchronized
-#define PWM_ENUPD_ENUPD0_M      0x00000003  // PWM0 Enable Update Mode
+#define PWM_ENUPD_ENUPD0_M      0x00000003  // MnPWM0 Enable Update Mode
 #define PWM_ENUPD_ENUPD0_IMM    0x00000000  // Immediate
 #define PWM_ENUPD_ENUPD0_LSYNC  0x00000002  // Locally Synchronized
 #define PWM_ENUPD_ENUPD0_GSYNC  0x00000003  // Globally Synchronized
@@ -3981,8 +3956,7 @@
 #define PWM_0_CTL_LATCH         0x00040000  // Latch Fault Input
 #define PWM_0_CTL_MINFLTPER     0x00020000  // Minimum Fault Period
 #define PWM_0_CTL_FLTSRC        0x00010000  // Fault Condition Source
-#define PWM_0_CTL_DBFALLUPD_M   0x0000C000  // Specifies the update mode for
-                                            // the PWMnDBFALL register
+#define PWM_0_CTL_DBFALLUPD_M   0x0000C000  // PWMnDBFALL Update Mode
 #define PWM_0_CTL_DBFALLUPD_I   0x00000000  // Immediate
 #define PWM_0_CTL_DBFALLUPD_LS  0x00008000  // Locally Synchronized
 #define PWM_0_CTL_DBFALLUPD_GS  0x0000C000  // Globally Synchronized
@@ -4014,25 +3988,23 @@
 // The following are defines for the bit fields in the PWM_O_0_INTEN register.
 //
 //*****************************************************************************
-#define PWM_0_INTEN_TRCMPBD     0x00002000  // Trigger for Counter=Comparator B
+#define PWM_0_INTEN_TRCMPBD     0x00002000  // Trigger for Counter=PWMnCMPB
                                             // Down
-#define PWM_0_INTEN_TRCMPBU     0x00001000  // Trigger for Counter=Comparator B
-                                            // Up
-#define PWM_0_INTEN_TRCMPAD     0x00000800  // Trigger for Counter=Comparator A
+#define PWM_0_INTEN_TRCMPBU     0x00001000  // Trigger for Counter=PWMnCMPB Up
+#define PWM_0_INTEN_TRCMPAD     0x00000800  // Trigger for Counter=PWMnCMPA
                                             // Down
-#define PWM_0_INTEN_TRCMPAU     0x00000400  // Trigger for Counter=Comparator A
-                                            // Up
-#define PWM_0_INTEN_TRCNTLOAD   0x00000200  // Trigger for Counter=Load
+#define PWM_0_INTEN_TRCMPAU     0x00000400  // Trigger for Counter=PWMnCMPA Up
+#define PWM_0_INTEN_TRCNTLOAD   0x00000200  // Trigger for Counter=PWMnLOAD
 #define PWM_0_INTEN_TRCNTZERO   0x00000100  // Trigger for Counter=0
-#define PWM_0_INTEN_INTCMPBD    0x00000020  // Interrupt for Counter=Comparator
-                                            // B Down
-#define PWM_0_INTEN_INTCMPBU    0x00000010  // Interrupt for Counter=Comparator
-                                            // B Up
-#define PWM_0_INTEN_INTCMPAD    0x00000008  // Interrupt for Counter=Comparator
-                                            // A Down
-#define PWM_0_INTEN_INTCMPAU    0x00000004  // Interrupt for Counter=Comparator
-                                            // A Up
-#define PWM_0_INTEN_INTCNTLOAD  0x00000002  // Interrupt for Counter=Load
+#define PWM_0_INTEN_INTCMPBD    0x00000020  // Interrupt for Counter=PWMnCMPB
+                                            // Down
+#define PWM_0_INTEN_INTCMPBU    0x00000010  // Interrupt for Counter=PWMnCMPB
+                                            // Up
+#define PWM_0_INTEN_INTCMPAD    0x00000008  // Interrupt for Counter=PWMnCMPA
+                                            // Down
+#define PWM_0_INTEN_INTCMPAU    0x00000004  // Interrupt for Counter=PWMnCMPA
+                                            // Up
+#define PWM_0_INTEN_INTCNTLOAD  0x00000002  // Interrupt for Counter=PWMnLOAD
 #define PWM_0_INTEN_INTCNTZERO  0x00000001  // Interrupt for Counter=0
 
 //*****************************************************************************
@@ -4101,41 +4073,41 @@
 #define PWM_0_GENA_ACTCMPBD_M   0x00000C00  // Action for Comparator B Down
 #define PWM_0_GENA_ACTCMPBD_NONE                                              \
                                 0x00000000  // Do nothing
-#define PWM_0_GENA_ACTCMPBD_INV 0x00000400  // Invert the output signal
+#define PWM_0_GENA_ACTCMPBD_INV 0x00000400  // Invert pwmA
 #define PWM_0_GENA_ACTCMPBD_ZERO                                              \
-                                0x00000800  // Set the output signal to 0
-#define PWM_0_GENA_ACTCMPBD_ONE 0x00000C00  // Set the output signal to 1
+                                0x00000800  // Drive pwmA Low
+#define PWM_0_GENA_ACTCMPBD_ONE 0x00000C00  // Drive pwmA High
 #define PWM_0_GENA_ACTCMPBU_M   0x00000300  // Action for Comparator B Up
 #define PWM_0_GENA_ACTCMPBU_NONE                                              \
                                 0x00000000  // Do nothing
-#define PWM_0_GENA_ACTCMPBU_INV 0x00000100  // Invert the output signal
+#define PWM_0_GENA_ACTCMPBU_INV 0x00000100  // Invert pwmA
 #define PWM_0_GENA_ACTCMPBU_ZERO                                              \
-                                0x00000200  // Set the output signal to 0
-#define PWM_0_GENA_ACTCMPBU_ONE 0x00000300  // Set the output signal to 1
+                                0x00000200  // Drive pwmA Low
+#define PWM_0_GENA_ACTCMPBU_ONE 0x00000300  // Drive pwmA High
 #define PWM_0_GENA_ACTCMPAD_M   0x000000C0  // Action for Comparator A Down
 #define PWM_0_GENA_ACTCMPAD_NONE                                              \
                                 0x00000000  // Do nothing
-#define PWM_0_GENA_ACTCMPAD_INV 0x00000040  // Invert the output signal
+#define PWM_0_GENA_ACTCMPAD_INV 0x00000040  // Invert pwmA
 #define PWM_0_GENA_ACTCMPAD_ZERO                                              \
-                                0x00000080  // Set the output signal to 0
-#define PWM_0_GENA_ACTCMPAD_ONE 0x000000C0  // Set the output signal to 1
+                                0x00000080  // Drive pwmA Low
+#define PWM_0_GENA_ACTCMPAD_ONE 0x000000C0  // Drive pwmA High
 #define PWM_0_GENA_ACTCMPAU_M   0x00000030  // Action for Comparator A Up
 #define PWM_0_GENA_ACTCMPAU_NONE                                              \
                                 0x00000000  // Do nothing
-#define PWM_0_GENA_ACTCMPAU_INV 0x00000010  // Invert the output signal
+#define PWM_0_GENA_ACTCMPAU_INV 0x00000010  // Invert pwmA
 #define PWM_0_GENA_ACTCMPAU_ZERO                                              \
-                                0x00000020  // Set the output signal to 0
-#define PWM_0_GENA_ACTCMPAU_ONE 0x00000030  // Set the output signal to 1
-#define PWM_0_GENA_ACTLOAD_M    0x0000000C  // Action for Counter=Load
+                                0x00000020  // Drive pwmA Low
+#define PWM_0_GENA_ACTCMPAU_ONE 0x00000030  // Drive pwmA High
+#define PWM_0_GENA_ACTLOAD_M    0x0000000C  // Action for Counter=LOAD
 #define PWM_0_GENA_ACTLOAD_NONE 0x00000000  // Do nothing
-#define PWM_0_GENA_ACTLOAD_INV  0x00000004  // Invert the output signal
-#define PWM_0_GENA_ACTLOAD_ZERO 0x00000008  // Set the output signal to 0
-#define PWM_0_GENA_ACTLOAD_ONE  0x0000000C  // Set the output signal to 1
+#define PWM_0_GENA_ACTLOAD_INV  0x00000004  // Invert pwmA
+#define PWM_0_GENA_ACTLOAD_ZERO 0x00000008  // Drive pwmA Low
+#define PWM_0_GENA_ACTLOAD_ONE  0x0000000C  // Drive pwmA High
 #define PWM_0_GENA_ACTZERO_M    0x00000003  // Action for Counter=0
 #define PWM_0_GENA_ACTZERO_NONE 0x00000000  // Do nothing
-#define PWM_0_GENA_ACTZERO_INV  0x00000001  // Invert the output signal
-#define PWM_0_GENA_ACTZERO_ZERO 0x00000002  // Set the output signal to 0
-#define PWM_0_GENA_ACTZERO_ONE  0x00000003  // Set the output signal to 1
+#define PWM_0_GENA_ACTZERO_INV  0x00000001  // Invert pwmA
+#define PWM_0_GENA_ACTZERO_ZERO 0x00000002  // Drive pwmA Low
+#define PWM_0_GENA_ACTZERO_ONE  0x00000003  // Drive pwmA High
 
 //*****************************************************************************
 //
@@ -4145,41 +4117,41 @@
 #define PWM_0_GENB_ACTCMPBD_M   0x00000C00  // Action for Comparator B Down
 #define PWM_0_GENB_ACTCMPBD_NONE                                              \
                                 0x00000000  // Do nothing
-#define PWM_0_GENB_ACTCMPBD_INV 0x00000400  // Invert the output signal
+#define PWM_0_GENB_ACTCMPBD_INV 0x00000400  // Invert pwmB
 #define PWM_0_GENB_ACTCMPBD_ZERO                                              \
-                                0x00000800  // Set the output signal to 0
-#define PWM_0_GENB_ACTCMPBD_ONE 0x00000C00  // Set the output signal to 1
+                                0x00000800  // Drive pwmB Low
+#define PWM_0_GENB_ACTCMPBD_ONE 0x00000C00  // Drive pwmB High
 #define PWM_0_GENB_ACTCMPBU_M   0x00000300  // Action for Comparator B Up
 #define PWM_0_GENB_ACTCMPBU_NONE                                              \
                                 0x00000000  // Do nothing
-#define PWM_0_GENB_ACTCMPBU_INV 0x00000100  // Invert the output signal
+#define PWM_0_GENB_ACTCMPBU_INV 0x00000100  // Invert pwmB
 #define PWM_0_GENB_ACTCMPBU_ZERO                                              \
-                                0x00000200  // Set the output signal to 0
-#define PWM_0_GENB_ACTCMPBU_ONE 0x00000300  // Set the output signal to 1
+                                0x00000200  // Drive pwmB Low
+#define PWM_0_GENB_ACTCMPBU_ONE 0x00000300  // Drive pwmB High
 #define PWM_0_GENB_ACTCMPAD_M   0x000000C0  // Action for Comparator A Down
 #define PWM_0_GENB_ACTCMPAD_NONE                                              \
                                 0x00000000  // Do nothing
-#define PWM_0_GENB_ACTCMPAD_INV 0x00000040  // Invert the output signal
+#define PWM_0_GENB_ACTCMPAD_INV 0x00000040  // Invert pwmB
 #define PWM_0_GENB_ACTCMPAD_ZERO                                              \
-                                0x00000080  // Set the output signal to 0
-#define PWM_0_GENB_ACTCMPAD_ONE 0x000000C0  // Set the output signal to 1
+                                0x00000080  // Drive pwmB Low
+#define PWM_0_GENB_ACTCMPAD_ONE 0x000000C0  // Drive pwmB High
 #define PWM_0_GENB_ACTCMPAU_M   0x00000030  // Action for Comparator A Up
 #define PWM_0_GENB_ACTCMPAU_NONE                                              \
                                 0x00000000  // Do nothing
-#define PWM_0_GENB_ACTCMPAU_INV 0x00000010  // Invert the output signal
+#define PWM_0_GENB_ACTCMPAU_INV 0x00000010  // Invert pwmB
 #define PWM_0_GENB_ACTCMPAU_ZERO                                              \
-                                0x00000020  // Set the output signal to 0
-#define PWM_0_GENB_ACTCMPAU_ONE 0x00000030  // Set the output signal to 1
-#define PWM_0_GENB_ACTLOAD_M    0x0000000C  // Action for Counter=Load
+                                0x00000020  // Drive pwmB Low
+#define PWM_0_GENB_ACTCMPAU_ONE 0x00000030  // Drive pwmB High
+#define PWM_0_GENB_ACTLOAD_M    0x0000000C  // Action for Counter=LOAD
 #define PWM_0_GENB_ACTLOAD_NONE 0x00000000  // Do nothing
-#define PWM_0_GENB_ACTLOAD_INV  0x00000004  // Invert the output signal
-#define PWM_0_GENB_ACTLOAD_ZERO 0x00000008  // Set the output signal to 0
-#define PWM_0_GENB_ACTLOAD_ONE  0x0000000C  // Set the output signal to 1
+#define PWM_0_GENB_ACTLOAD_INV  0x00000004  // Invert pwmB
+#define PWM_0_GENB_ACTLOAD_ZERO 0x00000008  // Drive pwmB Low
+#define PWM_0_GENB_ACTLOAD_ONE  0x0000000C  // Drive pwmB High
 #define PWM_0_GENB_ACTZERO_M    0x00000003  // Action for Counter=0
 #define PWM_0_GENB_ACTZERO_NONE 0x00000000  // Do nothing
-#define PWM_0_GENB_ACTZERO_INV  0x00000001  // Invert the output signal
-#define PWM_0_GENB_ACTZERO_ZERO 0x00000002  // Set the output signal to 0
-#define PWM_0_GENB_ACTZERO_ONE  0x00000003  // Set the output signal to 1
+#define PWM_0_GENB_ACTZERO_INV  0x00000001  // Invert pwmB
+#define PWM_0_GENB_ACTZERO_ZERO 0x00000002  // Drive pwmB Low
+#define PWM_0_GENB_ACTZERO_ONE  0x00000003  // Drive pwmB High
 
 //*****************************************************************************
 //
@@ -4213,7 +4185,7 @@
 #define PWM_0_FLTSRC0_FAULT3    0x00000008  // Fault3 Input
 #define PWM_0_FLTSRC0_FAULT2    0x00000004  // Fault2 Input
 #define PWM_0_FLTSRC0_FAULT1    0x00000002  // Fault1 Input
-#define PWM_0_FLTSRC0_FAULT0    0x00000001  // Fault0
+#define PWM_0_FLTSRC0_FAULT0    0x00000001  // Fault0 Input
 
 //*****************************************************************************
 //
@@ -4247,8 +4219,7 @@
 #define PWM_1_CTL_LATCH         0x00040000  // Latch Fault Input
 #define PWM_1_CTL_MINFLTPER     0x00020000  // Minimum Fault Period
 #define PWM_1_CTL_FLTSRC        0x00010000  // Fault Condition Source
-#define PWM_1_CTL_DBFALLUPD_M   0x0000C000  // Specifies the update mode for
-                                            // the PWMnDBFALL register
+#define PWM_1_CTL_DBFALLUPD_M   0x0000C000  // PWMnDBFALL Update Mode
 #define PWM_1_CTL_DBFALLUPD_I   0x00000000  // Immediate
 #define PWM_1_CTL_DBFALLUPD_LS  0x00008000  // Locally Synchronized
 #define PWM_1_CTL_DBFALLUPD_GS  0x0000C000  // Globally Synchronized
@@ -4280,25 +4251,23 @@
 // The following are defines for the bit fields in the PWM_O_1_INTEN register.
 //
 //*****************************************************************************
-#define PWM_1_INTEN_TRCMPBD     0x00002000  // Trigger for Counter=Comparator B
+#define PWM_1_INTEN_TRCMPBD     0x00002000  // Trigger for Counter=PWMnCMPB
                                             // Down
-#define PWM_1_INTEN_TRCMPBU     0x00001000  // Trigger for Counter=Comparator B
-                                            // Up
-#define PWM_1_INTEN_TRCMPAD     0x00000800  // Trigger for Counter=Comparator A
+#define PWM_1_INTEN_TRCMPBU     0x00001000  // Trigger for Counter=PWMnCMPB Up
+#define PWM_1_INTEN_TRCMPAD     0x00000800  // Trigger for Counter=PWMnCMPA
                                             // Down
-#define PWM_1_INTEN_TRCMPAU     0x00000400  // Trigger for Counter=Comparator A
-                                            // Up
-#define PWM_1_INTEN_TRCNTLOAD   0x00000200  // Trigger for Counter=Load
+#define PWM_1_INTEN_TRCMPAU     0x00000400  // Trigger for Counter=PWMnCMPA Up
+#define PWM_1_INTEN_TRCNTLOAD   0x00000200  // Trigger for Counter=PWMnLOAD
 #define PWM_1_INTEN_TRCNTZERO   0x00000100  // Trigger for Counter=0
-#define PWM_1_INTEN_INTCMPBD    0x00000020  // Interrupt for Counter=Comparator
-                                            // B Down
-#define PWM_1_INTEN_INTCMPBU    0x00000010  // Interrupt for Counter=Comparator
-                                            // B Up
-#define PWM_1_INTEN_INTCMPAD    0x00000008  // Interrupt for Counter=Comparator
-                                            // A Down
-#define PWM_1_INTEN_INTCMPAU    0x00000004  // Interrupt for Counter=Comparator
-                                            // A Up
-#define PWM_1_INTEN_INTCNTLOAD  0x00000002  // Interrupt for Counter=Load
+#define PWM_1_INTEN_INTCMPBD    0x00000020  // Interrupt for Counter=PWMnCMPB
+                                            // Down
+#define PWM_1_INTEN_INTCMPBU    0x00000010  // Interrupt for Counter=PWMnCMPB
+                                            // Up
+#define PWM_1_INTEN_INTCMPAD    0x00000008  // Interrupt for Counter=PWMnCMPA
+                                            // Down
+#define PWM_1_INTEN_INTCMPAU    0x00000004  // Interrupt for Counter=PWMnCMPA
+                                            // Up
+#define PWM_1_INTEN_INTCNTLOAD  0x00000002  // Interrupt for Counter=PWMnLOAD
 #define PWM_1_INTEN_INTCNTZERO  0x00000001  // Interrupt for Counter=0
 
 //*****************************************************************************
@@ -4367,41 +4336,41 @@
 #define PWM_1_GENA_ACTCMPBD_M   0x00000C00  // Action for Comparator B Down
 #define PWM_1_GENA_ACTCMPBD_NONE                                              \
                                 0x00000000  // Do nothing
-#define PWM_1_GENA_ACTCMPBD_INV 0x00000400  // Invert the output signal
+#define PWM_1_GENA_ACTCMPBD_INV 0x00000400  // Invert pwmA
 #define PWM_1_GENA_ACTCMPBD_ZERO                                              \
-                                0x00000800  // Set the output signal to 0
-#define PWM_1_GENA_ACTCMPBD_ONE 0x00000C00  // Set the output signal to 1
+                                0x00000800  // Drive pwmA Low
+#define PWM_1_GENA_ACTCMPBD_ONE 0x00000C00  // Drive pwmA High
 #define PWM_1_GENA_ACTCMPBU_M   0x00000300  // Action for Comparator B Up
 #define PWM_1_GENA_ACTCMPBU_NONE                                              \
                                 0x00000000  // Do nothing
-#define PWM_1_GENA_ACTCMPBU_INV 0x00000100  // Invert the output signal
+#define PWM_1_GENA_ACTCMPBU_INV 0x00000100  // Invert pwmA
 #define PWM_1_GENA_ACTCMPBU_ZERO                                              \
-                                0x00000200  // Set the output signal to 0
-#define PWM_1_GENA_ACTCMPBU_ONE 0x00000300  // Set the output signal to 1
+                                0x00000200  // Drive pwmA Low
+#define PWM_1_GENA_ACTCMPBU_ONE 0x00000300  // Drive pwmA High
 #define PWM_1_GENA_ACTCMPAD_M   0x000000C0  // Action for Comparator A Down
 #define PWM_1_GENA_ACTCMPAD_NONE                                              \
                                 0x00000000  // Do nothing
-#define PWM_1_GENA_ACTCMPAD_INV 0x00000040  // Invert the output signal
+#define PWM_1_GENA_ACTCMPAD_INV 0x00000040  // Invert pwmA
 #define PWM_1_GENA_ACTCMPAD_ZERO                                              \
-                                0x00000080  // Set the output signal to 0
-#define PWM_1_GENA_ACTCMPAD_ONE 0x000000C0  // Set the output signal to 1
+                                0x00000080  // Drive pwmA Low
+#define PWM_1_GENA_ACTCMPAD_ONE 0x000000C0  // Drive pwmA High
 #define PWM_1_GENA_ACTCMPAU_M   0x00000030  // Action for Comparator A Up
 #define PWM_1_GENA_ACTCMPAU_NONE                                              \
                                 0x00000000  // Do nothing
-#define PWM_1_GENA_ACTCMPAU_INV 0x00000010  // Invert the output signal
+#define PWM_1_GENA_ACTCMPAU_INV 0x00000010  // Invert pwmA
 #define PWM_1_GENA_ACTCMPAU_ZERO                                              \
-                                0x00000020  // Set the output signal to 0
-#define PWM_1_GENA_ACTCMPAU_ONE 0x00000030  // Set the output signal to 1
-#define PWM_1_GENA_ACTLOAD_M    0x0000000C  // Action for Counter=Load
+                                0x00000020  // Drive pwmA Low
+#define PWM_1_GENA_ACTCMPAU_ONE 0x00000030  // Drive pwmA High
+#define PWM_1_GENA_ACTLOAD_M    0x0000000C  // Action for Counter=LOAD
 #define PWM_1_GENA_ACTLOAD_NONE 0x00000000  // Do nothing
-#define PWM_1_GENA_ACTLOAD_INV  0x00000004  // Invert the output signal
-#define PWM_1_GENA_ACTLOAD_ZERO 0x00000008  // Set the output signal to 0
-#define PWM_1_GENA_ACTLOAD_ONE  0x0000000C  // Set the output signal to 1
+#define PWM_1_GENA_ACTLOAD_INV  0x00000004  // Invert pwmA
+#define PWM_1_GENA_ACTLOAD_ZERO 0x00000008  // Drive pwmA Low
+#define PWM_1_GENA_ACTLOAD_ONE  0x0000000C  // Drive pwmA High
 #define PWM_1_GENA_ACTZERO_M    0x00000003  // Action for Counter=0
 #define PWM_1_GENA_ACTZERO_NONE 0x00000000  // Do nothing
-#define PWM_1_GENA_ACTZERO_INV  0x00000001  // Invert the output signal
-#define PWM_1_GENA_ACTZERO_ZERO 0x00000002  // Set the output signal to 0
-#define PWM_1_GENA_ACTZERO_ONE  0x00000003  // Set the output signal to 1
+#define PWM_1_GENA_ACTZERO_INV  0x00000001  // Invert pwmA
+#define PWM_1_GENA_ACTZERO_ZERO 0x00000002  // Drive pwmA Low
+#define PWM_1_GENA_ACTZERO_ONE  0x00000003  // Drive pwmA High
 
 //*****************************************************************************
 //
@@ -4411,41 +4380,41 @@
 #define PWM_1_GENB_ACTCMPBD_M   0x00000C00  // Action for Comparator B Down
 #define PWM_1_GENB_ACTCMPBD_NONE                                              \
                                 0x00000000  // Do nothing
-#define PWM_1_GENB_ACTCMPBD_INV 0x00000400  // Invert the output signal
+#define PWM_1_GENB_ACTCMPBD_INV 0x00000400  // Invert pwmB
 #define PWM_1_GENB_ACTCMPBD_ZERO                                              \
-                                0x00000800  // Set the output signal to 0
-#define PWM_1_GENB_ACTCMPBD_ONE 0x00000C00  // Set the output signal to 1
+                                0x00000800  // Drive pwmB Low
+#define PWM_1_GENB_ACTCMPBD_ONE 0x00000C00  // Drive pwmB High
 #define PWM_1_GENB_ACTCMPBU_M   0x00000300  // Action for Comparator B Up
 #define PWM_1_GENB_ACTCMPBU_NONE                                              \
                                 0x00000000  // Do nothing
-#define PWM_1_GENB_ACTCMPBU_INV 0x00000100  // Invert the output signal
+#define PWM_1_GENB_ACTCMPBU_INV 0x00000100  // Invert pwmB
 #define PWM_1_GENB_ACTCMPBU_ZERO                                              \
-                                0x00000200  // Set the output signal to 0
-#define PWM_1_GENB_ACTCMPBU_ONE 0x00000300  // Set the output signal to 1
+                                0x00000200  // Drive pwmB Low
+#define PWM_1_GENB_ACTCMPBU_ONE 0x00000300  // Drive pwmB High
 #define PWM_1_GENB_ACTCMPAD_M   0x000000C0  // Action for Comparator A Down
 #define PWM_1_GENB_ACTCMPAD_NONE                                              \
                                 0x00000000  // Do nothing
-#define PWM_1_GENB_ACTCMPAD_INV 0x00000040  // Invert the output signal
+#define PWM_1_GENB_ACTCMPAD_INV 0x00000040  // Invert pwmB
 #define PWM_1_GENB_ACTCMPAD_ZERO                                              \
-                                0x00000080  // Set the output signal to 0
-#define PWM_1_GENB_ACTCMPAD_ONE 0x000000C0  // Set the output signal to 1
+                                0x00000080  // Drive pwmB Low
+#define PWM_1_GENB_ACTCMPAD_ONE 0x000000C0  // Drive pwmB High
 #define PWM_1_GENB_ACTCMPAU_M   0x00000030  // Action for Comparator A Up
 #define PWM_1_GENB_ACTCMPAU_NONE                                              \
                                 0x00000000  // Do nothing
-#define PWM_1_GENB_ACTCMPAU_INV 0x00000010  // Invert the output signal
+#define PWM_1_GENB_ACTCMPAU_INV 0x00000010  // Invert pwmB
 #define PWM_1_GENB_ACTCMPAU_ZERO                                              \
-                                0x00000020  // Set the output signal to 0
-#define PWM_1_GENB_ACTCMPAU_ONE 0x00000030  // Set the output signal to 1
-#define PWM_1_GENB_ACTLOAD_M    0x0000000C  // Action for Counter=Load
+                                0x00000020  // Drive pwmB Low
+#define PWM_1_GENB_ACTCMPAU_ONE 0x00000030  // Drive pwmB High
+#define PWM_1_GENB_ACTLOAD_M    0x0000000C  // Action for Counter=LOAD
 #define PWM_1_GENB_ACTLOAD_NONE 0x00000000  // Do nothing
-#define PWM_1_GENB_ACTLOAD_INV  0x00000004  // Invert the output signal
-#define PWM_1_GENB_ACTLOAD_ZERO 0x00000008  // Set the output signal to 0
-#define PWM_1_GENB_ACTLOAD_ONE  0x0000000C  // Set the output signal to 1
+#define PWM_1_GENB_ACTLOAD_INV  0x00000004  // Invert pwmB
+#define PWM_1_GENB_ACTLOAD_ZERO 0x00000008  // Drive pwmB Low
+#define PWM_1_GENB_ACTLOAD_ONE  0x0000000C  // Drive pwmB High
 #define PWM_1_GENB_ACTZERO_M    0x00000003  // Action for Counter=0
 #define PWM_1_GENB_ACTZERO_NONE 0x00000000  // Do nothing
-#define PWM_1_GENB_ACTZERO_INV  0x00000001  // Invert the output signal
-#define PWM_1_GENB_ACTZERO_ZERO 0x00000002  // Set the output signal to 0
-#define PWM_1_GENB_ACTZERO_ONE  0x00000003  // Set the output signal to 1
+#define PWM_1_GENB_ACTZERO_INV  0x00000001  // Invert pwmB
+#define PWM_1_GENB_ACTZERO_ZERO 0x00000002  // Drive pwmB Low
+#define PWM_1_GENB_ACTZERO_ONE  0x00000003  // Drive pwmB High
 
 //*****************************************************************************
 //
@@ -4483,7 +4452,7 @@
 #define PWM_1_FLTSRC0_FAULT3    0x00000008  // Fault3 Input
 #define PWM_1_FLTSRC0_FAULT2    0x00000004  // Fault2 Input
 #define PWM_1_FLTSRC0_FAULT1    0x00000002  // Fault1 Input
-#define PWM_1_FLTSRC0_FAULT0    0x00000001  // Fault0
+#define PWM_1_FLTSRC0_FAULT0    0x00000001  // Fault0 Input
 
 //*****************************************************************************
 //
@@ -4517,8 +4486,7 @@
 #define PWM_2_CTL_LATCH         0x00040000  // Latch Fault Input
 #define PWM_2_CTL_MINFLTPER     0x00020000  // Minimum Fault Period
 #define PWM_2_CTL_FLTSRC        0x00010000  // Fault Condition Source
-#define PWM_2_CTL_DBFALLUPD_M   0x0000C000  // Specifies the update mode for
-                                            // the PWMnDBFALL register
+#define PWM_2_CTL_DBFALLUPD_M   0x0000C000  // PWMnDBFALL Update Mode
 #define PWM_2_CTL_DBFALLUPD_I   0x00000000  // Immediate
 #define PWM_2_CTL_DBFALLUPD_LS  0x00008000  // Locally Synchronized
 #define PWM_2_CTL_DBFALLUPD_GS  0x0000C000  // Globally Synchronized
@@ -4550,25 +4518,23 @@
 // The following are defines for the bit fields in the PWM_O_2_INTEN register.
 //
 //*****************************************************************************
-#define PWM_2_INTEN_TRCMPBD     0x00002000  // Trigger for Counter=Comparator B
+#define PWM_2_INTEN_TRCMPBD     0x00002000  // Trigger for Counter=PWMnCMPB
                                             // Down
-#define PWM_2_INTEN_TRCMPBU     0x00001000  // Trigger for Counter=Comparator B
-                                            // Up
-#define PWM_2_INTEN_TRCMPAD     0x00000800  // Trigger for Counter=Comparator A
+#define PWM_2_INTEN_TRCMPBU     0x00001000  // Trigger for Counter=PWMnCMPB Up
+#define PWM_2_INTEN_TRCMPAD     0x00000800  // Trigger for Counter=PWMnCMPA
                                             // Down
-#define PWM_2_INTEN_TRCMPAU     0x00000400  // Trigger for Counter=Comparator A
-                                            // Up
-#define PWM_2_INTEN_TRCNTLOAD   0x00000200  // Trigger for Counter=Load
+#define PWM_2_INTEN_TRCMPAU     0x00000400  // Trigger for Counter=PWMnCMPA Up
+#define PWM_2_INTEN_TRCNTLOAD   0x00000200  // Trigger for Counter=PWMnLOAD
 #define PWM_2_INTEN_TRCNTZERO   0x00000100  // Trigger for Counter=0
-#define PWM_2_INTEN_INTCMPBD    0x00000020  // Interrupt for Counter=Comparator
-                                            // B Down
-#define PWM_2_INTEN_INTCMPBU    0x00000010  // Interrupt for Counter=Comparator
-                                            // B Up
-#define PWM_2_INTEN_INTCMPAD    0x00000008  // Interrupt for Counter=Comparator
-                                            // A Down
-#define PWM_2_INTEN_INTCMPAU    0x00000004  // Interrupt for Counter=Comparator
-                                            // A Up
-#define PWM_2_INTEN_INTCNTLOAD  0x00000002  // Interrupt for Counter=Load
+#define PWM_2_INTEN_INTCMPBD    0x00000020  // Interrupt for Counter=PWMnCMPB
+                                            // Down
+#define PWM_2_INTEN_INTCMPBU    0x00000010  // Interrupt for Counter=PWMnCMPB
+                                            // Up
+#define PWM_2_INTEN_INTCMPAD    0x00000008  // Interrupt for Counter=PWMnCMPA
+                                            // Down
+#define PWM_2_INTEN_INTCMPAU    0x00000004  // Interrupt for Counter=PWMnCMPA
+                                            // Up
+#define PWM_2_INTEN_INTCNTLOAD  0x00000002  // Interrupt for Counter=PWMnLOAD
 #define PWM_2_INTEN_INTCNTZERO  0x00000001  // Interrupt for Counter=0
 
 //*****************************************************************************
@@ -4637,41 +4603,41 @@
 #define PWM_2_GENA_ACTCMPBD_M   0x00000C00  // Action for Comparator B Down
 #define PWM_2_GENA_ACTCMPBD_NONE                                              \
                                 0x00000000  // Do nothing
-#define PWM_2_GENA_ACTCMPBD_INV 0x00000400  // Invert the output signal
+#define PWM_2_GENA_ACTCMPBD_INV 0x00000400  // Invert pwmA
 #define PWM_2_GENA_ACTCMPBD_ZERO                                              \
-                                0x00000800  // Set the output signal to 0
-#define PWM_2_GENA_ACTCMPBD_ONE 0x00000C00  // Set the output signal to 1
+                                0x00000800  // Drive pwmA Low
+#define PWM_2_GENA_ACTCMPBD_ONE 0x00000C00  // Drive pwmA High
 #define PWM_2_GENA_ACTCMPBU_M   0x00000300  // Action for Comparator B Up
 #define PWM_2_GENA_ACTCMPBU_NONE                                              \
                                 0x00000000  // Do nothing
-#define PWM_2_GENA_ACTCMPBU_INV 0x00000100  // Invert the output signal
+#define PWM_2_GENA_ACTCMPBU_INV 0x00000100  // Invert pwmA
 #define PWM_2_GENA_ACTCMPBU_ZERO                                              \
-                                0x00000200  // Set the output signal to 0
-#define PWM_2_GENA_ACTCMPBU_ONE 0x00000300  // Set the output signal to 1
+                                0x00000200  // Drive pwmA Low
+#define PWM_2_GENA_ACTCMPBU_ONE 0x00000300  // Drive pwmA High
 #define PWM_2_GENA_ACTCMPAD_M   0x000000C0  // Action for Comparator A Down
 #define PWM_2_GENA_ACTCMPAD_NONE                                              \
                                 0x00000000  // Do nothing
-#define PWM_2_GENA_ACTCMPAD_INV 0x00000040  // Invert the output signal
+#define PWM_2_GENA_ACTCMPAD_INV 0x00000040  // Invert pwmA
 #define PWM_2_GENA_ACTCMPAD_ZERO                                              \
-                                0x00000080  // Set the output signal to 0
-#define PWM_2_GENA_ACTCMPAD_ONE 0x000000C0  // Set the output signal to 1
+                                0x00000080  // Drive pwmA Low
+#define PWM_2_GENA_ACTCMPAD_ONE 0x000000C0  // Drive pwmA High
 #define PWM_2_GENA_ACTCMPAU_M   0x00000030  // Action for Comparator A Up
 #define PWM_2_GENA_ACTCMPAU_NONE                                              \
                                 0x00000000  // Do nothing
-#define PWM_2_GENA_ACTCMPAU_INV 0x00000010  // Invert the output signal
+#define PWM_2_GENA_ACTCMPAU_INV 0x00000010  // Invert pwmA
 #define PWM_2_GENA_ACTCMPAU_ZERO                                              \
-                                0x00000020  // Set the output signal to 0
-#define PWM_2_GENA_ACTCMPAU_ONE 0x00000030  // Set the output signal to 1
-#define PWM_2_GENA_ACTLOAD_M    0x0000000C  // Action for Counter=Load
+                                0x00000020  // Drive pwmA Low
+#define PWM_2_GENA_ACTCMPAU_ONE 0x00000030  // Drive pwmA High
+#define PWM_2_GENA_ACTLOAD_M    0x0000000C  // Action for Counter=LOAD
 #define PWM_2_GENA_ACTLOAD_NONE 0x00000000  // Do nothing
-#define PWM_2_GENA_ACTLOAD_INV  0x00000004  // Invert the output signal
-#define PWM_2_GENA_ACTLOAD_ZERO 0x00000008  // Set the output signal to 0
-#define PWM_2_GENA_ACTLOAD_ONE  0x0000000C  // Set the output signal to 1
+#define PWM_2_GENA_ACTLOAD_INV  0x00000004  // Invert pwmA
+#define PWM_2_GENA_ACTLOAD_ZERO 0x00000008  // Drive pwmA Low
+#define PWM_2_GENA_ACTLOAD_ONE  0x0000000C  // Drive pwmA High
 #define PWM_2_GENA_ACTZERO_M    0x00000003  // Action for Counter=0
 #define PWM_2_GENA_ACTZERO_NONE 0x00000000  // Do nothing
-#define PWM_2_GENA_ACTZERO_INV  0x00000001  // Invert the output signal
-#define PWM_2_GENA_ACTZERO_ZERO 0x00000002  // Set the output signal to 0
-#define PWM_2_GENA_ACTZERO_ONE  0x00000003  // Set the output signal to 1
+#define PWM_2_GENA_ACTZERO_INV  0x00000001  // Invert pwmA
+#define PWM_2_GENA_ACTZERO_ZERO 0x00000002  // Drive pwmA Low
+#define PWM_2_GENA_ACTZERO_ONE  0x00000003  // Drive pwmA High
 
 //*****************************************************************************
 //
@@ -4681,41 +4647,41 @@
 #define PWM_2_GENB_ACTCMPBD_M   0x00000C00  // Action for Comparator B Down
 #define PWM_2_GENB_ACTCMPBD_NONE                                              \
                                 0x00000000  // Do nothing
-#define PWM_2_GENB_ACTCMPBD_INV 0x00000400  // Invert the output signal
+#define PWM_2_GENB_ACTCMPBD_INV 0x00000400  // Invert pwmB
 #define PWM_2_GENB_ACTCMPBD_ZERO                                              \
-                                0x00000800  // Set the output signal to 0
-#define PWM_2_GENB_ACTCMPBD_ONE 0x00000C00  // Set the output signal to 1
+                                0x00000800  // Drive pwmB Low
+#define PWM_2_GENB_ACTCMPBD_ONE 0x00000C00  // Drive pwmB High
 #define PWM_2_GENB_ACTCMPBU_M   0x00000300  // Action for Comparator B Up
 #define PWM_2_GENB_ACTCMPBU_NONE                                              \
                                 0x00000000  // Do nothing
-#define PWM_2_GENB_ACTCMPBU_INV 0x00000100  // Invert the output signal
+#define PWM_2_GENB_ACTCMPBU_INV 0x00000100  // Invert pwmB
 #define PWM_2_GENB_ACTCMPBU_ZERO                                              \
-                                0x00000200  // Set the output signal to 0
-#define PWM_2_GENB_ACTCMPBU_ONE 0x00000300  // Set the output signal to 1
+                                0x00000200  // Drive pwmB Low
+#define PWM_2_GENB_ACTCMPBU_ONE 0x00000300  // Drive pwmB High
 #define PWM_2_GENB_ACTCMPAD_M   0x000000C0  // Action for Comparator A Down
 #define PWM_2_GENB_ACTCMPAD_NONE                                              \
                                 0x00000000  // Do nothing
-#define PWM_2_GENB_ACTCMPAD_INV 0x00000040  // Invert the output signal
+#define PWM_2_GENB_ACTCMPAD_INV 0x00000040  // Invert pwmB
 #define PWM_2_GENB_ACTCMPAD_ZERO                                              \
-                                0x00000080  // Set the output signal to 0
-#define PWM_2_GENB_ACTCMPAD_ONE 0x000000C0  // Set the output signal to 1
+                                0x00000080  // Drive pwmB Low
+#define PWM_2_GENB_ACTCMPAD_ONE 0x000000C0  // Drive pwmB High
 #define PWM_2_GENB_ACTCMPAU_M   0x00000030  // Action for Comparator A Up
 #define PWM_2_GENB_ACTCMPAU_NONE                                              \
                                 0x00000000  // Do nothing
-#define PWM_2_GENB_ACTCMPAU_INV 0x00000010  // Invert the output signal
+#define PWM_2_GENB_ACTCMPAU_INV 0x00000010  // Invert pwmB
 #define PWM_2_GENB_ACTCMPAU_ZERO                                              \
-                                0x00000020  // Set the output signal to 0
-#define PWM_2_GENB_ACTCMPAU_ONE 0x00000030  // Set the output signal to 1
-#define PWM_2_GENB_ACTLOAD_M    0x0000000C  // Action for Counter=Load
+                                0x00000020  // Drive pwmB Low
+#define PWM_2_GENB_ACTCMPAU_ONE 0x00000030  // Drive pwmB High
+#define PWM_2_GENB_ACTLOAD_M    0x0000000C  // Action for Counter=LOAD
 #define PWM_2_GENB_ACTLOAD_NONE 0x00000000  // Do nothing
-#define PWM_2_GENB_ACTLOAD_INV  0x00000004  // Invert the output signal
-#define PWM_2_GENB_ACTLOAD_ZERO 0x00000008  // Set the output signal to 0
-#define PWM_2_GENB_ACTLOAD_ONE  0x0000000C  // Set the output signal to 1
+#define PWM_2_GENB_ACTLOAD_INV  0x00000004  // Invert pwmB
+#define PWM_2_GENB_ACTLOAD_ZERO 0x00000008  // Drive pwmB Low
+#define PWM_2_GENB_ACTLOAD_ONE  0x0000000C  // Drive pwmB High
 #define PWM_2_GENB_ACTZERO_M    0x00000003  // Action for Counter=0
 #define PWM_2_GENB_ACTZERO_NONE 0x00000000  // Do nothing
-#define PWM_2_GENB_ACTZERO_INV  0x00000001  // Invert the output signal
-#define PWM_2_GENB_ACTZERO_ZERO 0x00000002  // Set the output signal to 0
-#define PWM_2_GENB_ACTZERO_ONE  0x00000003  // Set the output signal to 1
+#define PWM_2_GENB_ACTZERO_INV  0x00000001  // Invert pwmB
+#define PWM_2_GENB_ACTZERO_ZERO 0x00000002  // Drive pwmB Low
+#define PWM_2_GENB_ACTZERO_ONE  0x00000003  // Drive pwmB High
 
 //*****************************************************************************
 //
@@ -4753,7 +4719,7 @@
 #define PWM_2_FLTSRC0_FAULT3    0x00000008  // Fault3 Input
 #define PWM_2_FLTSRC0_FAULT2    0x00000004  // Fault2 Input
 #define PWM_2_FLTSRC0_FAULT1    0x00000002  // Fault1 Input
-#define PWM_2_FLTSRC0_FAULT0    0x00000001  // Fault0
+#define PWM_2_FLTSRC0_FAULT0    0x00000001  // Fault0 Input
 
 //*****************************************************************************
 //
@@ -4787,8 +4753,7 @@
 #define PWM_3_CTL_LATCH         0x00040000  // Latch Fault Input
 #define PWM_3_CTL_MINFLTPER     0x00020000  // Minimum Fault Period
 #define PWM_3_CTL_FLTSRC        0x00010000  // Fault Condition Source
-#define PWM_3_CTL_DBFALLUPD_M   0x0000C000  // Specifies the update mode for
-                                            // the PWMnDBFALL register
+#define PWM_3_CTL_DBFALLUPD_M   0x0000C000  // PWMnDBFALL Update Mode
 #define PWM_3_CTL_DBFALLUPD_I   0x00000000  // Immediate
 #define PWM_3_CTL_DBFALLUPD_LS  0x00008000  // Locally Synchronized
 #define PWM_3_CTL_DBFALLUPD_GS  0x0000C000  // Globally Synchronized
@@ -4820,25 +4785,23 @@
 // The following are defines for the bit fields in the PWM_O_3_INTEN register.
 //
 //*****************************************************************************
-#define PWM_3_INTEN_TRCMPBD     0x00002000  // Trigger for Counter=Comparator B
+#define PWM_3_INTEN_TRCMPBD     0x00002000  // Trigger for Counter=PWMnCMPB
                                             // Down
-#define PWM_3_INTEN_TRCMPBU     0x00001000  // Trigger for Counter=Comparator B
-                                            // Up
-#define PWM_3_INTEN_TRCMPAD     0x00000800  // Trigger for Counter=Comparator A
+#define PWM_3_INTEN_TRCMPBU     0x00001000  // Trigger for Counter=PWMnCMPB Up
+#define PWM_3_INTEN_TRCMPAD     0x00000800  // Trigger for Counter=PWMnCMPA
                                             // Down
-#define PWM_3_INTEN_TRCMPAU     0x00000400  // Trigger for Counter=Comparator A
-                                            // Up
-#define PWM_3_INTEN_TRCNTLOAD   0x00000200  // Trigger for Counter=Load
+#define PWM_3_INTEN_TRCMPAU     0x00000400  // Trigger for Counter=PWMnCMPA Up
+#define PWM_3_INTEN_TRCNTLOAD   0x00000200  // Trigger for Counter=PWMnLOAD
 #define PWM_3_INTEN_TRCNTZERO   0x00000100  // Trigger for Counter=0
-#define PWM_3_INTEN_INTCMPBD    0x00000020  // Interrupt for Counter=Comparator
-                                            // B Down
-#define PWM_3_INTEN_INTCMPBU    0x00000010  // Interrupt for Counter=Comparator
-                                            // B Up
-#define PWM_3_INTEN_INTCMPAD    0x00000008  // Interrupt for Counter=Comparator
-                                            // A Down
-#define PWM_3_INTEN_INTCMPAU    0x00000004  // Interrupt for Counter=Comparator
-                                            // A Up
-#define PWM_3_INTEN_INTCNTLOAD  0x00000002  // Interrupt for Counter=Load
+#define PWM_3_INTEN_INTCMPBD    0x00000020  // Interrupt for Counter=PWMnCMPB
+                                            // Down
+#define PWM_3_INTEN_INTCMPBU    0x00000010  // Interrupt for Counter=PWMnCMPB
+                                            // Up
+#define PWM_3_INTEN_INTCMPAD    0x00000008  // Interrupt for Counter=PWMnCMPA
+                                            // Down
+#define PWM_3_INTEN_INTCMPAU    0x00000004  // Interrupt for Counter=PWMnCMPA
+                                            // Up
+#define PWM_3_INTEN_INTCNTLOAD  0x00000002  // Interrupt for Counter=PWMnLOAD
 #define PWM_3_INTEN_INTCNTZERO  0x00000001  // Interrupt for Counter=0
 
 //*****************************************************************************
@@ -4907,41 +4870,41 @@
 #define PWM_3_GENA_ACTCMPBD_M   0x00000C00  // Action for Comparator B Down
 #define PWM_3_GENA_ACTCMPBD_NONE                                              \
                                 0x00000000  // Do nothing
-#define PWM_3_GENA_ACTCMPBD_INV 0x00000400  // Invert the output signal
+#define PWM_3_GENA_ACTCMPBD_INV 0x00000400  // Invert pwmA
 #define PWM_3_GENA_ACTCMPBD_ZERO                                              \
-                                0x00000800  // Set the output signal to 0
-#define PWM_3_GENA_ACTCMPBD_ONE 0x00000C00  // Set the output signal to 1
+                                0x00000800  // Drive pwmA Low
+#define PWM_3_GENA_ACTCMPBD_ONE 0x00000C00  // Drive pwmA High
 #define PWM_3_GENA_ACTCMPBU_M   0x00000300  // Action for Comparator B Up
 #define PWM_3_GENA_ACTCMPBU_NONE                                              \
                                 0x00000000  // Do nothing
-#define PWM_3_GENA_ACTCMPBU_INV 0x00000100  // Invert the output signal
+#define PWM_3_GENA_ACTCMPBU_INV 0x00000100  // Invert pwmA
 #define PWM_3_GENA_ACTCMPBU_ZERO                                              \
-                                0x00000200  // Set the output signal to 0
-#define PWM_3_GENA_ACTCMPBU_ONE 0x00000300  // Set the output signal to 1
+                                0x00000200  // Drive pwmA Low
+#define PWM_3_GENA_ACTCMPBU_ONE 0x00000300  // Drive pwmA High
 #define PWM_3_GENA_ACTCMPAD_M   0x000000C0  // Action for Comparator A Down
 #define PWM_3_GENA_ACTCMPAD_NONE                                              \
                                 0x00000000  // Do nothing
-#define PWM_3_GENA_ACTCMPAD_INV 0x00000040  // Invert the output signal
+#define PWM_3_GENA_ACTCMPAD_INV 0x00000040  // Invert pwmA
 #define PWM_3_GENA_ACTCMPAD_ZERO                                              \
-                                0x00000080  // Set the output signal to 0
-#define PWM_3_GENA_ACTCMPAD_ONE 0x000000C0  // Set the output signal to 1
+                                0x00000080  // Drive pwmA Low
+#define PWM_3_GENA_ACTCMPAD_ONE 0x000000C0  // Drive pwmA High
 #define PWM_3_GENA_ACTCMPAU_M   0x00000030  // Action for Comparator A Up
 #define PWM_3_GENA_ACTCMPAU_NONE                                              \
                                 0x00000000  // Do nothing
-#define PWM_3_GENA_ACTCMPAU_INV 0x00000010  // Invert the output signal
+#define PWM_3_GENA_ACTCMPAU_INV 0x00000010  // Invert pwmA
 #define PWM_3_GENA_ACTCMPAU_ZERO                                              \
-                                0x00000020  // Set the output signal to 0
-#define PWM_3_GENA_ACTCMPAU_ONE 0x00000030  // Set the output signal to 1
-#define PWM_3_GENA_ACTLOAD_M    0x0000000C  // Action for Counter=Load
+                                0x00000020  // Drive pwmA Low
+#define PWM_3_GENA_ACTCMPAU_ONE 0x00000030  // Drive pwmA High
+#define PWM_3_GENA_ACTLOAD_M    0x0000000C  // Action for Counter=LOAD
 #define PWM_3_GENA_ACTLOAD_NONE 0x00000000  // Do nothing
-#define PWM_3_GENA_ACTLOAD_INV  0x00000004  // Invert the output signal
-#define PWM_3_GENA_ACTLOAD_ZERO 0x00000008  // Set the output signal to 0
-#define PWM_3_GENA_ACTLOAD_ONE  0x0000000C  // Set the output signal to 1
+#define PWM_3_GENA_ACTLOAD_INV  0x00000004  // Invert pwmA
+#define PWM_3_GENA_ACTLOAD_ZERO 0x00000008  // Drive pwmA Low
+#define PWM_3_GENA_ACTLOAD_ONE  0x0000000C  // Drive pwmA High
 #define PWM_3_GENA_ACTZERO_M    0x00000003  // Action for Counter=0
 #define PWM_3_GENA_ACTZERO_NONE 0x00000000  // Do nothing
-#define PWM_3_GENA_ACTZERO_INV  0x00000001  // Invert the output signal
-#define PWM_3_GENA_ACTZERO_ZERO 0x00000002  // Set the output signal to 0
-#define PWM_3_GENA_ACTZERO_ONE  0x00000003  // Set the output signal to 1
+#define PWM_3_GENA_ACTZERO_INV  0x00000001  // Invert pwmA
+#define PWM_3_GENA_ACTZERO_ZERO 0x00000002  // Drive pwmA Low
+#define PWM_3_GENA_ACTZERO_ONE  0x00000003  // Drive pwmA High
 
 //*****************************************************************************
 //
@@ -4951,41 +4914,41 @@
 #define PWM_3_GENB_ACTCMPBD_M   0x00000C00  // Action for Comparator B Down
 #define PWM_3_GENB_ACTCMPBD_NONE                                              \
                                 0x00000000  // Do nothing
-#define PWM_3_GENB_ACTCMPBD_INV 0x00000400  // Invert the output signal
+#define PWM_3_GENB_ACTCMPBD_INV 0x00000400  // Invert pwmB
 #define PWM_3_GENB_ACTCMPBD_ZERO                                              \
-                                0x00000800  // Set the output signal to 0
-#define PWM_3_GENB_ACTCMPBD_ONE 0x00000C00  // Set the output signal to 1
+                                0x00000800  // Drive pwmB Low
+#define PWM_3_GENB_ACTCMPBD_ONE 0x00000C00  // Drive pwmB High
 #define PWM_3_GENB_ACTCMPBU_M   0x00000300  // Action for Comparator B Up
 #define PWM_3_GENB_ACTCMPBU_NONE                                              \
                                 0x00000000  // Do nothing
-#define PWM_3_GENB_ACTCMPBU_INV 0x00000100  // Invert the output signal
+#define PWM_3_GENB_ACTCMPBU_INV 0x00000100  // Invert pwmB
 #define PWM_3_GENB_ACTCMPBU_ZERO                                              \
-                                0x00000200  // Set the output signal to 0
-#define PWM_3_GENB_ACTCMPBU_ONE 0x00000300  // Set the output signal to 1
+                                0x00000200  // Drive pwmB Low
+#define PWM_3_GENB_ACTCMPBU_ONE 0x00000300  // Drive pwmB High
 #define PWM_3_GENB_ACTCMPAD_M   0x000000C0  // Action for Comparator A Down
 #define PWM_3_GENB_ACTCMPAD_NONE                                              \
                                 0x00000000  // Do nothing
-#define PWM_3_GENB_ACTCMPAD_INV 0x00000040  // Invert the output signal
+#define PWM_3_GENB_ACTCMPAD_INV 0x00000040  // Invert pwmB
 #define PWM_3_GENB_ACTCMPAD_ZERO                                              \
-                                0x00000080  // Set the output signal to 0
-#define PWM_3_GENB_ACTCMPAD_ONE 0x000000C0  // Set the output signal to 1
+                                0x00000080  // Drive pwmB Low
+#define PWM_3_GENB_ACTCMPAD_ONE 0x000000C0  // Drive pwmB High
 #define PWM_3_GENB_ACTCMPAU_M   0x00000030  // Action for Comparator A Up
 #define PWM_3_GENB_ACTCMPAU_NONE                                              \
                                 0x00000000  // Do nothing
-#define PWM_3_GENB_ACTCMPAU_INV 0x00000010  // Invert the output signal
+#define PWM_3_GENB_ACTCMPAU_INV 0x00000010  // Invert pwmB
 #define PWM_3_GENB_ACTCMPAU_ZERO                                              \
-                                0x00000020  // Set the output signal to 0
-#define PWM_3_GENB_ACTCMPAU_ONE 0x00000030  // Set the output signal to 1
-#define PWM_3_GENB_ACTLOAD_M    0x0000000C  // Action for Counter=Load
+                                0x00000020  // Drive pwmB Low
+#define PWM_3_GENB_ACTCMPAU_ONE 0x00000030  // Drive pwmB High
+#define PWM_3_GENB_ACTLOAD_M    0x0000000C  // Action for Counter=LOAD
 #define PWM_3_GENB_ACTLOAD_NONE 0x00000000  // Do nothing
-#define PWM_3_GENB_ACTLOAD_INV  0x00000004  // Invert the output signal
-#define PWM_3_GENB_ACTLOAD_ZERO 0x00000008  // Set the output signal to 0
-#define PWM_3_GENB_ACTLOAD_ONE  0x0000000C  // Set the output signal to 1
+#define PWM_3_GENB_ACTLOAD_INV  0x00000004  // Invert pwmB
+#define PWM_3_GENB_ACTLOAD_ZERO 0x00000008  // Drive pwmB Low
+#define PWM_3_GENB_ACTLOAD_ONE  0x0000000C  // Drive pwmB High
 #define PWM_3_GENB_ACTZERO_M    0x00000003  // Action for Counter=0
 #define PWM_3_GENB_ACTZERO_NONE 0x00000000  // Do nothing
-#define PWM_3_GENB_ACTZERO_INV  0x00000001  // Invert the output signal
-#define PWM_3_GENB_ACTZERO_ZERO 0x00000002  // Set the output signal to 0
-#define PWM_3_GENB_ACTZERO_ONE  0x00000003  // Set the output signal to 1
+#define PWM_3_GENB_ACTZERO_INV  0x00000001  // Invert pwmB
+#define PWM_3_GENB_ACTZERO_ZERO 0x00000002  // Drive pwmB Low
+#define PWM_3_GENB_ACTZERO_ONE  0x00000003  // Drive pwmB High
 
 //*****************************************************************************
 //
@@ -5021,9 +4984,9 @@
 //
 //*****************************************************************************
 #define PWM_3_FLTSRC0_FAULT3    0x00000008  // Fault3 Input
-#define PWM_3_FLTSRC0_FAULT2    0x00000004  // Fault2
-#define PWM_3_FLTSRC0_FAULT1    0x00000002  // Fault1
-#define PWM_3_FLTSRC0_FAULT0    0x00000001  // Fault0
+#define PWM_3_FLTSRC0_FAULT2    0x00000004  // Fault2 Input
+#define PWM_3_FLTSRC0_FAULT1    0x00000002  // Fault1 Input
+#define PWM_3_FLTSRC0_FAULT0    0x00000001  // Fault0 Input
 
 //*****************************************************************************
 //
@@ -5201,7 +5164,7 @@
 #define PWM_PP_ONE              0x00000400  // One-Shot Mode
 #define PWM_PP_EFAULT           0x00000200  // Extended Fault
 #define PWM_PP_ESYNC            0x00000100  // Extended Synchronization
-#define PWM_PP_FCNT_M           0x000000F0  // Fault Inputs
+#define PWM_PP_FCNT_M           0x000000F0  // Fault Inputs (per PWM unit)
 #define PWM_PP_GCNT_M           0x0000000F  // Generators
 #define PWM_PP_FCNT_S           4
 #define PWM_PP_GCNT_S           0
@@ -5344,12 +5307,16 @@
 //
 //*****************************************************************************
 #define TIMER_CFG_M             0x00000007  // GPTM Configuration
-#define TIMER_CFG_32_BIT_TIMER  0x00000000  // 32-bit timer configuration
-#define TIMER_CFG_32_BIT_RTC    0x00000001  // 32-bit real-time clock (RTC)
-                                            // counter configuration
-#define TIMER_CFG_16_BIT        0x00000004  // 16-bit timer configuration. The
-                                            // function is controlled by bits
-                                            // 1:0 of GPTMTAMR and GPTMTBMR
+#define TIMER_CFG_32_BIT_TIMER  0x00000000  // For a 16/32-bit timer, this
+                                            // value selects the 32-bit timer
+                                            // configuration
+#define TIMER_CFG_32_BIT_RTC    0x00000001  // For a 16/32-bit timer, this
+                                            // value selects the 32-bit
+                                            // real-time clock (RTC) counter
+                                            // configuration
+#define TIMER_CFG_16_BIT        0x00000004  // For a 16/32-bit timer, this
+                                            // value selects the 16-bit timer
+                                            // configuration
 
 //*****************************************************************************
 //
@@ -5373,7 +5340,8 @@
 #define TIMER_TAMR_TCACT_CLRSETTO                                             \
                                 0x0000E000  // Clear CCP immediately and set on
                                             // Time-Out
-#define TIMER_TAMR_TACINTD      0x00001000  // One-shot/Periodic Interrupt Mode
+#define TIMER_TAMR_TACINTD      0x00001000  // One-shot/Periodic Interrupt
+                                            // Disable
 #define TIMER_TAMR_TAPLO        0x00000800  // GPTM Timer A PWM Legacy
                                             // Operation
 #define TIMER_TAMR_TAMRSU       0x00000400  // GPTM Timer A Match Register
@@ -5416,7 +5384,8 @@
 #define TIMER_TBMR_TCACT_CLRSETTO                                             \
                                 0x0000E000  // Clear CCP immediately and set on
                                             // Time-Out
-#define TIMER_TBMR_TBCINTD      0x00001000  // One-Shot/Periodic Interrupt Mode
+#define TIMER_TBMR_TBCINTD      0x00001000  // One-Shot/Periodic Interrupt
+                                            // Disable
 #define TIMER_TBMR_TBPLO        0x00000800  // GPTM Timer B PWM Legacy
                                             // Operation
 #define TIMER_TBMR_TBMRSU       0x00000400  // GPTM Timer B Match Register
@@ -5485,84 +5454,60 @@
 #define TIMER_SYNC_SYNCT6_TATB  0x00003000  // A timeout event for both Timer A
                                             // and Timer B of GPTM6 is
                                             // triggered
-#define TIMER_SYNC_SYNCT5_M     0x00000C00  // Synchronize GPTM 16/32-Bit Timer
-                                            // 5
-#define TIMER_SYNC_SYNCT5_NONE  0x00000000  // GPTM 16/32-Bit Timer 5 is not
-                                            // affected
+#define TIMER_SYNC_SYNCT5_M     0x00000C00  // Synchronize GPTM Timer 5
+#define TIMER_SYNC_SYNCT5_NONE  0x00000000  // GPTM5 is not affected
 #define TIMER_SYNC_SYNCT5_TA    0x00000400  // A timeout event for Timer A of
-                                            // GPTM 16/32-Bit Timer 5 is
-                                            // triggered
+                                            // GPTM5 is triggered
 #define TIMER_SYNC_SYNCT5_TB    0x00000800  // A timeout event for Timer B of
-                                            // GPTM 16/32-Bit Timer 5 is
-                                            // triggered
+                                            // GPTM5 is triggered
 #define TIMER_SYNC_SYNCT5_TATB  0x00000C00  // A timeout event for both Timer A
-                                            // and Timer B of GPTM 16/32-Bit
-                                            // Timer 5 is triggered
-#define TIMER_SYNC_SYNCT4_M     0x00000300  // Synchronize GPTM 16/32-Bit Timer
-                                            // 4
-#define TIMER_SYNC_SYNCT4_NONE  0x00000000  // GPTM 16/32-Bit Timer 4 is not
-                                            // affected
+                                            // and Timer B of GPTM5 is
+                                            // triggered
+#define TIMER_SYNC_SYNCT4_M     0x00000300  // Synchronize GPTM Timer 4
+#define TIMER_SYNC_SYNCT4_NONE  0x00000000  // GPTM4 is not affected
 #define TIMER_SYNC_SYNCT4_TA    0x00000100  // A timeout event for Timer A of
-                                            // GPTM 16/32-Bit Timer 4 is
-                                            // triggered
+                                            // GPTM4 is triggered
 #define TIMER_SYNC_SYNCT4_TB    0x00000200  // A timeout event for Timer B of
-                                            // GPTM 16/32-Bit Timer 4 is
-                                            // triggered
+                                            // GPTM4 is triggered
 #define TIMER_SYNC_SYNCT4_TATB  0x00000300  // A timeout event for both Timer A
-                                            // and Timer B of GPTM 16/32-Bit
-                                            // Timer 4 is triggered
-#define TIMER_SYNC_SYNCT3_M     0x000000C0  // Synchronize GPTM 16/32-Bit Timer
-                                            // 3
-#define TIMER_SYNC_SYNCT3_NONE  0x00000000  // GPTM 16/32-Bit Timer 3 is not
-                                            // affected
+                                            // and Timer B of GPTM4 is
+                                            // triggered
+#define TIMER_SYNC_SYNCT3_M     0x000000C0  // Synchronize GPTM Timer 3
+#define TIMER_SYNC_SYNCT3_NONE  0x00000000  // GPTM3 is not affected
 #define TIMER_SYNC_SYNCT3_TA    0x00000040  // A timeout event for Timer A of
-                                            // GPTM 16/32-Bit Timer 3 is
-                                            // triggered
+                                            // GPTM3 is triggered
 #define TIMER_SYNC_SYNCT3_TB    0x00000080  // A timeout event for Timer B of
-                                            // GPTM 16/32-Bit Timer 3 is
-                                            // triggered
+                                            // GPTM3 is triggered
 #define TIMER_SYNC_SYNCT3_TATB  0x000000C0  // A timeout event for both Timer A
-                                            // and Timer B of GPTM 16/32-Bit
-                                            // Timer 3 is triggered
-#define TIMER_SYNC_SYNCT2_M     0x00000030  // Synchronize GPTM 16/32-Bit Timer
-                                            // 2
-#define TIMER_SYNC_SYNCT2_NONE  0x00000000  // GPTM 16/32-Bit Timer 2 is not
-                                            // affected
+                                            // and Timer B of GPTM3 is
+                                            // triggered
+#define TIMER_SYNC_SYNCT2_M     0x00000030  // Synchronize GPTM Timer 2
+#define TIMER_SYNC_SYNCT2_NONE  0x00000000  // GPTM2 is not affected
 #define TIMER_SYNC_SYNCT2_TA    0x00000010  // A timeout event for Timer A of
-                                            // GPTM 16/32-Bit Timer 2 is
-                                            // triggered
+                                            // GPTM2 is triggered
 #define TIMER_SYNC_SYNCT2_TB    0x00000020  // A timeout event for Timer B of
-                                            // GPTM 16/32-Bit Timer 2 is
-                                            // triggered
+                                            // GPTM2 is triggered
 #define TIMER_SYNC_SYNCT2_TATB  0x00000030  // A timeout event for both Timer A
-                                            // and Timer B of GPTM 16/32-Bit
-                                            // Timer 2 is triggered
-#define TIMER_SYNC_SYNCT1_M     0x0000000C  // Synchronize GPTM 16/32-Bit Timer
-                                            // 1
-#define TIMER_SYNC_SYNCT1_NONE  0x00000000  // GPTM 16/32-Bit Timer 1 is not
-                                            // affected
+                                            // and Timer B of GPTM2 is
+                                            // triggered
+#define TIMER_SYNC_SYNCT1_M     0x0000000C  // Synchronize GPTM Timer 1
+#define TIMER_SYNC_SYNCT1_NONE  0x00000000  // GPTM1 is not affected
 #define TIMER_SYNC_SYNCT1_TA    0x00000004  // A timeout event for Timer A of
-                                            // GPTM 16/32-Bit Timer 1 is
-                                            // triggered
+                                            // GPTM1 is triggered
 #define TIMER_SYNC_SYNCT1_TB    0x00000008  // A timeout event for Timer B of
-                                            // GPTM 16/32-Bit Timer 1 is
-                                            // triggered
+                                            // GPTM1 is triggered
 #define TIMER_SYNC_SYNCT1_TATB  0x0000000C  // A timeout event for both Timer A
-                                            // and Timer B of GPTM 16/32-Bit
-                                            // Timer 1 is triggered
-#define TIMER_SYNC_SYNCT0_M     0x00000003  // Synchronize GPTM 16/32-Bit Timer
-                                            // 0
-#define TIMER_SYNC_SYNCT0_NONE  0x00000000  // GPTM 16/32-Bit Timer 0 is not
-                                            // affected
+                                            // and Timer B of GPTM1 is
+                                            // triggered
+#define TIMER_SYNC_SYNCT0_M     0x00000003  // Synchronize GPTM Timer 0
+#define TIMER_SYNC_SYNCT0_NONE  0x00000000  // GPTM0 is not affected
 #define TIMER_SYNC_SYNCT0_TA    0x00000001  // A timeout event for Timer A of
-                                            // GPTM 16/32-Bit Timer 0 is
-                                            // triggered
+                                            // GPTM0 is triggered
 #define TIMER_SYNC_SYNCT0_TB    0x00000002  // A timeout event for Timer B of
-                                            // GPTM 16/32-Bit Timer 0 is
-                                            // triggered
+                                            // GPTM0 is triggered
 #define TIMER_SYNC_SYNCT0_TATB  0x00000003  // A timeout event for both Timer A
-                                            // and Timer B of GPTM 16/32-Bit
-                                            // Timer 0 is triggered
+                                            // and Timer B of GPTM0 is
+                                            // triggered
 
 //*****************************************************************************
 //
@@ -5799,22 +5744,23 @@
 // The following are defines for the bit fields in the TIMER_O_DMAEV register.
 //
 //*****************************************************************************
-#define TIMER_DMAEV_TBMDMAEN    0x00000800  // GPTM Timer B Mode Match DMA
+#define TIMER_DMAEV_TBMDMAEN    0x00000800  // GPTM B Mode Match Event DMA
                                             // Trigger Enable
-#define TIMER_DMAEV_CBEDMAEN    0x00000400  // GPTM Capture B Event DMA Trigger
+#define TIMER_DMAEV_CBEDMAEN    0x00000400  // GPTM B Capture Event DMA Trigger
                                             // Enable
-#define TIMER_DMAEV_CBMDMAEN    0x00000200  // GPTM Capture B Match DMA Trigger
-                                            // Enable
-#define TIMER_DMAEV_TBTODMAEN   0x00000100  // GPTM Timer B Time-Out DMA
+#define TIMER_DMAEV_CBMDMAEN    0x00000200  // GPTM B Capture Match Event DMA
                                             // Trigger Enable
-#define TIMER_DMAEV_TAMDMAEN    0x00000010  // GPTM Timer A Mode Match DMA
+#define TIMER_DMAEV_TBTODMAEN   0x00000100  // GPTM B Time-Out Event DMA
                                             // Trigger Enable
-#define TIMER_DMAEV_RTCDMAEN    0x00000008  // GPTM RTC DMA Trigger Enable
-#define TIMER_DMAEV_CAEDMAEN    0x00000004  // GPTM Capture A Event DMA Trigger
+#define TIMER_DMAEV_TAMDMAEN    0x00000010  // GPTM A Mode Match Event DMA
+                                            // Trigger Enable
+#define TIMER_DMAEV_RTCDMAEN    0x00000008  // GPTM A RTC Match Event DMA
+                                            // Trigger Enable
+#define TIMER_DMAEV_CAEDMAEN    0x00000004  // GPTM A Capture Event DMA Trigger
                                             // Enable
-#define TIMER_DMAEV_CAMDMAEN    0x00000002  // GPTM Capture A Match DMA Trigger
-                                            // Enable
-#define TIMER_DMAEV_TATODMAEN   0x00000001  // GPTM Timer A Time-Out DMA
+#define TIMER_DMAEV_CAMDMAEN    0x00000002  // GPTM A Capture Match Event DMA
+                                            // Trigger Enable
+#define TIMER_DMAEV_TATODMAEN   0x00000001  // GPTM A Time-Out Event DMA
                                             // Trigger Enable
 
 //*****************************************************************************
@@ -5822,22 +5768,23 @@
 // The following are defines for the bit fields in the TIMER_O_ADCEV register.
 //
 //*****************************************************************************
-#define TIMER_ADCEV_TBMADCEN    0x00000800  // GPTM Timer B Mode Match ADC
+#define TIMER_ADCEV_TBMADCEN    0x00000800  // GPTM B Mode Match Event ADC
                                             // Trigger Enable
-#define TIMER_ADCEV_CBEADCEN    0x00000400  // GPTM Capture B Event ADC Trigger
+#define TIMER_ADCEV_CBEADCEN    0x00000400  // GPTM B Capture Event ADC Trigger
                                             // Enable
-#define TIMER_ADCEV_CBMADCEN    0x00000200  // GPTM Capture B Match ADC Trigger
-                                            // Enable
-#define TIMER_ADCEV_TBTOADCEN   0x00000100  // GPTM Timer B Time-Out ADC
+#define TIMER_ADCEV_CBMADCEN    0x00000200  // GPTM B Capture Match Event ADC
                                             // Trigger Enable
-#define TIMER_ADCEV_TAMADCEN    0x00000010  // GPTM Timer A Mode Match ADC
+#define TIMER_ADCEV_TBTOADCEN   0x00000100  // GPTM B Time-Out Event ADC
                                             // Trigger Enable
-#define TIMER_ADCEV_RTCADCEN    0x00000008  // GPTM RTC ADC Trigger Enable
-#define TIMER_ADCEV_CAEADCEN    0x00000004  // GPTM Capture A Event ADC Trigger
+#define TIMER_ADCEV_TAMADCEN    0x00000010  // GPTM A Mode Match Event ADC
+                                            // Trigger Enable
+#define TIMER_ADCEV_RTCADCEN    0x00000008  // GPTM RTC Match Event ADC Trigger
                                             // Enable
-#define TIMER_ADCEV_CAMADCEN    0x00000002  // GPTM Capture A Match ADC Trigger
+#define TIMER_ADCEV_CAEADCEN    0x00000004  // GPTM A Capture Event ADC Trigger
                                             // Enable
-#define TIMER_ADCEV_TATOADCEN   0x00000001  // GPTM Timer A Time-Out ADC
+#define TIMER_ADCEV_CAMADCEN    0x00000002  // GPTM A Capture Match Event ADC
+                                            // Trigger Enable
+#define TIMER_ADCEV_TATOADCEN   0x00000001  // GPTM A Time-Out Event ADC
                                             // Trigger Enable
 
 //*****************************************************************************
@@ -5962,12 +5909,12 @@
 #define ADC_EMUX_EM3_COMP0      0x00001000  // Analog Comparator 0
 #define ADC_EMUX_EM3_COMP1      0x00002000  // Analog Comparator 1
 #define ADC_EMUX_EM3_COMP2      0x00003000  // Analog Comparator 2
-#define ADC_EMUX_EM3_EXTERNAL   0x00004000  // External (GPIO PB4)
+#define ADC_EMUX_EM3_EXTERNAL   0x00004000  // External (GPIO Pins)
 #define ADC_EMUX_EM3_TIMER      0x00005000  // Timer
-#define ADC_EMUX_EM3_PWM0       0x00006000  // PWM0
-#define ADC_EMUX_EM3_PWM1       0x00007000  // PWM1
-#define ADC_EMUX_EM3_PWM2       0x00008000  // PWM2
-#define ADC_EMUX_EM3_PWM3       0x00009000  // PWM3
+#define ADC_EMUX_EM3_PWM0       0x00006000  // PWM generator 0
+#define ADC_EMUX_EM3_PWM1       0x00007000  // PWM generator 1
+#define ADC_EMUX_EM3_PWM2       0x00008000  // PWM generator 2
+#define ADC_EMUX_EM3_PWM3       0x00009000  // PWM generator 3
 #define ADC_EMUX_EM3_NEVER      0x0000E000  // Never Trigger
 #define ADC_EMUX_EM3_ALWAYS     0x0000F000  // Always (continuously sample)
 #define ADC_EMUX_EM2_M          0x00000F00  // SS2 Trigger Select
@@ -5975,12 +5922,12 @@
 #define ADC_EMUX_EM2_COMP0      0x00000100  // Analog Comparator 0
 #define ADC_EMUX_EM2_COMP1      0x00000200  // Analog Comparator 1
 #define ADC_EMUX_EM2_COMP2      0x00000300  // Analog Comparator 2
-#define ADC_EMUX_EM2_EXTERNAL   0x00000400  // External (GPIO PB4)
+#define ADC_EMUX_EM2_EXTERNAL   0x00000400  // External (GPIO Pins)
 #define ADC_EMUX_EM2_TIMER      0x00000500  // Timer
-#define ADC_EMUX_EM2_PWM0       0x00000600  // PWM0
-#define ADC_EMUX_EM2_PWM1       0x00000700  // PWM1
-#define ADC_EMUX_EM2_PWM2       0x00000800  // PWM2
-#define ADC_EMUX_EM2_PWM3       0x00000900  // PWM3
+#define ADC_EMUX_EM2_PWM0       0x00000600  // PWM generator 0
+#define ADC_EMUX_EM2_PWM1       0x00000700  // PWM generator 1
+#define ADC_EMUX_EM2_PWM2       0x00000800  // PWM generator 2
+#define ADC_EMUX_EM2_PWM3       0x00000900  // PWM generator 3
 #define ADC_EMUX_EM2_NEVER      0x00000E00  // Never Trigger
 #define ADC_EMUX_EM2_ALWAYS     0x00000F00  // Always (continuously sample)
 #define ADC_EMUX_EM1_M          0x000000F0  // SS1 Trigger Select
@@ -5988,12 +5935,12 @@
 #define ADC_EMUX_EM1_COMP0      0x00000010  // Analog Comparator 0
 #define ADC_EMUX_EM1_COMP1      0x00000020  // Analog Comparator 1
 #define ADC_EMUX_EM1_COMP2      0x00000030  // Analog Comparator 2
-#define ADC_EMUX_EM1_EXTERNAL   0x00000040  // External (GPIO PB4)
+#define ADC_EMUX_EM1_EXTERNAL   0x00000040  // External (GPIO Pins)
 #define ADC_EMUX_EM1_TIMER      0x00000050  // Timer
-#define ADC_EMUX_EM1_PWM0       0x00000060  // PWM0
-#define ADC_EMUX_EM1_PWM1       0x00000070  // PWM1
-#define ADC_EMUX_EM1_PWM2       0x00000080  // PWM2
-#define ADC_EMUX_EM1_PWM3       0x00000090  // PWM3
+#define ADC_EMUX_EM1_PWM0       0x00000060  // PWM generator 0
+#define ADC_EMUX_EM1_PWM1       0x00000070  // PWM generator 1
+#define ADC_EMUX_EM1_PWM2       0x00000080  // PWM generator 2
+#define ADC_EMUX_EM1_PWM3       0x00000090  // PWM generator 3
 #define ADC_EMUX_EM1_NEVER      0x000000E0  // Never Trigger
 #define ADC_EMUX_EM1_ALWAYS     0x000000F0  // Always (continuously sample)
 #define ADC_EMUX_EM0_M          0x0000000F  // SS0 Trigger Select
@@ -6001,12 +5948,12 @@
 #define ADC_EMUX_EM0_COMP0      0x00000001  // Analog Comparator 0
 #define ADC_EMUX_EM0_COMP1      0x00000002  // Analog Comparator 1
 #define ADC_EMUX_EM0_COMP2      0x00000003  // Analog Comparator 2
-#define ADC_EMUX_EM0_EXTERNAL   0x00000004  // External (GPIO PB4)
+#define ADC_EMUX_EM0_EXTERNAL   0x00000004  // External (GPIO Pins)
 #define ADC_EMUX_EM0_TIMER      0x00000005  // Timer
-#define ADC_EMUX_EM0_PWM0       0x00000006  // PWM0
-#define ADC_EMUX_EM0_PWM1       0x00000007  // PWM1
-#define ADC_EMUX_EM0_PWM2       0x00000008  // PWM2
-#define ADC_EMUX_EM0_PWM3       0x00000009  // PWM3
+#define ADC_EMUX_EM0_PWM0       0x00000006  // PWM generator 0
+#define ADC_EMUX_EM0_PWM1       0x00000007  // PWM generator 1
+#define ADC_EMUX_EM0_PWM2       0x00000008  // PWM generator 2
+#define ADC_EMUX_EM0_PWM3       0x00000009  // PWM generator 3
 #define ADC_EMUX_EM0_NEVER      0x0000000E  // Never Trigger
 #define ADC_EMUX_EM0_ALWAYS     0x0000000F  // Always (continuously sample)
 
@@ -6025,14 +5972,22 @@
 // The following are defines for the bit fields in the ADC_O_TSSEL register.
 //
 //*****************************************************************************
-#define ADC_TSSEL_PS3_M         0x30000000  // PWM Unit Select
-#define ADC_TSSEL_PS3_0         0x00000000  // PWM Unit 0
-#define ADC_TSSEL_PS2_M         0x00300000  // PWM Unit Select
-#define ADC_TSSEL_PS2_0         0x00000000  // PWM Unit 0
-#define ADC_TSSEL_PS1_M         0x00003000  // PWM Unit Select
-#define ADC_TSSEL_PS1_0         0x00000000  // PWM Unit 0
-#define ADC_TSSEL_PS0_M         0x00000030  // PWM Unit Select
-#define ADC_TSSEL_PS0_0         0x00000000  // PWM Unit 0
+#define ADC_TSSEL_PS3_M         0x30000000  // Generator 3 PWM Module Trigger
+                                            // Select
+#define ADC_TSSEL_PS3_0         0x00000000  // Use Generator 3 (and its
+                                            // trigger) in PWM module 0
+#define ADC_TSSEL_PS2_M         0x00300000  // Generator 2 PWM Module Trigger
+                                            // Select
+#define ADC_TSSEL_PS2_0         0x00000000  // Use Generator 2 (and its
+                                            // trigger) in PWM module 0
+#define ADC_TSSEL_PS1_M         0x00003000  // Generator 1 PWM Module Trigger
+                                            // Select
+#define ADC_TSSEL_PS1_0         0x00000000  // Use Generator 1 (and its
+                                            // trigger) in PWM module 0
+#define ADC_TSSEL_PS0_M         0x00000030  // Generator 0 PWM Module Trigger
+                                            // Select
+#define ADC_TSSEL_PS0_0         0x00000000  // Use Generator 0 (and its
+                                            // trigger) in PWM module 0
 
 //*****************************************************************************
 //
@@ -6120,14 +6075,12 @@
 // The following are defines for the bit fields in the ADC_O_CTL register.
 //
 //*****************************************************************************
-#define ADC_CTL_DITHER          0x00000040  // Dither Mode Enable
-#define ADC_CTL_VREF_M          0x00000003  // Voltage Reference Select
-#define ADC_CTL_VREF_INTERNAL   0x00000000  // The internal reference as the
-                                            // voltage reference
-#define ADC_CTL_VREF_EXT_3V     0x00000001  // A 3.0 V external VREFA input is
-                                            // the voltage reference. The ADC
-                                            // conversion range is 0.0 V to the
-                                            // external reference value
+#define ADC_CTL_VREF_M          0x00000001  // Voltage Reference Select
+#define ADC_CTL_VREF_INTERNAL   0x00000000  // VDDA and GNDA are the voltage
+                                            // references
+#define ADC_CTL_VREF_EXT_3V     0x00000001  // The external VREFA+ and VREFA-
+                                            // inputs are the voltage
+                                            // references
 
 //*****************************************************************************
 //
@@ -6159,35 +6112,43 @@
 #define ADC_SSCTL0_TS7          0x80000000  // 8th Sample Temp Sensor Select
 #define ADC_SSCTL0_IE7          0x40000000  // 8th Sample Interrupt Enable
 #define ADC_SSCTL0_END7         0x20000000  // 8th Sample is End of Sequence
-#define ADC_SSCTL0_D7           0x10000000  // 8th Sample Diff Input Select
+#define ADC_SSCTL0_D7           0x10000000  // 8th Sample Differential Input
+                                            // Select
 #define ADC_SSCTL0_TS6          0x08000000  // 7th Sample Temp Sensor Select
 #define ADC_SSCTL0_IE6          0x04000000  // 7th Sample Interrupt Enable
 #define ADC_SSCTL0_END6         0x02000000  // 7th Sample is End of Sequence
-#define ADC_SSCTL0_D6           0x01000000  // 7th Sample Diff Input Select
+#define ADC_SSCTL0_D6           0x01000000  // 7th Sample Differential Input
+                                            // Select
 #define ADC_SSCTL0_TS5          0x00800000  // 6th Sample Temp Sensor Select
 #define ADC_SSCTL0_IE5          0x00400000  // 6th Sample Interrupt Enable
 #define ADC_SSCTL0_END5         0x00200000  // 6th Sample is End of Sequence
-#define ADC_SSCTL0_D5           0x00100000  // 6th Sample Diff Input Select
+#define ADC_SSCTL0_D5           0x00100000  // 6th Sample Differential Input
+                                            // Select
 #define ADC_SSCTL0_TS4          0x00080000  // 5th Sample Temp Sensor Select
 #define ADC_SSCTL0_IE4          0x00040000  // 5th Sample Interrupt Enable
 #define ADC_SSCTL0_END4         0x00020000  // 5th Sample is End of Sequence
-#define ADC_SSCTL0_D4           0x00010000  // 5th Sample Diff Input Select
+#define ADC_SSCTL0_D4           0x00010000  // 5th Sample Differential Input
+                                            // Select
 #define ADC_SSCTL0_TS3          0x00008000  // 4th Sample Temp Sensor Select
 #define ADC_SSCTL0_IE3          0x00004000  // 4th Sample Interrupt Enable
 #define ADC_SSCTL0_END3         0x00002000  // 4th Sample is End of Sequence
-#define ADC_SSCTL0_D3           0x00001000  // 4th Sample Diff Input Select
+#define ADC_SSCTL0_D3           0x00001000  // 4th Sample Differential Input
+                                            // Select
 #define ADC_SSCTL0_TS2          0x00000800  // 3rd Sample Temp Sensor Select
 #define ADC_SSCTL0_IE2          0x00000400  // 3rd Sample Interrupt Enable
 #define ADC_SSCTL0_END2         0x00000200  // 3rd Sample is End of Sequence
-#define ADC_SSCTL0_D2           0x00000100  // 3rd Sample Diff Input Select
+#define ADC_SSCTL0_D2           0x00000100  // 3rd Sample Differential Input
+                                            // Select
 #define ADC_SSCTL0_TS1          0x00000080  // 2nd Sample Temp Sensor Select
 #define ADC_SSCTL0_IE1          0x00000040  // 2nd Sample Interrupt Enable
 #define ADC_SSCTL0_END1         0x00000020  // 2nd Sample is End of Sequence
-#define ADC_SSCTL0_D1           0x00000010  // 2nd Sample Diff Input Select
+#define ADC_SSCTL0_D1           0x00000010  // 2nd Sample Differential Input
+                                            // Select
 #define ADC_SSCTL0_TS0          0x00000008  // 1st Sample Temp Sensor Select
 #define ADC_SSCTL0_IE0          0x00000004  // 1st Sample Interrupt Enable
 #define ADC_SSCTL0_END0         0x00000002  // 1st Sample is End of Sequence
-#define ADC_SSCTL0_D0           0x00000001  // 1st Sample Diff Input Select
+#define ADC_SSCTL0_D0           0x00000001  // 1st Sample Differential Input
+                                            // Select
 
 //*****************************************************************************
 //
@@ -6334,19 +6295,23 @@
 #define ADC_SSCTL1_TS3          0x00008000  // 4th Sample Temp Sensor Select
 #define ADC_SSCTL1_IE3          0x00004000  // 4th Sample Interrupt Enable
 #define ADC_SSCTL1_END3         0x00002000  // 4th Sample is End of Sequence
-#define ADC_SSCTL1_D3           0x00001000  // 4th Sample Diff Input Select
+#define ADC_SSCTL1_D3           0x00001000  // 4th Sample Differential Input
+                                            // Select
 #define ADC_SSCTL1_TS2          0x00000800  // 3rd Sample Temp Sensor Select
 #define ADC_SSCTL1_IE2          0x00000400  // 3rd Sample Interrupt Enable
 #define ADC_SSCTL1_END2         0x00000200  // 3rd Sample is End of Sequence
-#define ADC_SSCTL1_D2           0x00000100  // 3rd Sample Diff Input Select
+#define ADC_SSCTL1_D2           0x00000100  // 3rd Sample Differential Input
+                                            // Select
 #define ADC_SSCTL1_TS1          0x00000080  // 2nd Sample Temp Sensor Select
 #define ADC_SSCTL1_IE1          0x00000040  // 2nd Sample Interrupt Enable
 #define ADC_SSCTL1_END1         0x00000020  // 2nd Sample is End of Sequence
-#define ADC_SSCTL1_D1           0x00000010  // 2nd Sample Diff Input Select
+#define ADC_SSCTL1_D1           0x00000010  // 2nd Sample Differential Input
+                                            // Select
 #define ADC_SSCTL1_TS0          0x00000008  // 1st Sample Temp Sensor Select
 #define ADC_SSCTL1_IE0          0x00000004  // 1st Sample Interrupt Enable
 #define ADC_SSCTL1_END0         0x00000002  // 1st Sample is End of Sequence
-#define ADC_SSCTL1_D0           0x00000001  // 1st Sample Diff Input Select
+#define ADC_SSCTL1_D0           0x00000001  // 1st Sample Differential Input
+                                            // Select
 
 //*****************************************************************************
 //
@@ -6453,19 +6418,23 @@
 #define ADC_SSCTL2_TS3          0x00008000  // 4th Sample Temp Sensor Select
 #define ADC_SSCTL2_IE3          0x00004000  // 4th Sample Interrupt Enable
 #define ADC_SSCTL2_END3         0x00002000  // 4th Sample is End of Sequence
-#define ADC_SSCTL2_D3           0x00001000  // 4th Sample Diff Input Select
+#define ADC_SSCTL2_D3           0x00001000  // 4th Sample Differential Input
+                                            // Select
 #define ADC_SSCTL2_TS2          0x00000800  // 3rd Sample Temp Sensor Select
 #define ADC_SSCTL2_IE2          0x00000400  // 3rd Sample Interrupt Enable
 #define ADC_SSCTL2_END2         0x00000200  // 3rd Sample is End of Sequence
-#define ADC_SSCTL2_D2           0x00000100  // 3rd Sample Diff Input Select
+#define ADC_SSCTL2_D2           0x00000100  // 3rd Sample Differential Input
+                                            // Select
 #define ADC_SSCTL2_TS1          0x00000080  // 2nd Sample Temp Sensor Select
 #define ADC_SSCTL2_IE1          0x00000040  // 2nd Sample Interrupt Enable
 #define ADC_SSCTL2_END1         0x00000020  // 2nd Sample is End of Sequence
-#define ADC_SSCTL2_D1           0x00000010  // 2nd Sample Diff Input Select
+#define ADC_SSCTL2_D1           0x00000010  // 2nd Sample Differential Input
+                                            // Select
 #define ADC_SSCTL2_TS0          0x00000008  // 1st Sample Temp Sensor Select
 #define ADC_SSCTL2_IE0          0x00000004  // 1st Sample Interrupt Enable
 #define ADC_SSCTL2_END0         0x00000002  // 1st Sample is End of Sequence
-#define ADC_SSCTL2_D0           0x00000001  // 1st Sample Diff Input Select
+#define ADC_SSCTL2_D0           0x00000001  // 1st Sample Differential Input
+                                            // Select
 
 //*****************************************************************************
 //
@@ -6564,9 +6533,9 @@
 //
 //*****************************************************************************
 #define ADC_SSCTL3_TS0          0x00000008  // 1st Sample Temp Sensor Select
-#define ADC_SSCTL3_IE0          0x00000004  // 1st Sample Interrupt Enable
-#define ADC_SSCTL3_END0         0x00000002  // 1st Sample is End of Sequence
-#define ADC_SSCTL3_D0           0x00000001  // 1st Sample Diff Input Select
+#define ADC_SSCTL3_IE0          0x00000004  // Sample Interrupt Enable
+#define ADC_SSCTL3_END0         0x00000002  // End of Sequence
+#define ADC_SSCTL3_D0           0x00000001  // Sample Differential Input Select
 
 //*****************************************************************************
 //
@@ -6982,10 +6951,7 @@
 //*****************************************************************************
 #define ADC_CC_CLKDIV_M         0x000003F0  // PLL VCO Clock Divisor
 #define ADC_CC_CS_M             0x0000000F  // ADC Clock Source
-#define ADC_CC_CS_SYSPLL        0x00000000  // Either the system clock (if the
-                                            // PLL bypass is in effect) or the
-                                            // 16 MHz clock derived from PLL /
-                                            // 25 (default)
+#define ADC_CC_CS_SYSPLL        0x00000000  // PLL VCO divided by CLKDIV
 #define ADC_CC_CS_PIOSC         0x00000001  // PIOSC
 #define ADC_CC_CS_MOSC          0x00000002  // MOSC
 #define ADC_CC_CLKDIV_S         4
@@ -7079,7 +7045,6 @@
 #define COMP_ACCTL1_ASRCP_PIN   0x00000000  // Pin value of Cn+
 #define COMP_ACCTL1_ASRCP_PIN0  0x00000200  // Pin value of C0+
 #define COMP_ACCTL1_ASRCP_REF   0x00000400  // Internal voltage reference
-                                            // (VIREF)
 #define COMP_ACCTL1_TSLVAL      0x00000080  // Trigger Sense Level Value
 #define COMP_ACCTL1_TSEN_M      0x00000060  // Trigger Sense
 #define COMP_ACCTL1_TSEN_LEVEL  0x00000000  // Level sense, see TSLVAL
@@ -7111,7 +7076,6 @@
 #define COMP_ACCTL2_ASRCP_PIN   0x00000000  // Pin value of Cn+
 #define COMP_ACCTL2_ASRCP_PIN0  0x00000200  // Pin value of C0+
 #define COMP_ACCTL2_ASRCP_REF   0x00000400  // Internal voltage reference
-                                            // (VIREF)
 #define COMP_ACCTL2_TSLVAL      0x00000080  // Trigger Sense Level Value
 #define COMP_ACCTL2_TSEN_M      0x00000060  // Trigger Sense
 #define COMP_ACCTL2_TSEN_LEVEL  0x00000000  // Level sense, see TSLVAL
@@ -7595,9 +7559,9 @@
 // The following are defines for the bit fields in the USB_O_IS register.
 //
 //*****************************************************************************
-#define USB_IS_VBUSERR          0x00000080  // VBUS Error
-#define USB_IS_SESREQ           0x00000040  // SESSION REQUEST
-#define USB_IS_DISCON           0x00000020  // Session Disconnect
+#define USB_IS_VBUSERR          0x00000080  // VBUS Error (OTG only)
+#define USB_IS_SESREQ           0x00000040  // SESSION REQUEST (OTG only)
+#define USB_IS_DISCON           0x00000020  // Session Disconnect (OTG only)
 #define USB_IS_CONN             0x00000010  // Session Connect
 #define USB_IS_SOF              0x00000008  // Start of Frame
 #define USB_IS_BABBLE           0x00000004  // Babble Detected
@@ -7610,8 +7574,10 @@
 // The following are defines for the bit fields in the USB_O_IE register.
 //
 //*****************************************************************************
-#define USB_IE_VBUSERR          0x00000080  // Enable VBUS Error Interrupt
-#define USB_IE_SESREQ           0x00000040  // Enable Session Request
+#define USB_IE_VBUSERR          0x00000080  // Enable VBUS Error Interrupt (OTG
+                                            // only)
+#define USB_IE_SESREQ           0x00000040  // Enable Session Request (OTG
+                                            // only)
 #define USB_IE_DISCON           0x00000020  // Enable Disconnect Interrupt
 #define USB_IE_CONN             0x00000010  // Enable Connect Interrupt
 #define USB_IE_SOF              0x00000008  // Enable Start-of-Frame Interrupt
@@ -7719,17 +7685,17 @@
 // The following are defines for the bit fields in the USB_O_DEVCTL register.
 //
 //*****************************************************************************
-#define USB_DEVCTL_DEV          0x00000080  // Device Mode
+#define USB_DEVCTL_DEV          0x00000080  // Device Mode (OTG only)
 #define USB_DEVCTL_FSDEV        0x00000040  // Full-Speed Device Detected
 #define USB_DEVCTL_LSDEV        0x00000020  // Low-Speed Device Detected
-#define USB_DEVCTL_VBUS_M       0x00000018  // VBUS Level
+#define USB_DEVCTL_VBUS_M       0x00000018  // VBUS Level (OTG only)
 #define USB_DEVCTL_VBUS_NONE    0x00000000  // Below SessionEnd
 #define USB_DEVCTL_VBUS_SEND    0x00000008  // Above SessionEnd, below AValid
 #define USB_DEVCTL_VBUS_AVALID  0x00000010  // Above AValid, below VBUSValid
 #define USB_DEVCTL_VBUS_VALID   0x00000018  // Above VBUSValid
 #define USB_DEVCTL_HOST         0x00000004  // Host Mode
-#define USB_DEVCTL_HOSTREQ      0x00000002  // Host Request
-#define USB_DEVCTL_SESSION      0x00000001  // Session Start/End
+#define USB_DEVCTL_HOSTREQ      0x00000002  // Host Request (OTG only)
+#define USB_DEVCTL_SESSION      0x00000001  // Session Start/End (OTG only)
 
 //*****************************************************************************
 //
@@ -7831,17 +7797,6 @@
 #define USB_ULPIREGCTL_RDWR     0x00000004  // Read/Write Control
 #define USB_ULPIREGCTL_REGCMPLT 0x00000002  // Register Access Complete
 #define USB_ULPIREGCTL_REGACC   0x00000001  // Initiate Register Access
-
-//*****************************************************************************
-//
-// The following are defines for the bit fields in the USB_O_ULPIRAWDATA
-// register.
-//
-//*****************************************************************************
-#define USB_ULPIRAWDATA_WTCON_M 0x000000F0  // Connect Wait
-#define USB_ULPIRAWDATA_WTID_M  0x0000000F  // Wait ID
-#define USB_ULPIRAWDATA_WTCON_S 4
-#define USB_ULPIRAWDATA_WTID_S  0
 
 //*****************************************************************************
 //
@@ -9448,14 +9403,14 @@
 // The following are defines for the bit fields in the USB_O_DMAINTR register.
 //
 //*****************************************************************************
-#define USB_DMAINTR_CH7         0x00000080  // Channel 8 DMA Interrupt
-#define USB_DMAINTR_CH6         0x00000040  // Channel 7 DMA Interrupt
-#define USB_DMAINTR_CH5         0x00000020  // Channel 6 DMA Interrupt
-#define USB_DMAINTR_CH4         0x00000010  // Channel 5 DMA Interrupt
-#define USB_DMAINTR_CH3         0x00000008  // Channel 4 DMA Interrupt
-#define USB_DMAINTR_CH2         0x00000004  // Channel 3 DMA Interrupt
-#define USB_DMAINTR_CH1         0x00000002  // Channel 2 DMA Interrupt
-#define USB_DMAINTR_CH0         0x00000001  // Channel 1 DMA Interrupt
+#define USB_DMAINTR_CH7         0x00000080  // Channel 7 DMA Interrupt
+#define USB_DMAINTR_CH6         0x00000040  // Channel 6 DMA Interrupt
+#define USB_DMAINTR_CH5         0x00000020  // Channel 5 DMA Interrupt
+#define USB_DMAINTR_CH4         0x00000010  // Channel 4 DMA Interrupt
+#define USB_DMAINTR_CH3         0x00000008  // Channel 3 DMA Interrupt
+#define USB_DMAINTR_CH2         0x00000004  // Channel 2 DMA Interrupt
+#define USB_DMAINTR_CH1         0x00000002  // Channel 1 DMA Interrupt
+#define USB_DMAINTR_CH0         0x00000001  // Channel 0 DMA Interrupt
 
 //*****************************************************************************
 //
@@ -9871,7 +9826,7 @@
 // The following are defines for the bit fields in the USB_O_HHSRTN register.
 //
 //*****************************************************************************
-#define USB_HHSRTN_HHSRTN_M     0x0000FFFF  // High Speed to UTM Operating
+#define USB_HHSRTN_HHSRTN_M     0x0000FFFF  // HIgh Speed to UTM Operating
                                             // Delay
 #define USB_HHSRTN_HHSRTN_S     0
 
@@ -9938,10 +9893,9 @@
 // The following are defines for the bit fields in the USB_O_LPMRIS register.
 //
 //*****************************************************************************
-#define USB_LPMRIS_ERR          0x00000020  // LPM Error Interrupt Status
+#define USB_LPMRIS_ERR          0x00000020  // LPM Interrupt Status
 #define USB_LPMRIS_RES          0x00000010  // LPM Resume Interrupt Status
-#define USB_LPMRIS_NC           0x00000008  // LPM No Completion Interrupt
-                                            // Status
+#define USB_LPMRIS_NC           0x00000008  // LPM NC Interrupt Status
 #define USB_LPMRIS_ACK          0x00000004  // LPM ACK Interrupt Status
 #define USB_LPMRIS_NY           0x00000002  // LPM NY Interrupt Status
 #define USB_LPMRIS_LPMST        0x00000001  // LPM STALL Interrupt Status
@@ -9973,7 +9927,9 @@
 #define USB_EPC_EPEN_LOW        0x00000000  // Power Enable Active Low
 #define USB_EPC_EPEN_HIGH       0x00000001  // Power Enable Active High
 #define USB_EPC_EPEN_VBLOW      0x00000002  // Power Enable High if VBUS Low
+                                            // (OTG only)
 #define USB_EPC_EPEN_VBHIGH     0x00000003  // Power Enable High if VBUS High
+                                            // (OTG only)
 
 //*****************************************************************************
 //
@@ -10156,7 +10112,6 @@
 // The following are defines for the bit fields in the EEPROM_EEDONE register.
 //
 //*****************************************************************************
-#define EEPROM_EEDONE_INVPL     0x00000100  // Invalid Program Voltage Level
 #define EEPROM_EEDONE_WRBUSY    0x00000020  // Write Busy
 #define EEPROM_EEDONE_NOPERM    0x00000010  // Write Without Permission
 #define EEPROM_EEDONE_WKCOPY    0x00000008  // Working on a Copy
@@ -10170,8 +10125,6 @@
 //*****************************************************************************
 #define EEPROM_EESUPP_PRETRY    0x00000008  // Programming Must Be Retried
 #define EEPROM_EESUPP_ERETRY    0x00000004  // Erase Must Be Retried
-#define EEPROM_EESUPP_EREQ      0x00000002  // Erase Required
-#define EEPROM_EESUPP_START     0x00000001  // Start Erase
 
 //*****************************************************************************
 //
@@ -10334,15 +10287,15 @@
 #define EPI_HB16CFG_BURST       0x00010000  // Burst Mode
 #define EPI_HB16CFG_MAXWAIT_M   0x0000FF00  // Maximum Wait
 #define EPI_HB16CFG_WRWS_M      0x000000C0  // Write Wait States
-#define EPI_HB16CFG_WRWS_0      0x00000000  // No wait states
-#define EPI_HB16CFG_WRWS_1      0x00000040  // 1 wait state
-#define EPI_HB16CFG_WRWS_2      0x00000080  // 2 wait states
-#define EPI_HB16CFG_WRWS_3      0x000000C0  // 3 wait states
+#define EPI_HB16CFG_WRWS_2      0x00000000  // Active WRn is 2 EPI clocks
+#define EPI_HB16CFG_WRWS_4      0x00000040  // Active WRn is 4 EPI clocks
+#define EPI_HB16CFG_WRWS_6      0x00000080  // Active WRn is 6 EPI clocks
+#define EPI_HB16CFG_WRWS_8      0x000000C0  // Active WRn is 8 EPI clocks
 #define EPI_HB16CFG_RDWS_M      0x00000030  // Read Wait States
-#define EPI_HB16CFG_RDWS_0      0x00000000  // No wait states
-#define EPI_HB16CFG_RDWS_1      0x00000010  // 1 wait state
-#define EPI_HB16CFG_RDWS_2      0x00000020  // 2 wait states
-#define EPI_HB16CFG_RDWS_3      0x00000030  // 3 wait states
+#define EPI_HB16CFG_RDWS_2      0x00000000  // Active RDn is 2 EPI clocks
+#define EPI_HB16CFG_RDWS_4      0x00000010  // Active RDn is 4 EPI clocks
+#define EPI_HB16CFG_RDWS_6      0x00000020  // Active RDn is 6 EPI clocks
+#define EPI_HB16CFG_RDWS_8      0x00000030  // Active RDn is 8 EPI clocks
 #define EPI_HB16CFG_BSEL        0x00000004  // Byte Select Configuration
 #define EPI_HB16CFG_MODE_M      0x00000003  // Host Bus Sub-Mode
 #define EPI_HB16CFG_MODE_ADMUX  0x00000000  // ADMUX - AD[15:0]
@@ -10358,11 +10311,9 @@
 //*****************************************************************************
 #define EPI_GPCFG_CLKPIN        0x80000000  // Clock Pin
 #define EPI_GPCFG_CLKGATE       0x40000000  // Clock Gated
-#define EPI_GPCFG_RDYEN         0x10000000  // Ready Enable
 #define EPI_GPCFG_FRM50         0x04000000  // 50/50 Frame
 #define EPI_GPCFG_FRMCNT_M      0x03C00000  // Frame Count
 #define EPI_GPCFG_WR2CYC        0x00080000  // 2-Cycle Writes
-#define EPI_GPCFG_MAXWAIT_M     0x0000FF00  // Maximum Wait
 #define EPI_GPCFG_ASIZE_M       0x00000030  // Address Bus Size
 #define EPI_GPCFG_ASIZE_NONE    0x00000000  // No address
 #define EPI_GPCFG_ASIZE_4BIT    0x00000010  // Up to 4 bits wide
@@ -10377,7 +10328,6 @@
 #define EPI_GPCFG_DSIZE_24BIT   0x00000002  // 24 Bits Wide (EPI0S0 to EPI0S23)
 #define EPI_GPCFG_DSIZE_32BIT   0x00000003  // 32 Bits Wide (EPI0S0 to EPI0S31)
 #define EPI_GPCFG_FRMCNT_S      22
-#define EPI_GPCFG_MAXWAIT_S     8
 
 //*****************************************************************************
 //
@@ -10414,15 +10364,15 @@
 #define EPI_HB8CFG_ALEHIGH      0x00080000  // ALE Strobe Polarity
 #define EPI_HB8CFG_MAXWAIT_M    0x0000FF00  // Maximum Wait
 #define EPI_HB8CFG_WRWS_M       0x000000C0  // Write Wait States
-#define EPI_HB8CFG_WRWS_0       0x00000000  // No wait states
-#define EPI_HB8CFG_WRWS_1       0x00000040  // 1 wait state
-#define EPI_HB8CFG_WRWS_2       0x00000080  // 2 wait states
-#define EPI_HB8CFG_WRWS_3       0x000000C0  // 3 wait states
+#define EPI_HB8CFG_WRWS_2       0x00000000  // Active WRn is 2 EPI clocks
+#define EPI_HB8CFG_WRWS_4       0x00000040  // Active WRn is 4 EPI clocks
+#define EPI_HB8CFG_WRWS_6       0x00000080  // Active WRn is 6 EPI clocks
+#define EPI_HB8CFG_WRWS_8       0x000000C0  // Active WRn is 8 EPI clocks
 #define EPI_HB8CFG_RDWS_M       0x00000030  // Read Wait States
-#define EPI_HB8CFG_RDWS_0       0x00000000  // No wait states
-#define EPI_HB8CFG_RDWS_1       0x00000010  // 1 wait state
-#define EPI_HB8CFG_RDWS_2       0x00000020  // 2 wait states
-#define EPI_HB8CFG_RDWS_3       0x00000030  // 3 wait states
+#define EPI_HB8CFG_RDWS_2       0x00000000  // Active RDn is 2 EPI clocks
+#define EPI_HB8CFG_RDWS_4       0x00000010  // Active RDn is 4 EPI clocks
+#define EPI_HB8CFG_RDWS_6       0x00000020  // Active RDn is 6 EPI clocks
+#define EPI_HB8CFG_RDWS_8       0x00000030  // Active RDn is 8 EPI clocks
 #define EPI_HB8CFG_MODE_M       0x00000003  // Host Bus Sub-Mode
 #define EPI_HB8CFG_MODE_MUX     0x00000000  // ADMUX - AD[7:0]
 #define EPI_HB8CFG_MODE_NMUX    0x00000001  // ADNONMUX - D[7:0]
@@ -10437,7 +10387,9 @@
 //*****************************************************************************
 #define EPI_HB8CFG2_CSCFGEXT    0x08000000  // Chip Select Extended
                                             // Configuration
-#define EPI_HB8CFG2_CSBAUD      0x04000000  // Chip Select Baud Rate
+#define EPI_HB8CFG2_CSBAUD      0x04000000  // Chip Select Baud Rate and
+                                            // Multiple Sub-Mode Configuration
+                                            // enable
 #define EPI_HB8CFG2_CSCFG_M     0x03000000  // Chip Select Configuration
 #define EPI_HB8CFG2_CSCFG_ALE   0x00000000  // ALE Configuration
 #define EPI_HB8CFG2_CSCFG_CS    0x01000000  // CSn Configuration
@@ -10447,15 +10399,15 @@
 #define EPI_HB8CFG2_RDHIGH      0x00100000  // CS1n READ Strobe Polarity
 #define EPI_HB8CFG2_ALEHIGH     0x00080000  // CS1n ALE Strobe Polarity
 #define EPI_HB8CFG2_WRWS_M      0x000000C0  // CS1n Write Wait States
-#define EPI_HB8CFG2_WRWS_0      0x00000000  // No wait states
-#define EPI_HB8CFG2_WRWS_1      0x00000040  // 1 wait state
-#define EPI_HB8CFG2_WRWS_2      0x00000080  // 2 wait states
-#define EPI_HB8CFG2_WRWS_3      0x000000C0  // 3 wait states
+#define EPI_HB8CFG2_WRWS_2      0x00000000  // Active WRn is 2 EPI clocks
+#define EPI_HB8CFG2_WRWS_4      0x00000040  // Active WRn is 4 EPI clocks
+#define EPI_HB8CFG2_WRWS_6      0x00000080  // Active WRn is 6 EPI clocks
+#define EPI_HB8CFG2_WRWS_8      0x000000C0  // Active WRn is 8 EPI clocks
 #define EPI_HB8CFG2_RDWS_M      0x00000030  // CS1n Read Wait States
-#define EPI_HB8CFG2_RDWS_0      0x00000000  // No wait states
-#define EPI_HB8CFG2_RDWS_1      0x00000010  // 1 wait state
-#define EPI_HB8CFG2_RDWS_2      0x00000020  // 2 wait states
-#define EPI_HB8CFG2_RDWS_3      0x00000030  // 3 wait states
+#define EPI_HB8CFG2_RDWS_2      0x00000000  // Active RDn is 2 EPI clocks
+#define EPI_HB8CFG2_RDWS_4      0x00000010  // Active RDn is 4 EPI clocks
+#define EPI_HB8CFG2_RDWS_6      0x00000020  // Active RDn is 6 EPI clocks
+#define EPI_HB8CFG2_RDWS_8      0x00000030  // Active RDn is 8 EPI clocks
 #define EPI_HB8CFG2_MODE_M      0x00000003  // CS1n Host Bus Sub-Mode
 #define EPI_HB8CFG2_MODE_ADMUX  0x00000000  // ADMUX - AD[7:0]
 #define EPI_HB8CFG2_MODE_AD     0x00000001  // ADNONMUX - D[7:0]
@@ -10467,7 +10419,9 @@
 //*****************************************************************************
 #define EPI_HB16CFG2_CSCFGEXT   0x08000000  // Chip Select Extended
                                             // Configuration
-#define EPI_HB16CFG2_CSBAUD     0x04000000  // Chip Select Baud Rate
+#define EPI_HB16CFG2_CSBAUD     0x04000000  // Chip Select Baud Rate and
+                                            // Multiple Sub-Mode Configuration
+                                            // enable
 #define EPI_HB16CFG2_CSCFG_M    0x03000000  // Chip Select Configuration
 #define EPI_HB16CFG2_CSCFG_ALE  0x00000000  // ALE Configuration
 #define EPI_HB16CFG2_CSCFG_CS   0x01000000  // CSn Configuration
@@ -10482,19 +10436,18 @@
                                             // Register Read
 #define EPI_HB16CFG2_BURST      0x00010000  // CS1n Burst Mode
 #define EPI_HB16CFG2_WRWS_M     0x000000C0  // CS1n Write Wait States
-#define EPI_HB16CFG2_WRWS_0     0x00000000  // No wait states
-#define EPI_HB16CFG2_WRWS_1     0x00000040  // 1 wait state
-#define EPI_HB16CFG2_WRWS_2     0x00000080  // 2 wait states
-#define EPI_HB16CFG2_WRWS_3     0x000000C0  // 3 wait states
+#define EPI_HB16CFG2_WRWS_2     0x00000000  // Active WRn is 2 EPI clocks
+#define EPI_HB16CFG2_WRWS_4     0x00000040  // Active WRn is 4 EPI clocks
+#define EPI_HB16CFG2_WRWS_6     0x00000080  // Active WRn is 6 EPI clocks
+#define EPI_HB16CFG2_WRWS_8     0x000000C0  // Active WRn is 8 EPI clocks
 #define EPI_HB16CFG2_RDWS_M     0x00000030  // CS1n Read Wait States
-#define EPI_HB16CFG2_RDWS_0     0x00000000  // No wait states
-#define EPI_HB16CFG2_RDWS_1     0x00000010  // 1 wait state
-#define EPI_HB16CFG2_RDWS_2     0x00000020  // 2 wait states
-#define EPI_HB16CFG2_RDWS_3     0x00000030  // 3 wait states
+#define EPI_HB16CFG2_RDWS_2     0x00000000  // Active RDn is 2 EPI clocks
+#define EPI_HB16CFG2_RDWS_4     0x00000010  // Active RDn is 4 EPI clocks
+#define EPI_HB16CFG2_RDWS_6     0x00000020  // Active RDn is 6 EPI clocks
+#define EPI_HB16CFG2_RDWS_8     0x00000030  // Active RDn is 8 EPI clocks
 #define EPI_HB16CFG2_MODE_M     0x00000003  // CS1n Host Bus Sub-Mode
 #define EPI_HB16CFG2_MODE_ADMUX 0x00000000  // ADMUX - AD[15:0]
 #define EPI_HB16CFG2_MODE_AD    0x00000001  // ADNONMUX - D[15:0]
-#define EPI_HB16CFG2_MODE_CR    0x00000002  // Continuous Read - D[15:0]
 
 //*****************************************************************************
 //
@@ -10607,7 +10560,6 @@
 // The following are defines for the bit fields in the EPI_O_STAT register.
 //
 //*****************************************************************************
-#define EPI_STAT_CELOW          0x00000200  // Clock Enable Low
 #define EPI_STAT_XFFULL         0x00000100  // External FIFO Full
 #define EPI_STAT_XFEMPTY        0x00000080  // External FIFO Empty
 #define EPI_STAT_INITSEQ        0x00000040  // Initialization Sequence
@@ -10703,26 +10655,36 @@
 #define EPI_FIFOLVL_WFERR       0x00020000  // Write Full Error
 #define EPI_FIFOLVL_RSERR       0x00010000  // Read Stall Error
 #define EPI_FIFOLVL_WRFIFO_M    0x00000070  // Write FIFO
-#define EPI_FIFOLVL_WRFIFO_EMPT 0x00000000  // Trigger when there are any
-                                            // spaces available in the WFIFO
-#define EPI_FIFOLVL_WRFIFO_1_4  0x00000020  // Trigger when there are up to 3
-                                            // spaces available in the WFIFO
-#define EPI_FIFOLVL_WRFIFO_1_2  0x00000030  // Trigger when there are up to 2
-                                            // spaces available in the WFIFO
-#define EPI_FIFOLVL_WRFIFO_3_4  0x00000040  // Trigger when there is 1 space
-                                            // available in the WFIFO
+#define EPI_FIFOLVL_WRFIFO_EMPT 0x00000000  // Interrupt is triggered while
+                                            // WRFIFO is empty.
+#define EPI_FIFOLVL_WRFIFO_2    0x00000020  // Interrupt is triggered until
+                                            // there are only two slots
+                                            // available. Thus, trigger is
+                                            // deasserted when there are two
+                                            // WRFIFO entries present. This
+                                            // configuration is optimized for
+                                            // bursts of 2
+#define EPI_FIFOLVL_WRFIFO_1    0x00000030  // Interrupt is triggered until
+                                            // there is one WRFIFO entry
+                                            // available. This configuration
+                                            // expects only single writes
+#define EPI_FIFOLVL_WRFIFO_NFULL                                              \
+                                0x00000040  // Trigger interrupt when WRFIFO is
+                                            // not full, meaning trigger will
+                                            // continue to assert until there
+                                            // are four entries in the WRFIFO
 #define EPI_FIFOLVL_RDFIFO_M    0x00000007  // Read FIFO
-#define EPI_FIFOLVL_RDFIFO_1_8  0x00000001  // Trigger when there are 1 or more
+#define EPI_FIFOLVL_RDFIFO_1    0x00000001  // Trigger when there are 1 or more
                                             // entries in the NBRFIFO
-#define EPI_FIFOLVL_RDFIFO_1_4  0x00000002  // Trigger when there are 2 or more
+#define EPI_FIFOLVL_RDFIFO_2    0x00000002  // Trigger when there are 2 or more
                                             // entries in the NBRFIFO
-#define EPI_FIFOLVL_RDFIFO_1_2  0x00000003  // Trigger when there are 4 or more
+#define EPI_FIFOLVL_RDFIFO_4    0x00000003  // Trigger when there are 4 or more
                                             // entries in the NBRFIFO
-#define EPI_FIFOLVL_RDFIFO_3_4  0x00000004  // Trigger when there are 6 or more
+#define EPI_FIFOLVL_RDFIFO_6    0x00000004  // Trigger when there are 6 or more
                                             // entries in the NBRFIFO
-#define EPI_FIFOLVL_RDFIFO_7_8  0x00000005  // Trigger when there are 7 or more
+#define EPI_FIFOLVL_RDFIFO_7    0x00000005  // Trigger when there are 7 or more
                                             // entries in the NBRFIFO
-#define EPI_FIFOLVL_RDFIFO_FULL 0x00000006  // Trigger when there are 8 entries
+#define EPI_FIFOLVL_RDFIFO_8    0x00000006  // Trigger when there are 8 entries
                                             // in the NBRFIFO
 
 //*****************************************************************************
@@ -10808,7 +10770,6 @@
 #define EPI_HB8CFG3_MODE_M      0x00000003  // CS2n Host Bus Sub-Mode
 #define EPI_HB8CFG3_MODE_ADMUX  0x00000000  // ADMUX - AD[7:0]
 #define EPI_HB8CFG3_MODE_AD     0x00000001  // ADNONMUX - D[7:0]
-#define EPI_HB8CFG3_MODE_CR     0x00000002  // Continuous Read - D[7:0]
 
 //*****************************************************************************
 //
@@ -10836,7 +10797,6 @@
 #define EPI_HB16CFG3_MODE_M     0x00000003  // CS2n Host Bus Sub-Mode
 #define EPI_HB16CFG3_MODE_ADMUX 0x00000000  // ADMUX - AD[15:0]
 #define EPI_HB16CFG3_MODE_AD    0x00000001  // ADNONMUX - D[15:0]
-#define EPI_HB16CFG3_MODE_CR    0x00000002  // Continuous Read - D[15:0]
 
 //*****************************************************************************
 //
@@ -10864,7 +10824,6 @@
 #define EPI_HB16CFG4_MODE_M     0x00000003  // CS3n Host Bus Sub-Mode
 #define EPI_HB16CFG4_MODE_ADMUX 0x00000000  // ADMUX - AD[15:0]
 #define EPI_HB16CFG4_MODE_AD    0x00000001  // ADNONMUX - D[15:0]
-#define EPI_HB16CFG4_MODE_CR    0x00000002  // Continuous Read - D[15:0]
 
 //*****************************************************************************
 //
@@ -10887,7 +10846,6 @@
 #define EPI_HB8CFG4_MODE_M      0x00000003  // CS3n Host Bus Sub-Mode
 #define EPI_HB8CFG4_MODE_ADMUX  0x00000000  // ADMUX - AD[7:0]
 #define EPI_HB8CFG4_MODE_AD     0x00000001  // ADNONMUX - D[7:0]
-#define EPI_HB8CFG4_MODE_CR     0x00000002  // Continuous Read - D[7:0]
 
 //*****************************************************************************
 //
@@ -10909,7 +10867,7 @@
 //*****************************************************************************
 #define EPI_HB16TIME_IRDYDLY_M  0x03000000  // CS0n Input Ready Delay
 #define EPI_HB16TIME_PSRAMSZ_M  0x00070000  // PSRAM Row Size
-#define EPI_HB16TIME_PSRAMSZ_0  0x00000000  // No PSRAM
+#define EPI_HB16TIME_PSRAMSZ_0  0x00000000  // No row size limitation
 #define EPI_HB16TIME_PSRAMSZ_128B                                             \
                                 0x00010000  // 128 B
 #define EPI_HB16TIME_PSRAMSZ_256B                                             \
@@ -10952,7 +10910,7 @@
 //*****************************************************************************
 #define EPI_HB16TIME2_IRDYDLY_M 0x03000000  // CS1n Input Ready Delay
 #define EPI_HB16TIME2_PSRAMSZ_M 0x00070000  // PSRAM Row Size
-#define EPI_HB16TIME2_PSRAMSZ_0 0x00000000  // No PSRAM
+#define EPI_HB16TIME2_PSRAMSZ_0 0x00000000  // No row size limitation
 #define EPI_HB16TIME2_PSRAMSZ_128B                                            \
                                 0x00010000  // 128 B
 #define EPI_HB16TIME2_PSRAMSZ_256B                                            \
@@ -10984,7 +10942,7 @@
 //*****************************************************************************
 #define EPI_HB16TIME3_IRDYDLY_M 0x03000000  // CS2n Input Ready Delay
 #define EPI_HB16TIME3_PSRAMSZ_M 0x00070000  // PSRAM Row Size
-#define EPI_HB16TIME3_PSRAMSZ_0 0x00000000  // No PSRAM
+#define EPI_HB16TIME3_PSRAMSZ_0 0x00000000  // No row size limitation
 #define EPI_HB16TIME3_PSRAMSZ_128B                                            \
                                 0x00010000  // 128 B
 #define EPI_HB16TIME3_PSRAMSZ_256B                                            \
@@ -11042,7 +11000,7 @@
 //*****************************************************************************
 #define EPI_HB16TIME4_IRDYDLY_M 0x03000000  // CS3n Input Ready Delay
 #define EPI_HB16TIME4_PSRAMSZ_M 0x00070000  // PSRAM Row Size
-#define EPI_HB16TIME4_PSRAMSZ_0 0x00000000  // No PSRAM
+#define EPI_HB16TIME4_PSRAMSZ_0 0x00000000  // No row size limitation
 #define EPI_HB16TIME4_PSRAMSZ_128B                                            \
                                 0x00010000  // 128 B
 #define EPI_HB16TIME4_PSRAMSZ_256B                                            \
@@ -11195,7 +11153,7 @@
 #define HIB_CTL_VDD3ON          0x00000100  // VDD Powered
 #define HIB_CTL_VABORT          0x00000080  // Power Cut Abort Enable
 #define HIB_CTL_CLK32EN         0x00000040  // Clocking Enable
-#define HIB_CTL_PINWEN          0x00000010  // External WAKE Pin Enable
+#define HIB_CTL_PINWEN          0x00000010  // External Wake Pin Enable
 #define HIB_CTL_RTCWEN          0x00000008  // RTC Wake-up Enable
 #define HIB_CTL_HIBREQ          0x00000002  // Hibernation Request
 #define HIB_CTL_RTCEN           0x00000001  // RTC Timer Enable
@@ -11222,9 +11180,10 @@
 //
 //*****************************************************************************
 #define HIB_RIS_VDDFAIL         0x00000080  // VDD Fail Raw Interrupt Status
-#define HIB_RIS_RSTWK           0x00000040  // Reset Pad I/O Wake-Up Interrupt
-                                            // Mask
-#define HIB_RIS_PADIOWK         0x00000020  // Pad I/O Wake-Up Interrupt Mask
+#define HIB_RIS_RSTWK           0x00000040  // Reset Pad I/O Wake-Up Raw
+                                            // Interrupt Status
+#define HIB_RIS_PADIOWK         0x00000020  // Pad I/O Wake-Up Raw Interrupt
+                                            // Status
 #define HIB_RIS_WC              0x00000010  // Write Complete/Capable Raw
                                             // Interrupt Status
 #define HIB_RIS_EXTW            0x00000008  // External Wake-Up Raw Interrupt
@@ -11258,14 +11217,13 @@
 //*****************************************************************************
 #define HIB_IC_VDDFAIL          0x00000080  // VDD Fail Interrupt Clear
 #define HIB_IC_RSTWK            0x00000040  // Reset Pad I/O Wake-Up Interrupt
-                                            // Mask
-#define HIB_IC_PADIOWK          0x00000020  // Pad I/O Wake-Up Interrupt Mask
-#define HIB_IC_WC               0x00000010  // Write Complete/Capable Masked
-                                            // Interrupt Clear
-#define HIB_IC_EXTW             0x00000008  // External Wake-Up Masked
-                                            // Interrupt Clear
-#define HIB_IC_LOWBAT           0x00000004  // Low Battery Voltage Masked
-                                            // Interrupt Clear
+                                            // Clear
+#define HIB_IC_PADIOWK          0x00000020  // Pad I/O Wake-Up Interrupt Clear
+#define HIB_IC_WC               0x00000010  // Write Complete/Capable Interrupt
+                                            // Clear
+#define HIB_IC_EXTW             0x00000008  // External Wake-Up Interrupt Clear
+#define HIB_IC_LOWBAT           0x00000004  // Low Battery Voltage Interrupt
+                                            // Clear
 #define HIB_IC_RTCALT0          0x00000001  // RTC Alert0 Masked Interrupt
                                             // Clear
 
@@ -11395,7 +11353,7 @@
 // The following are defines for the bit fields in the HIB_LOCK register.
 //
 //*****************************************************************************
-#define HIB_LOCK_HIBLOCK_M      0xFFFFFFFF  // Hibernate Lock
+#define HIB_LOCK_HIBLOCK_M      0xFFFFFFFF  // HIbernate Lock
 #define HIB_LOCK_HIBLOCK_S      0
 
 //*****************************************************************************
@@ -11427,7 +11385,7 @@
                                 0x00000000  // Tamper disabled
 #define HIB_TPSTAT_STATE_CONFIGED                                             \
                                 0x00000004  // Tamper configured
-#define HIB_TPSTAT_STATE_ERROR  0x00000008  // Tamper event occurred
+#define HIB_TPSTAT_STATE_ERROR  0x00000008  // Tamper pin event occurred
 #define HIB_TPSTAT_XOSCST       0x00000002  // External Oscillator Status
 #define HIB_TPSTAT_XOSCFAIL     0x00000001  // External Oscillator Failure
 
@@ -11436,26 +11394,26 @@
 // The following are defines for the bit fields in the HIB_TPIO register.
 //
 //*****************************************************************************
-#define HIB_TPIO_GFLTR3         0x08000000  // TPIO3 Glitch Filtering
-#define HIB_TPIO_PUEN3          0x04000000  // TPIO3 Internal Weak Pull-up
+#define HIB_TPIO_GFLTR3         0x08000000  // TMPR3 Glitch Filtering
+#define HIB_TPIO_PUEN3          0x04000000  // TMPR3 Internal Weak Pull-up
                                             // Enable
-#define HIB_TPIO_LEV3           0x02000000  // TPIO3 Trigger Level
-#define HIB_TPIO_EN3            0x01000000  // TPIO3 Enable
-#define HIB_TPIO_GFLTR2         0x00080000  // TPIO2 Glitch Filtering
-#define HIB_TPIO_PUEN2          0x00040000  // TPIO2 Internal Weak Pull-up
+#define HIB_TPIO_LEV3           0x02000000  // TMPR3 Trigger Level
+#define HIB_TPIO_EN3            0x01000000  // TMPR3 Enable
+#define HIB_TPIO_GFLTR2         0x00080000  // TMPR2 Glitch Filtering
+#define HIB_TPIO_PUEN2          0x00040000  // TMPR2 Internal Weak Pull-up
                                             // Enable
-#define HIB_TPIO_LEV2           0x00020000  // TPIO2 Trigger Level
-#define HIB_TPIO_EN2            0x00010000  // TPIO2 Enable
-#define HIB_TPIO_GFLTR1         0x00000800  // TPIO1 Glitch Filtering
-#define HIB_TPIO_PUEN1          0x00000400  // TPIO1 Internal Weak Pull-up
+#define HIB_TPIO_LEV2           0x00020000  // TMPR2 Trigger Level
+#define HIB_TPIO_EN2            0x00010000  // TMPR2 Enable
+#define HIB_TPIO_GFLTR1         0x00000800  // TMPR1 Glitch Filtering
+#define HIB_TPIO_PUEN1          0x00000400  // TMPR1 Internal Weak Pull-up
                                             // Enable
-#define HIB_TPIO_LEV1           0x00000200  // TPIO1 Trigger Level
-#define HIB_TPIO_EN1            0x00000100  // TPIO1Enable
-#define HIB_TPIO_GFLTR0         0x00000008  // TPIO0 Glitch Filtering
-#define HIB_TPIO_PUEN0          0x00000004  // TPIO0 Internal Weak Pull-up
+#define HIB_TPIO_LEV1           0x00000200  // TMPR1 Trigger Level
+#define HIB_TPIO_EN1            0x00000100  // TMPR1Enable
+#define HIB_TPIO_GFLTR0         0x00000008  // TMPR0 Glitch Filtering
+#define HIB_TPIO_PUEN0          0x00000004  // TMPR0 Internal Weak Pull-up
                                             // Enable
-#define HIB_TPIO_LEV0           0x00000002  // TPIO0 Trigger Level
-#define HIB_TPIO_EN0            0x00000001  // TPIO0 Enable
+#define HIB_TPIO_LEV0           0x00000002  // TMPR0 Trigger Level
+#define HIB_TPIO_EN0            0x00000001  // TMPR0 Enable
 
 //*****************************************************************************
 //
@@ -11471,10 +11429,10 @@
 //
 //*****************************************************************************
 #define HIB_TPLOG1_XOSC         0x00010000  // Status of external 32
-#define HIB_TPLOG1_TRIG3        0x00000008  // Status of TPIO[3] Trigger
-#define HIB_TPLOG1_TRIG2        0x00000004  // Status of TPIO[2] Trigger
-#define HIB_TPLOG1_TRIG1        0x00000002  // Status of TPIO[1] Trigger
-#define HIB_TPLOG1_TRIG0        0x00000001  // Status of TPIO[0] Trigger
+#define HIB_TPLOG1_TRIG3        0x00000008  // Status of TMPR[3] Trigger
+#define HIB_TPLOG1_TRIG2        0x00000004  // Status of TMPR[2] Trigger
+#define HIB_TPLOG1_TRIG1        0x00000002  // Status of TMPR[1] Trigger
+#define HIB_TPLOG1_TRIG0        0x00000001  // Status of TMPR[0] Trigger
 
 //*****************************************************************************
 //
@@ -11490,10 +11448,10 @@
 //
 //*****************************************************************************
 #define HIB_TPLOG3_XOSC         0x00010000  // Status of external 32
-#define HIB_TPLOG3_TRIG3        0x00000008  // Status of TPIO[3] Trigger
-#define HIB_TPLOG3_TRIG2        0x00000004  // Status of TPIO[2] Trigger
-#define HIB_TPLOG3_TRIG1        0x00000002  // Status of TPIO[1] Trigger
-#define HIB_TPLOG3_TRIG0        0x00000001  // Status of TPIO[0] Trigger
+#define HIB_TPLOG3_TRIG3        0x00000008  // Status of TMPR[3] Trigger
+#define HIB_TPLOG3_TRIG2        0x00000004  // Status of TMPR[2] Trigger
+#define HIB_TPLOG3_TRIG1        0x00000002  // Status of TMPR[1] Trigger
+#define HIB_TPLOG3_TRIG0        0x00000001  // Status of TMPR[0] Trigger
 
 //*****************************************************************************
 //
@@ -11509,10 +11467,10 @@
 //
 //*****************************************************************************
 #define HIB_TPLOG5_XOSC         0x00010000  // Status of external 32
-#define HIB_TPLOG5_TRIG3        0x00000008  // Status of TPIO[3] Trigger
-#define HIB_TPLOG5_TRIG2        0x00000004  // Status of TPIO[2] Trigger
-#define HIB_TPLOG5_TRIG1        0x00000002  // Status of TPIO[1] Trigger
-#define HIB_TPLOG5_TRIG0        0x00000001  // Status of TPIO[0] Trigger
+#define HIB_TPLOG5_TRIG3        0x00000008  // Status of TMPR[3] Trigger
+#define HIB_TPLOG5_TRIG2        0x00000004  // Status of TMPR[2] Trigger
+#define HIB_TPLOG5_TRIG1        0x00000002  // Status of TMPR[1] Trigger
+#define HIB_TPLOG5_TRIG0        0x00000001  // Status of TMPR[0] Trigger
 
 //*****************************************************************************
 //
@@ -11528,10 +11486,10 @@
 //
 //*****************************************************************************
 #define HIB_TPLOG7_XOSC         0x00010000  // Status of external 32
-#define HIB_TPLOG7_TRIG3        0x00000008  // Status of TPIO[3] Trigger
-#define HIB_TPLOG7_TRIG2        0x00000004  // Status of TPIO[2] Trigger
-#define HIB_TPLOG7_TRIG1        0x00000002  // Status of TPIO[1] Trigger
-#define HIB_TPLOG7_TRIG0        0x00000001  // Status of TPIO[0] Trigger
+#define HIB_TPLOG7_TRIG3        0x00000008  // Status of TMPR[3] Trigger
+#define HIB_TPLOG7_TRIG2        0x00000004  // Status of TMPR[2] Trigger
+#define HIB_TPLOG7_TRIG1        0x00000002  // Status of TMPR[1] Trigger
+#define HIB_TPLOG7_TRIG0        0x00000001  // Status of TMPR[0] Trigger
 
 //*****************************************************************************
 //
@@ -11546,7 +11504,7 @@
 // The following are defines for the bit fields in the HIB_CC register.
 //
 //*****************************************************************************
-#define HIB_CC_SYSCLKEN         0x00000001  // System Clock Enable
+#define HIB_CC_SYSCLKEN         0x00000001  // RTCOSC to System Clock Enable
 
 //*****************************************************************************
 //
@@ -11580,11 +11538,14 @@
 // The following are defines for the bit fields in the FLASH_FCRIS register.
 //
 //*****************************************************************************
-#define FLASH_FCRIS_PROGRIS     0x00002000  // PROGVER Raw Interrupt Status
-#define FLASH_FCRIS_ERRIS       0x00000800  // ERVER Raw Interrupt Status
+#define FLASH_FCRIS_PROGRIS     0x00002000  // Program Verify Error Raw
+                                            // Interrupt Status
+#define FLASH_FCRIS_ERRIS       0x00000800  // Erase Verify Error Raw Interrupt
+                                            // Status
 #define FLASH_FCRIS_INVDRIS     0x00000400  // Invalid Data Raw Interrupt
                                             // Status
-#define FLASH_FCRIS_VOLTRIS     0x00000200  // VOLTSTAT Raw Interrupt Status
+#define FLASH_FCRIS_VOLTRIS     0x00000200  // Pump Voltage Raw Interrupt
+                                            // Status
 #define FLASH_FCRIS_ERIS        0x00000004  // EEPROM Raw Interrupt Status
 #define FLASH_FCRIS_PRIS        0x00000002  // Programming Raw Interrupt Status
 #define FLASH_FCRIS_ARIS        0x00000001  // Access Raw Interrupt Status
@@ -11656,9 +11617,9 @@
 // The following are defines for the bit fields in the FLASH_PP register.
 //
 //*****************************************************************************
-#define FLASH_PP_PFC            0x40000000  // Prefetch Cache Mode
+#define FLASH_PP_PFC            0x40000000  // Prefetch Buffer Mode
 #define FLASH_PP_FMM            0x20000000  // Flash Mirror Mode
-#define FLASH_PP_DFA            0x10000000  // DMA Code SRAM Access
+#define FLASH_PP_DFA            0x10000000  // DMA Flash Access
 #define FLASH_PP_EESS_M         0x00780000  // EEPROM Sector Size of the
                                             // physical bank
 #define FLASH_PP_EESS_1KB       0x00000000  // 1 KB
@@ -11672,16 +11633,7 @@
 #define FLASH_PP_MAINSS_4KB     0x00020000  // 4 KB
 #define FLASH_PP_MAINSS_8KB     0x00030000  // 8 KB
 #define FLASH_PP_MAINSS_16KB    0x00040000  // 16 KB
-#define FLASH_PP_SIZE_M         0x0000FFFF  // Code SRAM Size
-#define FLASH_PP_SIZE_16KB      0x00000007  // 16 KB of Code SRAM
-#define FLASH_PP_SIZE_32KB      0x0000000F  // 32 KB of Code SRAM
-#define FLASH_PP_SIZE_64KB      0x0000001F  // 64 KB of Code SRAM
-#define FLASH_PP_SIZE_96KB      0x0000002F  // 96 KB of Code SRAM
-#define FLASH_PP_SIZE_128KB     0x0000003F  // 128 KB of Code SRAM
-#define FLASH_PP_SIZE_192KB     0x0000005F  // 192 KB of Flash
-#define FLASH_PP_SIZE_256KB     0x0000007F  // 256 KB of Flash
-#define FLASH_PP_SIZE_384KB     0x000000BF  // 384 K of Flash
-#define FLASH_PP_SIZE_512KB     0x000000FF  // 512 KB of Flash
+#define FLASH_PP_SIZE_M         0x0000FFFF  // Flash Size
 #define FLASH_PP_SIZE_1MB       0x000001FF  // 1024 KB of Flash
 
 //*****************************************************************************
@@ -11699,7 +11651,7 @@
 //*****************************************************************************
 #define FLASH_CONF_FMME         0x40000000  // Flash Mirror Mode Enable
 #define FLASH_CONF_SPFE         0x20000000  // Single Prefetch Mode Enable
-#define FLASH_CONF_CLRTV        0x00100000  // Clear Tag Valid Bits
+#define FLASH_CONF_CLRTV        0x00100000  // Clear Valid Tags
 #define FLASH_CONF_FPFON        0x00020000  // Force Prefetch On
 #define FLASH_CONF_FPFOFF       0x00010000  // Force Prefetch Off
 
@@ -11710,60 +11662,59 @@
 //*****************************************************************************
 #define FLASH_ROMSWMAP_SW7EN_M  0x0000C000  // ROM SW Region 7 Availability
 #define FLASH_ROMSWMAP_SW7EN_NOTVIS                                           \
-                                0x00000000  // Not Visible outside of secure
-                                            // INITIALIZATION
+                                0x00000000  // Software region not available to
+                                            // the core
 #define FLASH_ROMSWMAP_SW7EN_CORE                                             \
-                                0x00004000  // Visible to core
+                                0x00004000  // Region available to core
 #define FLASH_ROMSWMAP_SW6EN_M  0x00003000  // ROM SW Region 6 Availability
 #define FLASH_ROMSWMAP_SW6EN_NOTVIS                                           \
-                                0x00000000  // Not Visible outside of secure
-                                            // INITIALIZATION
+                                0x00000000  // Software region not available to
+                                            // the core
 #define FLASH_ROMSWMAP_SW6EN_CORE                                             \
-                                0x00001000  // Visible to core
+                                0x00001000  // Region available to core
 #define FLASH_ROMSWMAP_SW5EN_M  0x00000C00  // ROM SW Region 5 Availability
 #define FLASH_ROMSWMAP_SW5EN_NOTVIS                                           \
-                                0x00000000  // Not Visible outside of secure
-                                            // INITIALIZATION
+                                0x00000000  // Software region not available to
+                                            // the core
 #define FLASH_ROMSWMAP_SW5EN_CORE                                             \
-                                0x00000400  // Visible to core
+                                0x00000400  // Region available to core
 #define FLASH_ROMSWMAP_SW4EN_M  0x00000300  // ROM SW Region 4 Availability
 #define FLASH_ROMSWMAP_SW4EN_NOTVIS                                           \
-                                0x00000000  // Not Visible outside of secure
-                                            // INITIALIZATION
+                                0x00000000  // Software region not available to
+                                            // the core
 #define FLASH_ROMSWMAP_SW4EN_CORE                                             \
-                                0x00000100  // Visible to core
+                                0x00000100  // Region available to core
 #define FLASH_ROMSWMAP_SW3EN_M  0x000000C0  // ROM SW Region 3 Availability
 #define FLASH_ROMSWMAP_SW3EN_NOTVIS                                           \
-                                0x00000000  // Not Visible outside of secure
-                                            // INITIALIZATION
+                                0x00000000  // Software region not available to
+                                            // the core
 #define FLASH_ROMSWMAP_SW3EN_CORE                                             \
-                                0x00000040  // Visible to core
+                                0x00000040  // Region available to core
 #define FLASH_ROMSWMAP_SW2EN_M  0x00000030  // ROM SW Region 2 Availability
 #define FLASH_ROMSWMAP_SW2EN_NOTVIS                                           \
-                                0x00000000  // Not Visible outside of secure
-                                            // INITIALIZATION
+                                0x00000000  // Software region not available to
+                                            // the core
 #define FLASH_ROMSWMAP_SW2EN_CORE                                             \
-                                0x00000010  // Visible to core
+                                0x00000010  // Region available to core
 #define FLASH_ROMSWMAP_SW1EN_M  0x0000000C  // ROM SW Region 1 Availability
 #define FLASH_ROMSWMAP_SW1EN_NOTVIS                                           \
-                                0x00000000  // Not Visible outside of secure
-                                            // INITIALIZATION
+                                0x00000000  // Software region not available to
+                                            // the core
 #define FLASH_ROMSWMAP_SW1EN_CORE                                             \
-                                0x00000004  // Visible to core
+                                0x00000004  // Region available to core
 #define FLASH_ROMSWMAP_SW0EN_M  0x00000003  // ROM SW Region 0 Availability
 #define FLASH_ROMSWMAP_SW0EN_NOTVIS                                           \
-                                0x00000000  // Not Visible outside of secure
-                                            // INITIALIZATION
+                                0x00000000  // Software region not available to
+                                            // the core
 #define FLASH_ROMSWMAP_SW0EN_CORE                                             \
-                                0x00000001  // Visible to core
+                                0x00000001  // Region available to core
 
 //*****************************************************************************
 //
 // The following are defines for the bit fields in the FLASH_DMASZ register.
 //
 //*****************************************************************************
-#define FLASH_DMASZ_SIZE_M      0x0003FFFF  // KBs of uDMA-accessible Address
-                                            // Space in powers of 2
+#define FLASH_DMASZ_SIZE_M      0x0003FFFF  // uDMA-accessible Memory Size
 #define FLASH_DMASZ_SIZE_S      0
 
 //*****************************************************************************
@@ -11772,9 +11723,9 @@
 //
 //*****************************************************************************
 #define FLASH_DMAST_ADDR_M      0x1FFFF800  // Contains the starting address of
-                                            // the Code SRAM region accessible
-                                            // by uDMA if the FLASHPP register
-                                            // DFA bit is set
+                                            // the flash region accessible by
+                                            // uDMA if the FLASHPP register DFA
+                                            // bit is set
 #define FLASH_DMAST_ADDR_S      11
 
 //*****************************************************************************
@@ -11814,16 +11765,6 @@
 #define FLASH_BOOTCFG_KEY       0x00000010  // KEY Select
 #define FLASH_BOOTCFG_DBG1      0x00000002  // Debug Control 1
 #define FLASH_BOOTCFG_DBG0      0x00000001  // Debug Control 0
-
-//*****************************************************************************
-//
-// The following are defines for the bit fields in the FLASH_USRPWRUP register.
-//
-//*****************************************************************************
-#define FLASH_USRPWRUP_LDODISABL_M                                            \
-                                0x000000FF  // LDO Disable
-#define FLASH_USRPWRUP_LDODISABL_S                                            \
-                                0
 
 //*****************************************************************************
 //
@@ -12024,11 +11965,11 @@
 //*****************************************************************************
 #define SYSCTL_DID0_VER_M       0x70000000  // DID0 Version
 #define SYSCTL_DID0_VER_1       0x10000000  // Second version of the DID0
-                                            // register format
+                                            // register format.
 #define SYSCTL_DID0_CLASS_M     0x00FF0000  // Device Class
-#define SYSCTL_DID0_CLASS_SNOWFLAKE                                           \
-                                0x000A0000  // Tiva(TM) C Series
-                                            // Snowflake-class microcontrollers
+#define SYSCTL_DID0_CLASS_TM4C129                                             \
+                                0x000A0000  // Tiva(TM) TM4C129-class
+                                            // microcontrollers
 #define SYSCTL_DID0_MAJ_M       0x0000FF00  // Major Revision
 #define SYSCTL_DID0_MAJ_REVA    0x00000000  // Revision A (initial device)
 #define SYSCTL_DID0_MAJ_REVB    0x00000100  // Revision B (first base layer
@@ -12047,29 +11988,24 @@
 //
 //*****************************************************************************
 #define SYSCTL_DID1_VER_M       0xF0000000  // DID1 Version
-#define SYSCTL_DID1_VER_1       0x10000000  // Second version of the DID1
-                                            // register format
+#define SYSCTL_DID1_VER_1       0x10000000  // fury_ib
 #define SYSCTL_DID1_FAM_M       0x0F000000  // Family
 #define SYSCTL_DID1_FAM_TIVA    0x00000000  // Tiva family of microcontollers
 #define SYSCTL_DID1_PRTNO_M     0x00FF0000  // Part Number
 #define SYSCTL_DID1_PRTNO_TM4C1294NCPDT                                       \
                                 0x001F0000  // TM4C1294NCPDT
 #define SYSCTL_DID1_PINCNT_M    0x0000E000  // Package Pin Count
-#define SYSCTL_DID1_PINCNT_100  0x00004000  // 100-pin package
-#define SYSCTL_DID1_PINCNT_64   0x00006000  // 64-pin package
-#define SYSCTL_DID1_PINCNT_144  0x00008000  // 144-pin package
-#define SYSCTL_DID1_PINCNT_157  0x0000A000  // 157-pin package
-#define SYSCTL_DID1_PINCNT_128  0x0000C000  // 128-pin package
+#define SYSCTL_DID1_PINCNT_100  0x00004000  // 100-pin LQFP package
+#define SYSCTL_DID1_PINCNT_64   0x00006000  // 64-pin LQFP package
+#define SYSCTL_DID1_PINCNT_144  0x00008000  // 144-pin LQFP package
+#define SYSCTL_DID1_PINCNT_157  0x0000A000  // 157-pin BGA package
+#define SYSCTL_DID1_PINCNT_128  0x0000C000  // 128-pin TQFP package
 #define SYSCTL_DID1_TEMP_M      0x000000E0  // Temperature Range
-#define SYSCTL_DID1_TEMP_C      0x00000000  // Commercial temperature range (0C
-                                            // to 70C)
+#define SYSCTL_DID1_TEMP_C      0x00000000  // Commercial temperature range
 #define SYSCTL_DID1_TEMP_I      0x00000020  // Industrial temperature range
-                                            // (-40C to 85C)
-#define SYSCTL_DID1_TEMP_E      0x00000040  // Extended temperature range (-40C
-                                            // to 105C)
+#define SYSCTL_DID1_TEMP_E      0x00000040  // Extended temperature range
 #define SYSCTL_DID1_PKG_M       0x00000018  // Package Type
-#define SYSCTL_DID1_PKG_SOIC    0x00000000  // SOIC package
-#define SYSCTL_DID1_PKG_QFP     0x00000008  // LQFP package
+#define SYSCTL_DID1_PKG_QFP     0x00000008  // QFP package
 #define SYSCTL_DID1_PKG_BGA     0x00000010  // BGA package
 #define SYSCTL_DID1_ROHS        0x00000004  // RoHS-Compliance
 #define SYSCTL_DID1_QUAL_M      0x00000003  // Qualification Status
@@ -12093,7 +12029,8 @@
 #define SYSCTL_PTBOCTL_VDDA_UBOR_RST                                          \
                                 0x00000300  // Reset
 #define SYSCTL_PTBOCTL_VDD_UBOR_M                                             \
-                                0x00000003  // VDD under BOR Event Action
+                                0x00000003  // VDD (VDDS) under BOR Event
+                                            // Action
 #define SYSCTL_PTBOCTL_VDD_UBOR_NONE                                          \
                                 0x00000000  // No Action
 #define SYSCTL_PTBOCTL_VDD_UBOR_SYSINT                                        \
@@ -12111,7 +12048,7 @@
 #define SYSCTL_RIS_MOSCPUPRIS   0x00000100  // MOSC Power Up Raw Interrupt
                                             // Status
 #define SYSCTL_RIS_PLLLRIS      0x00000040  // PLL Lock Raw Interrupt Status
-#define SYSCTL_RIS_MOFRIS       0x00000008  // Main Oscillator Fault Raw
+#define SYSCTL_RIS_MOFRIS       0x00000008  // Main Oscillator Failure Raw
                                             // Interrupt Status
 #define SYSCTL_RIS_BORRIS       0x00000002  // Brown-Out Reset Raw Interrupt
                                             // Status
@@ -12123,8 +12060,8 @@
 //*****************************************************************************
 #define SYSCTL_IMC_MOSCPUPIM    0x00000100  // MOSC Power Up Interrupt Mask
 #define SYSCTL_IMC_PLLLIM       0x00000040  // PLL Lock Interrupt Mask
-#define SYSCTL_IMC_MOFIM        0x00000008  // Main Oscillator Fault Interrupt
-                                            // Mask
+#define SYSCTL_IMC_MOFIM        0x00000008  // Main Oscillator Failure
+                                            // Interrupt Mask
 #define SYSCTL_IMC_BORIM        0x00000002  // Brown-Out Reset Interrupt Mask
 
 //*****************************************************************************
@@ -12135,7 +12072,7 @@
 #define SYSCTL_MISC_MOSCPUPMIS  0x00000100  // MOSC Power Up Masked Interrupt
                                             // Status
 #define SYSCTL_MISC_PLLLMIS     0x00000040  // PLL Lock Masked Interrupt Status
-#define SYSCTL_MISC_MOFMIS      0x00000008  // Main Oscillator Fault Masked
+#define SYSCTL_MISC_MOFMIS      0x00000008  // Main Oscillator Failure Masked
                                             // Interrupt Status
 #define SYSCTL_MISC_BORMIS      0x00000002  // BOR Masked Interrupt Status
 
@@ -12145,9 +12082,7 @@
 //
 //*****************************************************************************
 #define SYSCTL_RESC_MOSCFAIL    0x00010000  // MOSC Failure Reset
-#define SYSCTL_RESC_KAPER       0x00008000  // Key Added Period Exceeded Reset
 #define SYSCTL_RESC_HSSR        0x00001000  // HSSR Reset
-#define SYSCTL_RESC_HIB         0x00000040  // HIB Reset
 #define SYSCTL_RESC_WDT1        0x00000020  // Watchdog Timer 1 Reset
 #define SYSCTL_RESC_SW          0x00000010  // Software Reset
 #define SYSCTL_RESC_WDT0        0x00000008  // Watchdog Timer 0 Reset
@@ -12160,8 +12095,8 @@
 // The following are defines for the bit fields in the SYSCTL_PWRTC register.
 //
 //*****************************************************************************
-#define SYSCTL_PWRTC_VDDA_UBOR0 0x00000010  // VDDAUnder BOR0 Status
-#define SYSCTL_PWRTC_VDD_UBOR0  0x00000001  // VDDUnder BOR0 Status
+#define SYSCTL_PWRTC_VDDA_UBOR  0x00000010  // VDDA Under BOR Status
+#define SYSCTL_PWRTC_VDD_UBOR   0x00000001  // VDD Under BOR Status
 
 //*****************************************************************************
 //
@@ -12180,7 +12115,6 @@
 // The following are defines for the bit fields in the SYSCTL_MOSCCTL register.
 //
 //*****************************************************************************
-#define SYSCTL_MOSCCTL_SESRC    0x00000020  // Single-Ended Source
 #define SYSCTL_MOSCCTL_OSCRNG   0x00000010  // Oscillator Range
 #define SYSCTL_MOSCCTL_PWRDN    0x00000008  // Power Down
 #define SYSCTL_MOSCCTL_NOXTAL   0x00000004  // No Crystal Connected
@@ -12195,14 +12129,15 @@
 //*****************************************************************************
 #define SYSCTL_RSCLKCFG_MEMTIMU 0x80000000  // Memory Timing Register Update
 #define SYSCTL_RSCLKCFG_NEWFREQ 0x40000000  // New PLLFREQ Accept
-#define SYSCTL_RSCLKCFG_ACG     0x20000000  // Auto Clock Gating Enable
+#define SYSCTL_RSCLKCFG_ACG     0x20000000  // Auto Clock Gating
 #define SYSCTL_RSCLKCFG_USEPLL  0x10000000  // Use PLL
 #define SYSCTL_RSCLKCFG_PLLSRC_M                                              \
                                 0x0F000000  // PLL Source
 #define SYSCTL_RSCLKCFG_PLLSRC_PIOSC                                          \
                                 0x00000000  // PIOSC is PLL input clock source
 #define SYSCTL_RSCLKCFG_PLLSRC_MOSC                                           \
-                                0x03000000  // MOSC is PLL input clock source
+                                0x03000000  // MOSC is the PLL input clock
+                                            // source
 #define SYSCTL_RSCLKCFG_OSCSRC_M                                              \
                                 0x00F00000  // Oscillator Source
 #define SYSCTL_RSCLKCFG_OSCSRC_PIOSC                                          \
@@ -12212,7 +12147,8 @@
 #define SYSCTL_RSCLKCFG_OSCSRC_MOSC                                           \
                                 0x00300000  // MOSC is oscillator source
 #define SYSCTL_RSCLKCFG_OSCSRC_RTC                                            \
-                                0x00400000  // RTC is oscillator source
+                                0x00400000  // Hibernation Module RTC
+                                            // Oscillator (RTCOSC)
 #define SYSCTL_RSCLKCFG_OSYSDIV_M                                             \
                                 0x000FFC00  // Oscillator System Clock Divisor
 #define SYSCTL_RSCLKCFG_PSYSDIV_M                                             \
@@ -12229,7 +12165,7 @@
 //*****************************************************************************
 #define SYSCTL_MEMTIM0_EBCHT_M  0x03C00000  // EEPROM Clock High Time
 #define SYSCTL_MEMTIM0_EBCHT_0_5                                              \
-                                0x00000000  // System clock high
+                                0x00000000  // 1/2 system clock period
 #define SYSCTL_MEMTIM0_EBCHT_1  0x00400000  // 1 system clock period
 #define SYSCTL_MEMTIM0_EBCHT_1_5                                              \
                                 0x00800000  // 1.5 system clock periods
@@ -12243,10 +12179,10 @@
 #define SYSCTL_MEMTIM0_EBCHT_4_5                                              \
                                 0x02000000  // 4.5 system clock periods
 #define SYSCTL_MEMTIM0_EBCE     0x00200000  // EEPROM Bank Clock Edge
-#define SYSCTL_MEMTIM0_EWS_M    0x000F0000  // EEPROM Wait State
+#define SYSCTL_MEMTIM0_EWS_M    0x000F0000  // EEPROM Wait States
 #define SYSCTL_MEMTIM0_FBCHT_M  0x000003C0  // Flash Bank Clock High Time
 #define SYSCTL_MEMTIM0_FBCHT_0_5                                              \
-                                0x00000000  // System clock high
+                                0x00000000  // 1/2 system clock period
 #define SYSCTL_MEMTIM0_FBCHT_1  0x00000040  // 1 system clock period
 #define SYSCTL_MEMTIM0_FBCHT_1_5                                              \
                                 0x00000080  // 1.5 system clock periods
@@ -12266,66 +12202,6 @@
 
 //*****************************************************************************
 //
-// The following are defines for the bit fields in the SYSCTL_DSMEMTIM0
-// register.
-//
-//*****************************************************************************
-#define SYSCTL_DSMEMTIM0_DSEBCHT_M                                            \
-                                0x03C00000  // Deep Sleep EEPROM Clock High
-                                            // Time
-#define SYSCTL_DSMEMTIM0_DSEBCHT_0_5                                          \
-                                0x00000000  // System clock high
-#define SYSCTL_DSMEMTIM0_DSEBCHT_1                                            \
-                                0x00400000  // 1 system clock period
-#define SYSCTL_DSMEMTIM0_DSEBCHT_1_5                                          \
-                                0x00800000  // 1.5 system clock periods
-#define SYSCTL_DSMEMTIM0_DSEBCHT_2                                            \
-                                0x00C00000  // 2 system clock periods
-#define SYSCTL_DSMEMTIM0_DSEBCHT_2_5                                          \
-                                0x01000000  // 2.5 system clock periods
-#define SYSCTL_DSMEMTIM0_DSEBCHT_3                                            \
-                                0x01400000  // 3 system clock periods
-#define SYSCTL_DSMEMTIM0_DSEBCHT_3_5                                          \
-                                0x01800000  // 3.5 system clock periods
-#define SYSCTL_DSMEMTIM0_DSEBCHT_4                                            \
-                                0x01C00000  // 4 system clock periods
-#define SYSCTL_DSMEMTIM0_DSEBCHT_4_5                                          \
-                                0x02000000  // 4.5 system clock periods
-#define SYSCTL_DSMEMTIM0_DSEBCE 0x00200000  // Deep Sleep EEPROM Bank Clock
-                                            // Edge
-#define SYSCTL_DSMEMTIM0_EBO    0x00100000  // Deep Sleep EEPROM Bank Output
-#define SYSCTL_DSMEMTIM0_EWS_M  0x000F0000  // Deep Sleep EEPROM Wait State
-#define SYSCTL_DSMEMTIM0_DSFBCHT_M                                            \
-                                0x000003C0  // Deep Sleep Flash Bank Clock High
-                                            // Time
-#define SYSCTL_DSMEMTIM0_DSFBCHT_0_5                                          \
-                                0x00000000  // System clock high
-#define SYSCTL_DSMEMTIM0_DSFBCHT_1                                            \
-                                0x00000040  // 1 system clock period
-#define SYSCTL_DSMEMTIM0_DSFBCHT_1_5                                          \
-                                0x00000080  // 1.5 system clock periods
-#define SYSCTL_DSMEMTIM0_DSFBCHT_2                                            \
-                                0x000000C0  // 2 system clock periods
-#define SYSCTL_DSMEMTIM0_DSFBCHT_2_5                                          \
-                                0x00000100  // 2.5 system clock periods
-#define SYSCTL_DSMEMTIM0_DSFBCHT_3                                            \
-                                0x00000140  // 3 system clock periods
-#define SYSCTL_DSMEMTIM0_DSFBCHT_3_5                                          \
-                                0x00000180  // 3.5 system clock periods
-#define SYSCTL_DSMEMTIM0_DSFBCHT_4                                            \
-                                0x000001C0  // 4 system clock periods
-#define SYSCTL_DSMEMTIM0_DSFBCHT_4_5                                          \
-                                0x00000200  // 4.5 system clock periods
-#define SYSCTL_DSMEMTIM0_DSFBCE 0x00000020  // Deep Sleep Flash Bank Clock Edge
-#define SYSCTL_DSMEMTIM0_DSFBO  0x00000010  // Deep Sleep Flash Bank Output
-#define SYSCTL_DSMEMTIM0_DSFWS_M                                              \
-                                0x0000000F  // Deep Sleep Flash Wait State
-#define SYSCTL_DSMEMTIM0_EWS_S  16
-#define SYSCTL_DSMEMTIM0_DSFWS_S                                              \
-                                0
-
-//*****************************************************************************
-//
 // The following are defines for the bit fields in the SYSCTL_ALTCLKCFG
 // register.
 //
@@ -12334,15 +12210,12 @@
                                 0x0000000F  // Alternate Clock Source
 #define SYSCTL_ALTCLKCFG_ALTCLK_PIOSC                                         \
                                 0x00000000  // PIOSC
-#define SYSCTL_ALTCLKCFG_ALTCLK_PIOSC48                                       \
-                                0x00000001  // PIOSC48
-#define SYSCTL_ALTCLKCFG_ALTCLK_LFIOSC                                        \
-                                0x00000002  // LFIOSC
 #define SYSCTL_ALTCLKCFG_ALTCLK_RTCOSC                                        \
                                 0x00000003  // Hibernation Module Real-time
                                             // clock output (RTCOSC)
-#define SYSCTL_ALTCLKCFG_ALTCLK_HIBRTC                                        \
-                                0x00000004  // Hibernation Module RTCOSC
+#define SYSCTL_ALTCLKCFG_ALTCLK_LFIOSC                                        \
+                                0x00000004  // Low-frequency internal
+                                            // oscillator (LFIOSC)
 
 //*****************************************************************************
 //
@@ -12353,7 +12226,7 @@
 #define SYSCTL_DSCLKCFG_PIOSCPD 0x80000000  // PIOSC Power Down
 #define SYSCTL_DSCLKCFG_MOSCDPD 0x40000000  // MOSC Disable Power Down
 #define SYSCTL_DSCLKCFG_DSOSCSRC_M                                            \
-                                0x00F00000  // Deep Sleep
+                                0x00F00000  // Deep Sleep Oscillator Source
 #define SYSCTL_DSCLKCFG_DSOSCSRC_PIOSC                                        \
                                 0x00000000  // PIOSC
 #define SYSCTL_DSCLKCFG_DSOSCSRC_LFIOSC                                       \
@@ -12361,7 +12234,7 @@
 #define SYSCTL_DSCLKCFG_DSOSCSRC_MOSC                                         \
                                 0x00300000  // MOSC
 #define SYSCTL_DSCLKCFG_DSOSCSRC_RTC                                          \
-                                0x00400000  // RTC
+                                0x00400000  // Hibernation Module RTCOSC
 #define SYSCTL_DSCLKCFG_DSSYSDIV_M                                            \
                                 0x000003FF  // Deep Sleep Clock Divisor
 #define SYSCTL_DSCLKCFG_DSSYSDIV_S                                            \
@@ -12372,7 +12245,7 @@
 // The following are defines for the bit fields in the SYSCTL_DIVSCLK register.
 //
 //*****************************************************************************
-#define SYSCTL_DIVSCLK_EN       0x80000000  // Enable
+#define SYSCTL_DIVSCLK_EN       0x80000000  // DIVSCLK Enable
 #define SYSCTL_DIVSCLK_SRC_M    0x00030000  // Clock Source
 #define SYSCTL_DIVSCLK_SRC_SYSCLK                                             \
                                 0x00000000  // System Clock
@@ -12499,7 +12372,30 @@
 //
 //*****************************************************************************
 #define SYSCTL_NVMSTAT_FWB      0x00000001  // 32 Word Flash Write Buffer
-                                            // Active
+                                            // Available
+
+//*****************************************************************************
+//
+// The following are defines for the bit fields in the SYSCTL_LDOSPCTL
+// register.
+//
+//*****************************************************************************
+#define SYSCTL_LDOSPCTL_VADJEN  0x80000000  // Voltage Adjust Enable
+#define SYSCTL_LDOSPCTL_VLDO_M  0x000000FF  // LDO Output Voltage
+#define SYSCTL_LDOSPCTL_VLDO_0_90V                                            \
+                                0x00000012  // 0.90 V
+#define SYSCTL_LDOSPCTL_VLDO_0_95V                                            \
+                                0x00000013  // 0.95 V
+#define SYSCTL_LDOSPCTL_VLDO_1_00V                                            \
+                                0x00000014  // 1.00 V
+#define SYSCTL_LDOSPCTL_VLDO_1_05V                                            \
+                                0x00000015  // 1.05 V
+#define SYSCTL_LDOSPCTL_VLDO_1_10V                                            \
+                                0x00000016  // 1.10 V
+#define SYSCTL_LDOSPCTL_VLDO_1_15V                                            \
+                                0x00000017  // 1.15 V
+#define SYSCTL_LDOSPCTL_VLDO_1_20V                                            \
+                                0x00000018  // 1.20 V
 
 //*****************************************************************************
 //
@@ -12537,53 +12433,49 @@
 //
 //*****************************************************************************
 #define SYSCTL_RESBEHAVCTL_WDOG1_M                                            \
-                                0x000000C0  // Defines operation of Watchdog 1
-                                            // Reset
+                                0x000000C0  // Watchdog 1 Reset Operation
 #define SYSCTL_RESBEHAVCTL_WDOG1_SYSRST                                       \
-                                0x00000080  // Watchdog 1 issues system reset.
-                                            // Application starts within 10usec
+                                0x00000080  // Watchdog 1 issues a system
+                                            // reset. The application starts
+                                            // within 10 us
 #define SYSCTL_RESBEHAVCTL_WDOG1_POR                                          \
-                                0x000000C0  // Watchdog 1 issues full POR
-                                            // sequence. Application starts <
-                                            // 500us after deassertion
-                                            // (Default)
+                                0x000000C0  // Watchdog 1 issues a simulated
+                                            // POR sequence. Application starts
+                                            // less than 500 us after
+                                            // deassertion (Default)
 #define SYSCTL_RESBEHAVCTL_WDOG0_M                                            \
-                                0x00000030  // Defines operation of Watchdog 0
-                                            // Reset
+                                0x00000030  // Watchdog 0 Reset Operation
 #define SYSCTL_RESBEHAVCTL_WDOG0_SYSRST                                       \
-                                0x00000020  // Watchdog 0 issues system reset.
-                                            // Application starts within 10usec
+                                0x00000020  // Watchdog 0 issues a system
+                                            // reset. The application starts
+                                            // within 10 us
 #define SYSCTL_RESBEHAVCTL_WDOG0_POR                                          \
-                                0x00000030  // Watchdog 0 issues full POR
-                                            // sequence. Application starts <
-                                            // 500us after deassertion
-                                            // (Default)
+                                0x00000030  // Watchdog 0 issues a simulated
+                                            // POR sequence. Application starts
+                                            // less than 500 us after
+                                            // deassertion (Default)
 #define SYSCTL_RESBEHAVCTL_BOR_M                                              \
-                                0x0000000C  // Defines operation of BOR when
-                                            // USER has defined the BOR
-                                            // operation to be a reset
+                                0x0000000C  // BOR Reset operation
 #define SYSCTL_RESBEHAVCTL_BOR_SYSRST                                         \
                                 0x00000008  // Brown Out Reset issues system
-                                            // reset. Application starts within
-                                            // 10usec
+                                            // reset. The application starts
+                                            // within 10 us
 #define SYSCTL_RESBEHAVCTL_BOR_POR                                            \
-                                0x0000000C  // Brown Out Reset issues full POR
-                                            // sequence. Application starts <
-                                            // 500us after deassertion
-                                            // (Default)
+                                0x0000000C  // Brown Out Reset issues a
+                                            // simulated POR sequence. The
+                                            // application starts less than 500
+                                            // us after deassertion (Default)
 #define SYSCTL_RESBEHAVCTL_EXTRES_M                                           \
-                                0x00000003  // External Resetn Pin Operation
+                                0x00000003  // External RST Pin Operation
 #define SYSCTL_RESBEHAVCTL_EXTRES_SYSRST                                      \
-                                0x00000002  // External Resetn issues system
-                                            // reset. Application starts within
-                                            // 10usec
+                                0x00000002  // External RST assertion issues a
+                                            // system reset. The application
+                                            // starts within 10 us
 #define SYSCTL_RESBEHAVCTL_EXTRES_POR                                         \
-                                0x00000003  // External Resetn issues full POR
-                                            // sequence. Application starts <
-                                            // 500us after deassertion
-                                            // (Default) Application starts <
-                                            // 500us after deassertion
-                                            // (Default)
+                                0x00000003  // External RST assertion issues a
+                                            // simulated POR sequence.
+                                            // Application starts less than 500
+                                            // us after deassertion (Default)
 
 //*****************************************************************************
 //
@@ -12671,12 +12563,18 @@
                                             // 7 Present
 #define SYSCTL_PPTIMER_P6       0x00000040  // 16/32-Bit General-Purpose Timer
                                             // 6 Present
-#define SYSCTL_PPTIMER_P5       0x00000020  // Timer 5 Present
-#define SYSCTL_PPTIMER_P4       0x00000010  // Timer 4 Present
-#define SYSCTL_PPTIMER_P3       0x00000008  // Timer 3 Present
-#define SYSCTL_PPTIMER_P2       0x00000004  // Timer 2 Present
-#define SYSCTL_PPTIMER_P1       0x00000002  // Timer 1 Present
-#define SYSCTL_PPTIMER_P0       0x00000001  // Timer 0 Present
+#define SYSCTL_PPTIMER_P5       0x00000020  // 16/32-Bit General-Purpose Timer
+                                            // 5 Present
+#define SYSCTL_PPTIMER_P4       0x00000010  // 16/32-Bit General-Purpose Timer
+                                            // 4 Present
+#define SYSCTL_PPTIMER_P3       0x00000008  // 16/32-Bit General-Purpose Timer
+                                            // 3 Present
+#define SYSCTL_PPTIMER_P2       0x00000004  // 16/32-Bit General-Purpose Timer
+                                            // 2 Present
+#define SYSCTL_PPTIMER_P1       0x00000002  // 16/32-Bit General-Purpose Timer
+                                            // 1 Present
+#define SYSCTL_PPTIMER_P0       0x00000001  // 16/32-Bit General-Purpose Timer
+                                            // 0 Present
 
 //*****************************************************************************
 //
@@ -12830,7 +12728,7 @@
 // The following are defines for the bit fields in the SYSCTL_PPFAN register.
 //
 //*****************************************************************************
-#define SYSCTL_PPFAN_P0         0x00000001  // FAN Module Present
+#define SYSCTL_PPFAN_P0         0x00000001  // FAN Module 0 Present
 
 //*****************************************************************************
 //
@@ -12846,7 +12744,8 @@
 // register.
 //
 //*****************************************************************************
-#define SYSCTL_PPWTIMER_P0      0x00000001  // Wide Timer 0 Present
+#define SYSCTL_PPWTIMER_P0      0x00000001  // 32/64-Bit Wide General-Purpose
+                                            // Timer 0 Present
 
 //*****************************************************************************
 //
@@ -12875,7 +12774,7 @@
 // The following are defines for the bit fields in the SYSCTL_PPOWIRE register.
 //
 //*****************************************************************************
-#define SYSCTL_PPOWIRE_P0       0x00000001  // One-Wire Module Present
+#define SYSCTL_PPOWIRE_P0       0x00000001  // 1-Wire Module Present
 
 //*****************************************************************************
 //
@@ -12909,12 +12808,18 @@
                                             // 7 Software Reset
 #define SYSCTL_SRTIMER_R6       0x00000040  // 16/32-Bit General-Purpose Timer
                                             // 6 Software Reset
-#define SYSCTL_SRTIMER_R5       0x00000020  // Timer 5 Software Reset
-#define SYSCTL_SRTIMER_R4       0x00000010  // Timer 4 Software Reset
-#define SYSCTL_SRTIMER_R3       0x00000008  // Timer 3 Software Reset
-#define SYSCTL_SRTIMER_R2       0x00000004  // Timer 2 Software Reset
-#define SYSCTL_SRTIMER_R1       0x00000002  // Timer 1 Software Reset
-#define SYSCTL_SRTIMER_R0       0x00000001  // Timer 0 Software Reset
+#define SYSCTL_SRTIMER_R5       0x00000020  // 16/32-Bit General-Purpose Timer
+                                            // 5 Software Reset
+#define SYSCTL_SRTIMER_R4       0x00000010  // 16/32-Bit General-Purpose Timer
+                                            // 4 Software Reset
+#define SYSCTL_SRTIMER_R3       0x00000008  // 16/32-Bit General-Purpose Timer
+                                            // 3 Software Reset
+#define SYSCTL_SRTIMER_R2       0x00000004  // 16/32-Bit General-Purpose Timer
+                                            // 2 Software Reset
+#define SYSCTL_SRTIMER_R1       0x00000002  // 16/32-Bit General-Purpose Timer
+                                            // 1 Software Reset
+#define SYSCTL_SRTIMER_R0       0x00000001  // 16/32-Bit General-Purpose Timer
+                                            // 0 Software Reset
 
 //*****************************************************************************
 //
@@ -13096,18 +13001,18 @@
                                             // 7 Run Mode Clock Gating Control
 #define SYSCTL_RCGCTIMER_R6     0x00000040  // 16/32-Bit General-Purpose Timer
                                             // 6 Run Mode Clock Gating Control
-#define SYSCTL_RCGCTIMER_R5     0x00000020  // Timer 5 Run Mode Clock Gating
-                                            // Control
-#define SYSCTL_RCGCTIMER_R4     0x00000010  // Timer 4 Run Mode Clock Gating
-                                            // Control
-#define SYSCTL_RCGCTIMER_R3     0x00000008  // Timer 3 Run Mode Clock Gating
-                                            // Control
-#define SYSCTL_RCGCTIMER_R2     0x00000004  // Timer 2 Run Mode Clock Gating
-                                            // Control
-#define SYSCTL_RCGCTIMER_R1     0x00000002  // Timer 1 Run Mode Clock Gating
-                                            // Control
-#define SYSCTL_RCGCTIMER_R0     0x00000001  // Timer 0 Run Mode Clock Gating
-                                            // Control
+#define SYSCTL_RCGCTIMER_R5     0x00000020  // 16/32-Bit General-Purpose Timer
+                                            // 5 Run Mode Clock Gating Control
+#define SYSCTL_RCGCTIMER_R4     0x00000010  // 16/32-Bit General-Purpose Timer
+                                            // 4 Run Mode Clock Gating Control
+#define SYSCTL_RCGCTIMER_R3     0x00000008  // 16/32-Bit General-Purpose Timer
+                                            // 3 Run Mode Clock Gating Control
+#define SYSCTL_RCGCTIMER_R2     0x00000004  // 16/32-Bit General-Purpose Timer
+                                            // 2 Run Mode Clock Gating Control
+#define SYSCTL_RCGCTIMER_R1     0x00000002  // 16/32-Bit General-Purpose Timer
+                                            // 1 Run Mode Clock Gating Control
+#define SYSCTL_RCGCTIMER_R0     0x00000001  // 16/32-Bit General-Purpose Timer
+                                            // 0 Run Mode Clock Gating Control
 
 //*****************************************************************************
 //
@@ -13343,17 +13248,23 @@
 #define SYSCTL_SCGCTIMER_S6     0x00000040  // 16/32-Bit General-Purpose Timer
                                             // 6 Sleep Mode Clock Gating
                                             // Control
-#define SYSCTL_SCGCTIMER_S5     0x00000020  // Timer 5 Sleep Mode Clock Gating
+#define SYSCTL_SCGCTIMER_S5     0x00000020  // 16/32-Bit General-Purpose Timer
+                                            // 5 Sleep Mode Clock Gating
                                             // Control
-#define SYSCTL_SCGCTIMER_S4     0x00000010  // Timer 4 Sleep Mode Clock Gating
+#define SYSCTL_SCGCTIMER_S4     0x00000010  // 16/32-Bit General-Purpose Timer
+                                            // 4 Sleep Mode Clock Gating
                                             // Control
-#define SYSCTL_SCGCTIMER_S3     0x00000008  // Timer 3 Sleep Mode Clock Gating
+#define SYSCTL_SCGCTIMER_S3     0x00000008  // 16/32-Bit General-Purpose Timer
+                                            // 3 Sleep Mode Clock Gating
                                             // Control
-#define SYSCTL_SCGCTIMER_S2     0x00000004  // Timer 2 Sleep Mode Clock Gating
+#define SYSCTL_SCGCTIMER_S2     0x00000004  // 16/32-Bit General-Purpose Timer
+                                            // 2 Sleep Mode Clock Gating
                                             // Control
-#define SYSCTL_SCGCTIMER_S1     0x00000002  // Timer 1 Sleep Mode Clock Gating
+#define SYSCTL_SCGCTIMER_S1     0x00000002  // 16/32-Bit General-Purpose Timer
+                                            // 1 Sleep Mode Clock Gating
                                             // Control
-#define SYSCTL_SCGCTIMER_S0     0x00000001  // Timer 0 Sleep Mode Clock Gating
+#define SYSCTL_SCGCTIMER_S0     0x00000001  // 16/32-Bit General-Purpose Timer
+                                            // 0 Sleep Mode Clock Gating
                                             // Control
 
 //*****************************************************************************
@@ -13391,6 +13302,14 @@
 #define SYSCTL_SCGCGPIO_S1      0x00000002  // GPIO Port B Sleep Mode Clock
                                             // Gating Control
 #define SYSCTL_SCGCGPIO_S0      0x00000001  // GPIO Port A Sleep Mode Clock
+                                            // Gating Control
+
+//*****************************************************************************
+//
+// The following are defines for the bit fields in the SYSCTL_SCGCDMA register.
+//
+//*****************************************************************************
+#define SYSCTL_SCGCDMA_S0       0x00000001  // uDMA Module Sleep Mode Clock
                                             // Gating Control
 
 //*****************************************************************************
@@ -13582,18 +13501,24 @@
 #define SYSCTL_DCGCTIMER_D6     0x00000040  // 16/32-Bit General-Purpose Timer
                                             // 6 Deep-Sleep Mode Clock Gating
                                             // Control
-#define SYSCTL_DCGCTIMER_D5     0x00000020  // Timer 5 Deep-Sleep Mode Clock
-                                            // Gating Control
-#define SYSCTL_DCGCTIMER_D4     0x00000010  // Timer 4 Deep-Sleep Mode Clock
-                                            // Gating Control
-#define SYSCTL_DCGCTIMER_D3     0x00000008  // Timer 3 Deep-Sleep Mode Clock
-                                            // Gating Control
-#define SYSCTL_DCGCTIMER_D2     0x00000004  // Timer 2 Deep-Sleep Mode Clock
-                                            // Gating Control
-#define SYSCTL_DCGCTIMER_D1     0x00000002  // Timer 1 Deep-Sleep Mode Clock
-                                            // Gating Control
-#define SYSCTL_DCGCTIMER_D0     0x00000001  // Timer 0 Deep-Sleep Mode Clock
-                                            // Gating Control
+#define SYSCTL_DCGCTIMER_D5     0x00000020  // 16/32-Bit General-Purpose Timer
+                                            // 5 Deep-Sleep Mode Clock Gating
+                                            // Control
+#define SYSCTL_DCGCTIMER_D4     0x00000010  // 16/32-Bit General-Purpose Timer
+                                            // 4 Deep-Sleep Mode Clock Gating
+                                            // Control
+#define SYSCTL_DCGCTIMER_D3     0x00000008  // 16/32-Bit General-Purpose Timer
+                                            // 3 Deep-Sleep Mode Clock Gating
+                                            // Control
+#define SYSCTL_DCGCTIMER_D2     0x00000004  // 16/32-Bit General-Purpose Timer
+                                            // 2 Deep-Sleep Mode Clock Gating
+                                            // Control
+#define SYSCTL_DCGCTIMER_D1     0x00000002  // 16/32-Bit General-Purpose Timer
+                                            // 1 Deep-Sleep Mode Clock Gating
+                                            // Control
+#define SYSCTL_DCGCTIMER_D0     0x00000001  // 16/32-Bit General-Purpose Timer
+                                            // 0 Deep-Sleep Mode Clock Gating
+                                            // Control
 
 //*****************************************************************************
 //
@@ -13630,6 +13555,14 @@
 #define SYSCTL_DCGCGPIO_D1      0x00000002  // GPIO Port B Deep-Sleep Mode
                                             // Clock Gating Control
 #define SYSCTL_DCGCGPIO_D0      0x00000001  // GPIO Port A Deep-Sleep Mode
+                                            // Clock Gating Control
+
+//*****************************************************************************
+//
+// The following are defines for the bit fields in the SYSCTL_DCGCDMA register.
+//
+//*****************************************************************************
+#define SYSCTL_DCGCDMA_D0       0x00000001  // uDMA Module Deep-Sleep Mode
                                             // Clock Gating Control
 
 //*****************************************************************************
@@ -13818,18 +13751,18 @@
                                             // Control
 #define SYSCTL_PCTIMER_P6       0x00000040  // General-Purpose Timer 6 Power
                                             // Control
-#define SYSCTL_PCTIMER_P5       0x00000020  // 16/32-Bit General-Purpose Timer
-                                            // 5 Power Control
-#define SYSCTL_PCTIMER_P4       0x00000010  // 16/32-Bit General-Purpose Timer
-                                            // 4 Power Control
-#define SYSCTL_PCTIMER_P3       0x00000008  // 16/32-Bit General-Purpose Timer
-                                            // 3 Power Control
-#define SYSCTL_PCTIMER_P2       0x00000004  // 16/32-Bit General-Purpose Timer
-                                            // 2 Power Control
-#define SYSCTL_PCTIMER_P1       0x00000002  // 16/32-Bit General-Purpose Timer
-                                            // 1 Power Control
-#define SYSCTL_PCTIMER_P0       0x00000001  // 16/32-Bit General-Purpose Timer
-                                            // 0 Power Control
+#define SYSCTL_PCTIMER_P5       0x00000020  // General-Purpose Timer 5 Power
+                                            // Control
+#define SYSCTL_PCTIMER_P4       0x00000010  // General-Purpose Timer 4 Power
+                                            // Control
+#define SYSCTL_PCTIMER_P3       0x00000008  // General-Purpose Timer 3 Power
+                                            // Control
+#define SYSCTL_PCTIMER_P2       0x00000004  // General-Purpose Timer 2 Power
+                                            // Control
+#define SYSCTL_PCTIMER_P1       0x00000002  // General-Purpose Timer 1 Power
+                                            // Control
+#define SYSCTL_PCTIMER_P0       0x00000001  // General-Purpose Timer 0 Power
+                                            // Control
 
 //*****************************************************************************
 //
@@ -14009,12 +13942,18 @@
                                             // 7 Peripheral Ready
 #define SYSCTL_PRTIMER_R6       0x00000040  // 16/32-Bit General-Purpose Timer
                                             // 6 Peripheral Ready
-#define SYSCTL_PRTIMER_R5       0x00000020  // Timer 5 Peripheral Ready
-#define SYSCTL_PRTIMER_R4       0x00000010  // Timer 4 Peripheral Ready
-#define SYSCTL_PRTIMER_R3       0x00000008  // Timer 3 Peripheral Ready
-#define SYSCTL_PRTIMER_R2       0x00000004  // Timer 2 Peripheral Ready
-#define SYSCTL_PRTIMER_R1       0x00000002  // Timer 1 Peripheral Ready
-#define SYSCTL_PRTIMER_R0       0x00000001  // Timer 0 Peripheral Ready
+#define SYSCTL_PRTIMER_R5       0x00000020  // 16/32-Bit General-Purpose Timer
+                                            // 5 Peripheral Ready
+#define SYSCTL_PRTIMER_R4       0x00000010  // 16/32-Bit General-Purpose Timer
+                                            // 4 Peripheral Ready
+#define SYSCTL_PRTIMER_R3       0x00000008  // 16/32-Bit General-Purpose Timer
+                                            // 3 Peripheral Ready
+#define SYSCTL_PRTIMER_R2       0x00000004  // 16/32-Bit General-Purpose Timer
+                                            // 2 Peripheral Ready
+#define SYSCTL_PRTIMER_R1       0x00000002  // 16/32-Bit General-Purpose Timer
+                                            // 1 Peripheral Ready
+#define SYSCTL_PRTIMER_R0       0x00000001  // 16/32-Bit General-Purpose Timer
+                                            // 0 Peripheral Ready
 
 //*****************************************************************************
 //
@@ -14501,8 +14440,8 @@
 //
 //*****************************************************************************
 #define CCM_CRCCTRL_INIT_M      0x00006000  // CRC Initialization
-#define CCM_CRCCTRL_INIT_SEED   0x00000000  // Use the EC_S_CRC_SEED register
-                                            // context as the starting value
+#define CCM_CRCCTRL_INIT_SEED   0x00000000  // Use the CRCSEED register context
+                                            // as the starting value
 #define CCM_CRCCTRL_INIT_0      0x00004000  // Initialize to all '0s'
 #define CCM_CRCCTRL_INIT_1      0x00006000  // Initialize to all '1s'
 #define CCM_CRCCTRL_SIZE        0x00001000  // Input Data Size
@@ -15647,5 +15586,25 @@
 #define NVIC_FPDSC_RMODE_RM     0x00800000  // Round towards Minus Infinity
                                             // (RM) mode
 #define NVIC_FPDSC_RMODE_RZ     0x00C00000  // Round towards Zero (RZ) mode
+
+//*****************************************************************************
+//
+// The following definitions are deprecated.
+//
+//*****************************************************************************
+#ifndef DEPRECATED
+#define SYSCTL_DID0_CLASS_SNOWFLAKE                                           \
+                                0x000A0000  // Tiva(TM) C Series TM4C129-class
+                                            // microcontrollers
+
+//*****************************************************************************
+//
+// Deprecated defines for the bit fields in the SYSCTL_PWRTC register.
+//
+//*****************************************************************************
+#define SYSCTL_PWRTC_VDDA_UBOR0 0x00000010  // VDDA Under BOR0 Status
+#define SYSCTL_PWRTC_VDD_UBOR0  0x00000001  // VDD Under BOR0 Status
+
+#endif
 
 #endif // __TM4C1294NCPDT_H__

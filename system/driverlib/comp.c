@@ -2,7 +2,7 @@
 //
 // comp.c - Driver for the analog comparator.
 //
-// Copyright (c) 2005-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2005-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Peripheral Driver Library.
+// This is part of revision 2.1.4.178 of the Tiva Peripheral Driver Library.
 //
 //*****************************************************************************
 
@@ -251,12 +251,12 @@ ComparatorIntRegister(uint32_t ui32Base, uint32_t ui32Comp,
     //
     // Register the interrupt handler, returning an error if an error occurs.
     //
-    IntRegister(INT_COMP0_BLIZZARD + ui32Comp, pfnHandler);
+    IntRegister(INT_COMP0_TM4C123 + ui32Comp, pfnHandler);
 
     //
     // Enable the interrupt in the interrupt controller.
     //
-    IntEnable(INT_COMP0_BLIZZARD + ui32Comp);
+    IntEnable(INT_COMP0_TM4C123 + ui32Comp);
 
     //
     // Enable the comparator interrupt.
@@ -298,12 +298,12 @@ ComparatorIntUnregister(uint32_t ui32Base, uint32_t ui32Comp)
     //
     // Disable the interrupt in the interrupt controller.
     //
-    IntDisable(INT_COMP0_BLIZZARD + ui32Comp);
+    IntDisable(INT_COMP0_TM4C123 + ui32Comp);
 
     //
     // Unregister the interrupt handler.
     //
-    IntUnregister(INT_COMP0_BLIZZARD + ui32Comp);
+    IntUnregister(INT_COMP0_TM4C123 + ui32Comp);
 }
 
 //*****************************************************************************
@@ -413,7 +413,7 @@ ComparatorIntStatus(uint32_t ui32Base, uint32_t ui32Comp, bool bMasked)
 //! \param ui32Comp is the index of the comparator.
 //!
 //! The comparator interrupt is cleared, so that it no longer asserts.  This
-//! fucntion must be called in the interrupt handler to keep the handler from
+//! function must be called in the interrupt handler to keep the handler from
 //! being called again immediately upon exit.  Note that for a level-triggered
 //! interrupt, the interrupt cannot be cleared until it stops asserting.
 //!

@@ -2,7 +2,7 @@
 //
 // sysctl.h - Prototypes for the system control driver.
 //
-// Copyright (c) 2005-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2005-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Peripheral Driver Library.
+// This is part of revision 2.1.4.178 of the Tiva Peripheral Driver Library.
 //
 //*****************************************************************************
 
@@ -64,10 +64,7 @@ extern "C"
 #define SYSCTL_PERIPH_ADC1      0xf0003801  // ADC 1
 #define SYSCTL_PERIPH_CAN0      0xf0003400  // CAN 0
 #define SYSCTL_PERIPH_CAN1      0xf0003401  // CAN 1
-#define SYSCTL_PERIPH_CAN2      0xf0003402  // CAN 2
-#define SYSCTL_PERIPH_COMP0     0xf0003c00  // Analog comparator 0
-#define SYSCTL_PERIPH_COMP1     0xf0003c01  // Analog comparator 1
-#define SYSCTL_PERIPH_COMP2     0xf0003c02  // Analog comparator 2
+#define SYSCTL_PERIPH_COMP0     0xf0003c00  // Analog Comparator Module 0
 #define SYSCTL_PERIPH_EMAC0     0xf0009c00  // Ethernet MAC0
 #define SYSCTL_PERIPH_EPHY0     0xf0003000  // Ethernet PHY0
 #define SYSCTL_PERIPH_EPI0      0xf0001000  // EPI0
@@ -105,6 +102,7 @@ extern "C"
 #define SYSCTL_PERIPH_I2C8      0xf0002008  // I2C 8
 #define SYSCTL_PERIPH_I2C9      0xf0002009  // I2C 9
 #define SYSCTL_PERIPH_LCD0      0xf0009000  // LCD 0
+#define SYSCTL_PERIPH_ONEWIRE0  0xf0009800  // One Wire 0
 #define SYSCTL_PERIPH_PWM0      0xf0004000  // PWM 0
 #define SYSCTL_PERIPH_PWM1      0xf0004001  // PWM 1
 #define SYSCTL_PERIPH_QEI0      0xf0004400  // QEI 0
@@ -162,15 +160,14 @@ extern "C"
 // by the SysCtlIntStatus() API.
 //
 //*****************************************************************************
+#define SYSCTL_INT_BOR0         0x00000800  // VDD under BOR0
+#define SYSCTL_INT_VDDA_OK      0x00000400  // VDDA Power OK
 #define SYSCTL_INT_MOSC_PUP     0x00000100  // MOSC power-up interrupt
 #define SYSCTL_INT_USBPLL_LOCK  0x00000080  // USB PLL lock interrupt
 #define SYSCTL_INT_PLL_LOCK     0x00000040  // PLL lock interrupt
-#define SYSCTL_INT_CUR_LIMIT    0x00000020  // Current limit interrupt
-#define SYSCTL_INT_IOSC_FAIL    0x00000010  // Internal oscillator failure int
 #define SYSCTL_INT_MOSC_FAIL    0x00000008  // Main oscillator failure int
-#define SYSCTL_INT_POR          0x00000004  // Power on reset interrupt
+#define SYSCTL_INT_BOR1         0x00000002  // VDD under BOR1
 #define SYSCTL_INT_BOR          0x00000002  // Brown out interrupt
-#define SYSCTL_INT_PLL_FAIL     0x00000001  // PLL failure interrupt
 
 //*****************************************************************************
 //
@@ -180,11 +177,13 @@ extern "C"
 //*****************************************************************************
 #define SYSCTL_CAUSE_HSRVREQ    0x00001000  // Hardware System Service Request
 #define SYSCTL_CAUSE_HIB        0x00000040  // Hibernate reset
-#define SYSCTL_CAUSE_LDO        0x00000020  // LDO power not OK reset
 #define SYSCTL_CAUSE_WDOG1      0x00000020  // Watchdog 1 reset
 #define SYSCTL_CAUSE_SW         0x00000010  // Software reset
 #define SYSCTL_CAUSE_WDOG0      0x00000008  // Watchdog 0 reset
-#define SYSCTL_CAUSE_WDOG       0x00000008  // Watchdog reset
+#ifndef DEPRECATED
+#define SYSCTL_CAUSE_WDOG       SYSCTL_CAUSE_WDOG0
+                                            // Watchdog reset(Deprecated)
+#endif
 #define SYSCTL_CAUSE_BOR        0x00000004  // Brown-out reset
 #define SYSCTL_CAUSE_POR        0x00000002  // Power on reset
 #define SYSCTL_CAUSE_EXT        0x00000001  // External reset
@@ -212,18 +211,6 @@ extern "C"
 #define SYSCTL_PWMDIV_16        0x00160000  // PWM clock is processor clock /16
 #define SYSCTL_PWMDIV_32        0x00180000  // PWM clock is processor clock /32
 #define SYSCTL_PWMDIV_64        0x001A0000  // PWM clock is processor clock /64
-
-//*****************************************************************************
-//
-// The following are values that can be passed to the SysCtlADCSpeedSet() API
-// as the ui32Speed parameter, and can be returned by the SysCtlADCSpeedGet()
-// API.
-//
-//*****************************************************************************
-#define SYSCTL_ADCSPEED_1MSPS   0x00000F00  // 1,000,000 samples per second
-#define SYSCTL_ADCSPEED_500KSPS 0x00000A00  // 500,000 samples per second
-#define SYSCTL_ADCSPEED_250KSPS 0x00000500  // 250,000 samples per second
-#define SYSCTL_ADCSPEED_125KSPS 0x00000000  // 125,000 samples per second
 
 //*****************************************************************************
 //
@@ -392,7 +379,6 @@ extern "C"
 #define SYSCTL_OSC_INT          0x00000010  // Osc source is int. osc
 #define SYSCTL_OSC_INT4         0x00000020  // Osc source is int. osc /4
 #define SYSCTL_OSC_INT30        0x00000030  // Osc source is int. 30 KHz
-#define SYSCTL_OSC_EXT4_19      0x80000028  // Osc source is ext. 4.19 MHz
 #define SYSCTL_OSC_EXT32        0x80000038  // Osc source is ext. 32 KHz
 #define SYSCTL_INT_OSC_DIS      0x00000002  // Disable internal oscillator
 #define SYSCTL_MAIN_OSC_DIS     0x00000001  // Disable main oscillator
@@ -500,6 +486,22 @@ extern "C"
 
 //*****************************************************************************
 //
+// The following are values that can be passed to the SysCtlSleepPowerSet() and
+// SysCtlDeepSleepPowerSet() APIs as the ui32Config parameter.
+//
+//*****************************************************************************
+#define SYSCTL_LDO_SLEEP        0x00000200  // LDO in sleep mode
+                                            // (Deep Sleep Only)
+#define SYSCTL_TEMP_LOW_POWER   0x00000100  // Temp sensor in low power mode
+                                            // (Deep Sleep Only)
+#define SYSCTL_FLASH_NORMAL     0x00000000  // Flash in normal mode
+#define SYSCTL_FLASH_LOW_POWER  0x00000020  // Flash in low power mode
+#define SYSCTL_SRAM_NORMAL      0x00000000  // SRAM in normal mode
+#define SYSCTL_SRAM_STANDBY     0x00000001  // SRAM in standby mode
+#define SYSCTL_SRAM_LOW_POWER   0x00000003  // SRAM in low power mode
+
+//*****************************************************************************
+//
 // Defines for the SysCtlResetBehaviorSet() and SysCtlResetBehaviorGet() APIs.
 //
 //*****************************************************************************
@@ -514,41 +516,9 @@ extern "C"
 
 //*****************************************************************************
 //
-// The valid settings for the ui32Config parameter of the
-// SysCtlLPCLowPowerConfigSet() function.
-//
-//*****************************************************************************
-#define SYSCTL_LPCLPWR_SRAM_OFF                                               \
-                                0x00000000
-#define SYSCTL_LPCLPWR_SRAM_RETENTION                                         \
-                                0x00000001
-#define SYSCTL_LPCLPWR_SRAM_ON  0x00000003
-
-//*****************************************************************************
-//
-// The return values from the SysCtlLPCLowPowerStatusGet() function.
-//
-//*****************************************************************************
-#define SYSCTL_LPCLPWRS_PD_OFF  0x00000000
-#define SYSCTL_LPCLPWRS_SRAM_OFF                                              \
-                                0x00000033
-#define SYSCTL_LPCLPWRS_SRAM_RETENTION                                        \
-                                0x00000037
-#define SYSCTL_LPCLPWRS_SRAM_ON 0x0000003F
-
-//*****************************************************************************
-//
 // Values used with the SysCtlVoltageEventConfig() API.
 //
 //*****************************************************************************
-#define SYSCTL_VEVENT_VDDCBO_NONE                                             \
-                                0x00000000
-#define SYSCTL_VEVENT_VDDCBO_INT                                              \
-                                0x00001000
-#define SYSCTL_VEVENT_VDDCBO_NMI                                              \
-                                0x00002000
-#define SYSCTL_VEVENT_VDDCBO_RST                                              \
-                                0x00003000
 #define SYSCTL_VEVENT_VDDABO_NONE                                             \
                                 0x00000000
 #define SYSCTL_VEVENT_VDDABO_INT                                              \
@@ -571,7 +541,6 @@ extern "C"
 //*****************************************************************************
 #define SYSCTL_VESTAT_VDDBOR    0x00000040
 #define SYSCTL_VESTAT_VDDABOR   0x00000010
-#define SYSCTL_VESTAT_VDDCBOR   0x00000001
 
 //*****************************************************************************
 //
@@ -602,9 +571,8 @@ extern "C"
 //
 //*****************************************************************************
 #define SYSCTL_ALTCLK_PIOSC     0x00000000
-#define SYSCTL_ALTCLK_PIOSC48   0x00000001
-#define SYSCTL_ALTCLK_LFIOSC    0x00000002
-#define SYSCTL_ALTCLK_HIB       0x00000004
+#define SYSCTL_ALTCLK_RTCOSC    0x00000003
+#define SYSCTL_ALTCLK_LFIOSC    0x00000004
 
 //*****************************************************************************
 //
@@ -638,7 +606,6 @@ extern void SysCtlLDODeepSleepSet(uint32_t ui32Voltage);
 extern uint32_t SysCtlLDODeepSleepGet(void);
 extern void SysCtlSleepPowerSet(uint32_t ui32Config);
 extern void SysCtlDeepSleepPowerSet(uint32_t ui32Config);
-extern void SysCtlLDOConfigSet(uint32_t ui32Config);
 extern void SysCtlReset(void);
 extern void SysCtlSleep(void);
 extern void SysCtlDeepSleep(void);
@@ -656,8 +623,6 @@ extern void SysCtlDeepSleepClockConfigSet(uint32_t ui32Div,
                                           uint32_t ui32Config);
 extern void SysCtlPWMClockSet(uint32_t ui32Config);
 extern uint32_t SysCtlPWMClockGet(void);
-extern void SysCtlADCSpeedSet(uint32_t ui32Speed);
-extern uint32_t SysCtlADCSpeedGet(void);
 extern void SysCtlIOSCVerificationSet(bool bEnable);
 extern void SysCtlMOSCVerificationSet(bool bEnable);
 extern void SysCtlPLLVerificationSet(bool bEnable);
@@ -668,8 +633,6 @@ extern void SysCtlUSBPLLEnable(void);
 extern void SysCtlUSBPLLDisable(void);
 extern uint32_t SysCtlClockFreqSet(uint32_t ui32Config,
                                    uint32_t ui32SysClock);
-extern void SysCtlLPCLowPowerConfigSet(uint32_t ui32Config);
-extern uint32_t SysCtlLPCLowPowerStatusGet(void);
 extern void SysCtlResetBehaviorSet(uint32_t ui32Behavior);
 extern uint32_t SysCtlResetBehaviorGet(void);
 extern void SysCtlClockOutConfig(uint32_t ui32Config, uint32_t ui32Div);
@@ -679,6 +642,7 @@ extern void SysCtlNMIClear(uint32_t ui32Status);
 extern void SysCtlVoltageEventConfig(uint32_t ui32Config);
 extern uint32_t SysCtlVoltageEventStatus(void);
 extern void SysCtlVoltageEventClear(uint32_t ui32Status);
+extern bool SysCtlVCOGet(uint32_t ui32Crystal, uint32_t *pui32VCOFrequency);
 
 //*****************************************************************************
 //

@@ -2,7 +2,7 @@
 //
 // gpio.c - API for GPIO ports
 //
-// Copyright (c) 2005-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2005-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Peripheral Driver Library.
+// This is part of revision 2.1.4.178 of the Tiva Peripheral Driver Library.
 //
 //*****************************************************************************
 
@@ -62,60 +62,63 @@
 //*****************************************************************************
 static const uint32_t g_ppui32GPIOIntMapBlizzard[][2] =
 {
-    { GPIO_PORTA_BASE, INT_GPIOA_BLIZZARD },
-    { GPIO_PORTA_AHB_BASE, INT_GPIOA_BLIZZARD },
-    { GPIO_PORTB_BASE, INT_GPIOB_BLIZZARD },
-    { GPIO_PORTB_AHB_BASE, INT_GPIOB_BLIZZARD },
-    { GPIO_PORTC_BASE, INT_GPIOC_BLIZZARD },
-    { GPIO_PORTC_AHB_BASE, INT_GPIOC_BLIZZARD },
-    { GPIO_PORTD_BASE,  INT_GPIOD_BLIZZARD },
-    { GPIO_PORTD_AHB_BASE, INT_GPIOD_BLIZZARD },
-    { GPIO_PORTE_BASE, INT_GPIOE_BLIZZARD },
-    { GPIO_PORTE_AHB_BASE, INT_GPIOE_BLIZZARD },
-    { GPIO_PORTF_BASE, INT_GPIOF_BLIZZARD },
-    { GPIO_PORTF_AHB_BASE, INT_GPIOF_BLIZZARD },
-    { GPIO_PORTG_BASE, INT_GPIOG_BLIZZARD },
-    { GPIO_PORTG_AHB_BASE, INT_GPIOG_BLIZZARD },
-    { GPIO_PORTH_BASE, INT_GPIOH_BLIZZARD },
-    { GPIO_PORTH_AHB_BASE, INT_GPIOH_BLIZZARD },
-    { GPIO_PORTJ_BASE, INT_GPIOJ_BLIZZARD },
-    { GPIO_PORTJ_AHB_BASE, INT_GPIOJ_BLIZZARD },
-    { GPIO_PORTK_BASE, INT_GPIOK_BLIZZARD },
-    { GPIO_PORTL_BASE, INT_GPIOL_BLIZZARD },
-    { GPIO_PORTM_BASE, INT_GPIOM_BLIZZARD },
-    { GPIO_PORTN_BASE, INT_GPION_BLIZZARD },
-    { GPIO_PORTP_BASE, INT_GPIOP0_BLIZZARD },
-    { GPIO_PORTQ_BASE, INT_GPIOQ0_BLIZZARD },
+    { GPIO_PORTA_BASE, INT_GPIOA_TM4C123 },
+    { GPIO_PORTA_AHB_BASE, INT_GPIOA_TM4C123 },
+    { GPIO_PORTB_BASE, INT_GPIOB_TM4C123 },
+    { GPIO_PORTB_AHB_BASE, INT_GPIOB_TM4C123 },
+    { GPIO_PORTC_BASE, INT_GPIOC_TM4C123 },
+    { GPIO_PORTC_AHB_BASE, INT_GPIOC_TM4C123 },
+    { GPIO_PORTD_BASE,  INT_GPIOD_TM4C123 },
+    { GPIO_PORTD_AHB_BASE, INT_GPIOD_TM4C123 },
+    { GPIO_PORTE_BASE, INT_GPIOE_TM4C123 },
+    { GPIO_PORTE_AHB_BASE, INT_GPIOE_TM4C123 },
+    { GPIO_PORTF_BASE, INT_GPIOF_TM4C123 },
+    { GPIO_PORTF_AHB_BASE, INT_GPIOF_TM4C123 },
+    { GPIO_PORTG_BASE, INT_GPIOG_TM4C123 },
+    { GPIO_PORTG_AHB_BASE, INT_GPIOG_TM4C123 },
+    { GPIO_PORTH_BASE, INT_GPIOH_TM4C123 },
+    { GPIO_PORTH_AHB_BASE, INT_GPIOH_TM4C123 },
+    { GPIO_PORTJ_BASE, INT_GPIOJ_TM4C123 },
+    { GPIO_PORTJ_AHB_BASE, INT_GPIOJ_TM4C123 },
+    { GPIO_PORTK_BASE, INT_GPIOK_TM4C123 },
+    { GPIO_PORTL_BASE, INT_GPIOL_TM4C123 },
+    { GPIO_PORTM_BASE, INT_GPIOM_TM4C123 },
+    { GPIO_PORTN_BASE, INT_GPION_TM4C123 },
+    { GPIO_PORTP_BASE, INT_GPIOP0_TM4C123 },
+    { GPIO_PORTQ_BASE, INT_GPIOQ0_TM4C123 },
 };
 static const uint_fast32_t g_ui32GPIOIntMapBlizzardRows =
     sizeof(g_ppui32GPIOIntMapBlizzard) / sizeof(g_ppui32GPIOIntMapBlizzard[0]);
 
 static const uint32_t g_ppui32GPIOIntMapSnowflake[][2] =
 {
-    { GPIO_PORTA_BASE, INT_GPIOA_SNOWFLAKE },
-    { GPIO_PORTA_AHB_BASE, INT_GPIOA_SNOWFLAKE },
-    { GPIO_PORTB_BASE, INT_GPIOB_SNOWFLAKE },
-    { GPIO_PORTB_AHB_BASE, INT_GPIOB_SNOWFLAKE },
-    { GPIO_PORTC_BASE, INT_GPIOC_SNOWFLAKE },
-    { GPIO_PORTC_AHB_BASE, INT_GPIOC_SNOWFLAKE },
-    { GPIO_PORTD_BASE,  INT_GPIOD_SNOWFLAKE },
-    { GPIO_PORTD_AHB_BASE, INT_GPIOD_SNOWFLAKE },
-    { GPIO_PORTE_BASE, INT_GPIOE_SNOWFLAKE },
-    { GPIO_PORTE_AHB_BASE, INT_GPIOE_SNOWFLAKE },
-    { GPIO_PORTF_BASE, INT_GPIOF_SNOWFLAKE },
-    { GPIO_PORTF_AHB_BASE, INT_GPIOF_SNOWFLAKE },
-    { GPIO_PORTG_BASE, INT_GPIOG_SNOWFLAKE },
-    { GPIO_PORTG_AHB_BASE, INT_GPIOG_SNOWFLAKE },
-    { GPIO_PORTH_BASE, INT_GPIOH_SNOWFLAKE },
-    { GPIO_PORTH_AHB_BASE, INT_GPIOH_SNOWFLAKE },
-    { GPIO_PORTJ_BASE, INT_GPIOJ_SNOWFLAKE },
-    { GPIO_PORTJ_AHB_BASE, INT_GPIOJ_SNOWFLAKE },
-    { GPIO_PORTK_BASE, INT_GPIOK_SNOWFLAKE },
-    { GPIO_PORTL_BASE, INT_GPIOL_SNOWFLAKE },
-    { GPIO_PORTM_BASE, INT_GPIOM_SNOWFLAKE },
-    { GPIO_PORTN_BASE, INT_GPION_SNOWFLAKE },
-    { GPIO_PORTP_BASE, INT_GPIOP0_SNOWFLAKE },
-    { GPIO_PORTQ_BASE, INT_GPIOQ0_SNOWFLAKE },
+    { GPIO_PORTA_BASE, INT_GPIOA_TM4C129 },
+    { GPIO_PORTA_AHB_BASE, INT_GPIOA_TM4C129 },
+    { GPIO_PORTB_BASE, INT_GPIOB_TM4C129 },
+    { GPIO_PORTB_AHB_BASE, INT_GPIOB_TM4C129 },
+    { GPIO_PORTC_BASE, INT_GPIOC_TM4C129 },
+    { GPIO_PORTC_AHB_BASE, INT_GPIOC_TM4C129 },
+    { GPIO_PORTD_BASE,  INT_GPIOD_TM4C129 },
+    { GPIO_PORTD_AHB_BASE, INT_GPIOD_TM4C129 },
+    { GPIO_PORTE_BASE, INT_GPIOE_TM4C129 },
+    { GPIO_PORTE_AHB_BASE, INT_GPIOE_TM4C129 },
+    { GPIO_PORTF_BASE, INT_GPIOF_TM4C129 },
+    { GPIO_PORTF_AHB_BASE, INT_GPIOF_TM4C129 },
+    { GPIO_PORTG_BASE, INT_GPIOG_TM4C129 },
+    { GPIO_PORTG_AHB_BASE, INT_GPIOG_TM4C129 },
+    { GPIO_PORTH_BASE, INT_GPIOH_TM4C129 },
+    { GPIO_PORTH_AHB_BASE, INT_GPIOH_TM4C129 },
+    { GPIO_PORTJ_BASE, INT_GPIOJ_TM4C129 },
+    { GPIO_PORTJ_AHB_BASE, INT_GPIOJ_TM4C129 },
+    { GPIO_PORTK_BASE, INT_GPIOK_TM4C129 },
+    { GPIO_PORTL_BASE, INT_GPIOL_TM4C129 },
+    { GPIO_PORTM_BASE, INT_GPIOM_TM4C129 },
+    { GPIO_PORTN_BASE, INT_GPION_TM4C129 },
+    { GPIO_PORTP_BASE, INT_GPIOP0_TM4C129 },
+    { GPIO_PORTQ_BASE, INT_GPIOQ0_TM4C129 },
+    { GPIO_PORTR_BASE, INT_GPIOR_TM4C129 },
+    { GPIO_PORTS_BASE, INT_GPIOS_TM4C129 },
+    { GPIO_PORTT_BASE, INT_GPIOT_TM4C129 },
 };
 static const uint_fast32_t g_ui32GPIOIntMapSnowflakeRows =
     (sizeof(g_ppui32GPIOIntMapSnowflake) /
@@ -222,7 +225,7 @@ _GPIOIntNumberGet(uint32_t ui32Port)
     ppui32GPIOIntMap = g_ppui32GPIOIntMapBlizzard;
     ui32Rows = g_ui32GPIOIntMapBlizzardRows;
 
-    if(CLASS_IS_SNOWFLAKE)
+    if(CLASS_IS_TM4C129)
     {
         ppui32GPIOIntMap = g_ppui32GPIOIntMapSnowflake;
         ui32Rows = g_ui32GPIOIntMapSnowflakeRows;
@@ -282,6 +285,14 @@ _GPIOIntNumberGet(uint32_t ui32Port)
 //!
 //! \note GPIOPadConfigSet() must also be used to configure the corresponding
 //! pad(s) in order for them to propagate the signal to/from the GPIO.
+//!
+//! \note A subset of GPIO pins on Tiva devices, notably those used by the
+//! JTAG/SWD interface and any pin capable of acting as an NMI input, are
+//! locked against inadvertent reconfiguration.  These pins must be unlocked
+//! using direct register writes to the relevant GPIO_O_LOCK and GPIO_O_CR
+//! registers before this function can be called.  Please see the ``gpio_jtag''
+//! example application for the mechanism required and consult your part
+//! datasheet for information on affected pins.
 //!
 //! \return None.
 //
@@ -398,11 +409,14 @@ GPIOIntTypeSet(uint32_t ui32Port, uint8_t ui8Pins,
     // Check the arguments.
     //
     ASSERT(_GPIOBaseValid(ui32Port));
-    ASSERT((ui32IntType == GPIO_FALLING_EDGE) ||
-           (ui32IntType == GPIO_RISING_EDGE) ||
-           (ui32IntType == GPIO_BOTH_EDGES) ||
-           (ui32IntType == GPIO_LOW_LEVEL) ||
-           (ui32IntType == GPIO_HIGH_LEVEL));
+    ASSERT(((ui32IntType & 0xF) == GPIO_FALLING_EDGE) ||
+           ((ui32IntType & 0xF) == GPIO_RISING_EDGE) ||
+           ((ui32IntType & 0xF) == GPIO_BOTH_EDGES) ||
+           ((ui32IntType & 0xF) == GPIO_LOW_LEVEL) ||
+           ((ui32IntType & 0xF) == GPIO_HIGH_LEVEL));
+    ASSERT(((ui32IntType & 0x000F0000) == 0) ||
+           (((ui32IntType & 0x000F0000) == GPIO_DISCRETE_INT) &&
+            ((ui32Port == GPIO_PORTP_BASE) || (ui32Port == GPIO_PORTQ_BASE))));
 
     //
     // Set the pin interrupt type.
@@ -523,6 +537,14 @@ GPIOIntTypeGet(uint32_t ui32Port, uint8_t ui8Pin)
 //! set identifies the pin to be accessed, and where bit 0 of the byte
 //! represents GPIO port pin 0, bit 1 represents GPIO port pin 1, and so on.
 //!
+//! \note A subset of GPIO pins on Tiva devices, notably those used by the
+//! JTAG/SWD interface and any pin capable of acting as an NMI input, are
+//! locked against inadvertent reconfiguration.  These pins must be unlocked
+//! using direct register writes to the relevant GPIO_O_LOCK and GPIO_O_CR
+//! registers before this function can be called.  Please see the ``gpio_jtag''
+//! example application for the mechanism required and consult your part
+//! datasheet for information on affected pins.
+//!
 //! \return None.
 //
 //*****************************************************************************
@@ -551,6 +573,24 @@ GPIOPadConfigSet(uint32_t ui32Port, uint8_t ui8Pins,
            (ui32PinType == GPIO_PIN_TYPE_WAKE_HIGH) ||
            (ui32PinType == GPIO_PIN_TYPE_ANALOG));
 
+
+    //
+    // Set the GPIO peripheral configuration register first as required.  This
+    // register only appears in TM4E111 and later device classes, but is a
+    // harmless write on older devices. Walk pins 0-7 and clear or set the
+    // provided PC[EDMn] encoding.
+    //
+    for(ui8Bit = 0; ui8Bit < 8; ui8Bit++)
+    {
+        if(ui8Pins & (1 << ui8Bit))
+        {
+            HWREG(ui32Port + GPIO_O_PC) = (HWREG(ui32Port + GPIO_O_PC) &
+                                           ~(0x3 << (2 * ui8Bit)));
+            HWREG(ui32Port + GPIO_O_PC) |= (((ui32Strength >> 5) & 0x3) <<
+                                            (2 * ui8Bit));
+        }
+    }
+
     //
     // Set the output drive strength.
     //
@@ -576,28 +616,15 @@ GPIOPadConfigSet(uint32_t ui32Port, uint8_t ui8Pins,
                                      ~(ui8Pins)));
 
     //
-    // Set the 12-mA drive select register and the GPIO peripheral
-    // configuration register.  These registers only appear in Flurry-class
-    // (and later) devices, but are harmless writes on older devices.
+    // Set the 12-mA drive select register.  This register only appears in
+    // TM4E111 and later device classes, but is a harmless write on older
+    // devices.
     //
     HWREG(ui32Port + GPIO_O_DR12R) = ((ui32Strength & 0x10) ?
                                       (HWREG(ui32Port + GPIO_O_DR12R) |
                                        ui8Pins) :
                                       (HWREG(ui32Port + GPIO_O_DR12R) &
                                        ~(ui8Pins)));
-    //
-    // Walk pins 0-7 and clear or set the provided PC[EDMn] encoding.
-    //
-    for(ui8Bit = 0; ui8Bit < 8; ui8Bit++)
-    {
-        if(ui8Pins & (1 << ui8Bit))
-        {
-            HWREG(ui32Port + GPIO_O_PC) = (HWREG(ui32Port + GPIO_O_PC) &
-                                           ~(0x3 << (2 * ui8Bit)));
-            HWREG(ui32Port + GPIO_O_PC) |= (((ui32Strength >> 5) & 0x3) <<
-                                            (2 * ui8Bit));
-        }
-    }
 
     //
     // Set the pin type.
@@ -616,9 +643,9 @@ GPIOPadConfigSet(uint32_t ui32Port, uint8_t ui8Pins,
                                     (HWREG(ui32Port + GPIO_O_DEN) & ~(ui8Pins)));
 
     //
-    // Set the wake pin enable register and the wake level register.
-    // These registers only appear in Flurry-class (and later) devices, but
-    // are harmless writes on older devices.
+    // Set the wake pin enable register and the wake level register.  These
+    // registers only appear in TM4E111 and later device classes, but are
+    // harmless writes on older devices.
     //
     HWREG(ui32Port + GPIO_O_WAKELVL) = ((ui32PinType & 0x200) ?
                                         (HWREG(ui32Port + GPIO_O_WAKELVL) |
@@ -725,6 +752,15 @@ GPIOPadConfigGet(uint32_t ui32Port, uint8_t ui8Pin,
 //! - \b GPIO_INT_PIN_6 - interrupt due to activity on Pin 6.
 //! - \b GPIO_INT_PIN_7 - interrupt due to activity on Pin 7.
 //! - \b GPIO_INT_DMA - interrupt due to DMA activity on this GPIO module.
+//!
+//! \note If this call is being used to enable summary interrupts on GPIO port
+//! P or Q (GPIOIntTypeSet() with GPIO_DISCRETE_INT not enabled), then all
+//! individual interrupts for these ports must be enabled in the GPIO module
+//! using GPIOIntEnable() and all but the interrupt for pin 0 must be disabled
+//! in the NVIC using the IntDisable() function.  The summary interrupts for
+//! the ports are routed to the INT_GPIOP0 or INT_GPIOQ0 which must be enabled
+//! to handle the interrupt.  If this is not done then any individual GPIO pin
+//! interrupts that are left enabled also trigger the individual interrupts.
 //!
 //! \return None.
 //
@@ -953,6 +989,99 @@ GPIOIntUnregister(uint32_t ui32Port)
 
 //*****************************************************************************
 //
+//! Registers an interrupt handler for an individual pin of a GPIO port.
+//!
+//! \param ui32Port is the base address of the GPIO port.
+//! \param ui32Pin is the pin whose interrupt is to be registered.
+//! \param pfnIntHandler is a pointer to the GPIO port interrupt handling
+//! function.
+//!
+//! This function ensures that the interrupt handler specified by
+//! \e pfnIntHandler is called when an interrupt is detected from the selected
+//! pin of a GPIO port.  This function also enables the corresponding GPIO pin
+//! interrupt in the interrupt controller.
+//!
+//! \sa IntRegister() for important information about registering interrupt
+//! handlers.
+//!
+//! \return None.
+//
+//*****************************************************************************
+void
+GPIOIntRegisterPin(uint32_t ui32Port, uint32_t ui32Pin,
+                   void (*pfnIntHandler)(void))
+{
+    uint32_t ui32Int;
+
+    //
+    // Check the arguments.
+    //
+    ASSERT((ui32Port == GPIO_PORTP_BASE) || (ui32Port == GPIO_PORTQ_BASE));
+    ASSERT((ui32Pin > 0) && (ui32Pin < 8));
+    ASSERT(pfnIntHandler != 0);
+
+    //
+    // Get the interrupt number associated with the specified GPIO.
+    //
+    ui32Int = _GPIOIntNumberGet(ui32Port);
+
+    //
+    // Register the interrupt handler.
+    //
+    IntRegister((ui32Int + ui32Pin), pfnIntHandler);
+
+    //
+    // Enable the GPIO pin interrupt.
+    //
+    IntEnable(ui32Int + ui32Pin);
+}
+
+//*****************************************************************************
+//
+//! Removes an interrupt handler for an individual pin of a GPIO port.
+//!
+//! \param ui32Port is the base address of the GPIO port.
+//! \param ui32Pin is the pin whose interrupt is to be unregistered.
+//!
+//! This function unregisters the interrupt handler for the specified pin of a
+//! GPIO port.  This function also disables the corresponding GPIO pin
+//! interrupt in the interrupt controller.
+//!
+//! \sa IntRegister() for important information about registering interrupt
+//! handlers.
+//!
+//! \return None.
+//
+//*****************************************************************************
+void
+GPIOIntUnregisterPin(uint32_t ui32Port, uint32_t ui32Pin)
+{
+    uint32_t ui32Int;
+
+    //
+    // Check the arguments.
+    //
+    ASSERT((ui32Port == GPIO_PORTP_BASE) || (ui32Port == GPIO_PORTQ_BASE));
+    ASSERT((ui32Pin > 0) && (ui32Pin < 8));
+
+    //
+    // Get the interrupt number associated with the specified GPIO.
+    //
+    ui32Int = _GPIOIntNumberGet(ui32Port);
+
+    //
+    // Disable the GPIO pin interrupt.
+    //
+    IntDisable(ui32Int + ui32Pin);
+
+    //
+    // UnRegister the interrupt handler.
+    //
+    IntUnregister(ui32Int + ui32Pin);
+}
+
+//*****************************************************************************
+//
 //! Reads the values present of the specified pin(s).
 //!
 //! \param ui32Port is the base address of the GPIO port.
@@ -1036,6 +1165,14 @@ GPIOPinWrite(uint32_t ui32Port, uint8_t ui8Pins, uint8_t ui8Val)
 //! \note This function cannot be used to turn any pin into an ADC input; it
 //! only configures an ADC input pin for proper operation.
 //!
+//! \note A subset of GPIO pins on Tiva devices, notably those used by the
+//! JTAG/SWD interface and any pin capable of acting as an NMI input, are
+//! locked against inadvertent reconfiguration.  These pins must be unlocked
+//! using direct register writes to the relevant GPIO_O_LOCK and GPIO_O_CR
+//! registers before this function can be called.  Please see the ``gpio_jtag''
+//! example application for the mechanism required and consult your part
+//! datasheet for information on affected pins.
+//!
 //! \return None.
 //
 //*****************************************************************************
@@ -1076,8 +1213,17 @@ GPIOPinTypeADC(uint32_t ui32Port, uint8_t ui8Pins)
 //! represents GPIO port pin 0, bit 1 represents GPIO port pin 1, and so on.
 //!
 //! \note This function cannot be used to turn any pin into a CAN pin; it only
-//! configures a CAN pin for proper operation.  Devices with flexible pin
-//! muxing also require a GPIOPinConfigure() function call.
+//! configures a CAN pin for proper operation.  Note that a GPIOPinConfigure()
+//! function call is also required to properly configure a pin for the CAN
+//!  function.
+//!
+//! \note A subset of GPIO pins on Tiva devices, notably those used by the
+//! JTAG/SWD interface and any pin capable of acting as an NMI input, are
+//! locked against inadvertent reconfiguration.  These pins must be unlocked
+//! using direct register writes to the relevant GPIO_O_LOCK and GPIO_O_CR
+//! registers before this function can be called.  Please see the ``gpio_jtag''
+//! example application for the mechanism required and consult your part
+//! datasheet for information on affected pins.
 //!
 //! \return None.
 //
@@ -1118,8 +1264,16 @@ GPIOPinTypeCAN(uint32_t ui32Port, uint8_t ui8Pins)
 //!
 //! \note This function cannot be used to turn any pin into an analog
 //! comparator input; it only configures an analog comparator pin for proper
-//! operation.  Devices with flexible pin muxing also require a
-//! GPIOPinConfigure() function call.
+//! operation.  Note that a GPIOPinConfigure() function call is also required
+//! to properly configure a pin for the analog comparator function.
+//!
+//! \note A subset of GPIO pins on Tiva devices, notably those used by the
+//! JTAG/SWD interface and any pin capable of acting as an NMI input, are
+//! locked against inadvertent reconfiguration.  These pins must be unlocked
+//! using direct register writes to the relevant GPIO_O_LOCK and GPIO_O_CR
+//! registers before this function can be called.  Please see the ``gpio_jtag''
+//! example application for the mechanism required and consult your part
+//! datasheet for information on affected pins.
 //!
 //! \return None.
 //
@@ -1146,6 +1300,78 @@ GPIOPinTypeComparator(uint32_t ui32Port, uint8_t ui8Pins)
 
 //*****************************************************************************
 //
+//! Configures pin(s) for use as an analog comparator output.
+//!
+//! \param ui32Port is the base address of the GPIO port.
+//! \param ui8Pins is the bit-packed representation of the pin(s).
+//!
+//! The analog comparator output pins must be properly configured for the analog
+//! comparator to function correctly.  This function provides the proper
+//! configuration for those pin(s).
+//!
+//! The pin(s) are specified using a bit-packed byte, where each bit that is
+//! set identifies the pin to be accessed, and where bit 0 of the byte
+//! represents GPIO port pin 0, bit 1 represents GPIO port pin 1, and so on.
+//!
+//! \return None.
+//
+//*****************************************************************************
+void GPIOPinTypeComparatorOutput(uint32_t ui32Port, uint8_t ui8Pins)
+{
+    //
+    // Check the arguments.
+    //
+    ASSERT(_GPIOBaseValid(ui32Port));
+
+    //
+    // Make the pin(s) be inputs.
+    //
+    GPIODirModeSet(ui32Port, ui8Pins, GPIO_DIR_MODE_HW);
+
+    //
+    // Set the pad(s) for standard push-pull operation.
+    //
+    GPIOPadConfigSet(ui32Port, ui8Pins, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD);
+}
+
+//*****************************************************************************
+//
+//! Configures pin(s) for use as an clock to be output from the device.
+//!
+//! \param ui32Port is the base address of the GPIO port.
+//! \param ui8Pins is the bit-packed representation of the pin(s).
+//!
+//! The system control output pin must be properly configured for the DIVSCLK to
+//! function correctly. This function provides the proper configuration for
+//! those pin(s).
+//!
+//! The pin(s) are specified using a bit-packed byte, where each bit that is
+//! set identifies the pin to be accessed, and where bit 0 of the byte
+//! represents GPIO port pin 0, bit 1 represents GPIO port pin 1, and so on.
+//!
+//! \return None.
+//
+//*****************************************************************************
+void GPIOPinTypeDIVSCLK(uint32_t ui32Port, uint8_t ui8Pins)
+{
+    //
+    // Check the arguments.
+    //
+    ASSERT(_GPIOBaseValid(ui32Port));
+
+    //
+    // Make the pin(s) be inputs.
+    //
+    GPIODirModeSet(ui32Port, ui8Pins, GPIO_DIR_MODE_HW);
+
+    //
+    // Set the pad(s) for standard push-pull operation.
+    //
+    GPIOPadConfigSet(ui32Port, ui8Pins, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD);
+}
+
+//*****************************************************************************
+//
 //! Configures pin(s) for use by the external peripheral interface.
 //!
 //! \param ui32Port is the base address of the GPIO port.
@@ -1163,8 +1389,17 @@ GPIOPinTypeComparator(uint32_t ui32Port, uint8_t ui8Pins)
 //!
 //! \note This function cannot be used to turn any pin into an external
 //! peripheral interface pin; it only configures an external peripheral
-//! interface pin for proper operation.  Devices with flexible pin muxing also
-//! require a GPIOPinConfigure() function call.
+//! interface pin for proper operation.  Note that a GPIOPinConfigure()
+//! function call is also required to properly configure a pin for the
+//! external peripheral interface function.
+//!
+//! \note A subset of GPIO pins on Tiva devices, notably those used by the
+//! JTAG/SWD interface and any pin capable of acting as an NMI input, are
+//! locked against inadvertent reconfiguration.  These pins must be unlocked
+//! using direct register writes to the relevant GPIO_O_LOCK and GPIO_O_CR
+//! registers before this function can be called.  Please see the ``gpio_jtag''
+//! example application for the mechanism required and consult your part
+//! datasheet for information on affected pins.
 //!
 //! \return None.
 //
@@ -1195,7 +1430,7 @@ GPIOPinTypeEPI(uint32_t ui32Port, uint8_t ui8Pins)
 //! \param ui32Port is the base address of the GPIO port.
 //! \param ui8Pins is the bit-packed representation of the pin(s).
 //!
-//! The Ethernet peripheral provides two signals that can be used to drive
+//! The Ethernet peripheral provides four signals that can be used to drive
 //! an LED (for example, for link status/activity).  This function provides a
 //! typical configuration for the pins.
 //!
@@ -1204,8 +1439,17 @@ GPIOPinTypeEPI(uint32_t ui32Port, uint8_t ui8Pins)
 //! represents GPIO port pin 0, bit 1 represents GPIO port pin 1, and so on.
 //!
 //! \note This function cannot be used to turn any pin into an Ethernet LED
-//! pin; it only configures an Ethernet LED pin for proper operation.  Devices
-//! with flexible pin muxing also require a GPIOPinConfigure() function call.
+//! pin; it only configures an Ethernet LED pin for proper operation.  Note
+//! that a GPIOPinConfigure() function call is also required to properly
+//! configure the pin for the Ethernet LED function.
+//!
+//! \note A subset of GPIO pins on Tiva devices, notably those used by the
+//! JTAG/SWD interface and any pin capable of acting as an NMI input, are
+//! locked against inadvertent reconfiguration.  These pins must be unlocked
+//! using direct register writes to the relevant GPIO_O_LOCK and GPIO_O_CR
+//! registers before this function can be called.  Please see the ``gpio_jtag''
+//! example application for the mechanism required and consult your part
+//! datasheet for information on affected pins.
 //!
 //! \return None.
 //
@@ -1245,8 +1489,17 @@ GPIOPinTypeEthernetLED(uint32_t ui32Port, uint8_t ui8Pins)
 //! represents GPIO port pin 0, bit 1 represents GPIO port pin 1, and so on.
 //!
 //! \note This function cannot be used to turn any pin into an Ethernet MII
-//! pin; it only configures an Ethernet MII pin for proper operation.  Devices
-//! with flexible pin muxing also require a GPIOPinConfigure() function call.
+//! pin; it only configures an Ethernet MII pin for proper operation.  Note
+//! that a GPIOPinConfigure() function call is also required to properly
+//! configure the pin for the Ethernet MII function.
+//!
+//! \note A subset of GPIO pins on Tiva devices, notably those used by the
+//! JTAG/SWD interface and any pin capable of acting as an NMI input, are
+//! locked against inadvertent reconfiguration.  These pins must be unlocked
+//! using direct register writes to the relevant GPIO_O_LOCK and GPIO_O_CR
+//! registers before this function can be called.  Please see the ``gpio_jtag''
+//! example application for the mechanism required and consult your part
+//! datasheet for information on affected pins.
 //!
 //! \return None.
 //
@@ -1272,48 +1525,6 @@ GPIOPinTypeEthernetMII(uint32_t ui32Port, uint8_t ui8Pins)
 
 //*****************************************************************************
 //
-//! Configures pin(s) for use by the fan module.
-//!
-//! \param ui32Port is the base address of the GPIO port.
-//! \param ui8Pins is the bit-packed representation of the pin(s).
-//!
-//! The fan pins must be properly configured for the fan controller to function
-//! correctly.  This function provides a typical configuration for those
-//! pin(s); other configurations may work as well depending upon the board
-//! setup (for example, using the on-chip pull-ups).
-//!
-//! The pin(s) are specified using a bit-packed byte, where each bit that is
-//! set identifies the pin to be accessed, and where bit 0 of the byte
-//! represents GPIO port pin 0, bit 1 represents GPIO port pin 1, and so on.
-//!
-//! \note This function cannot be used to turn any pin into a fan pin; it only
-//! configures a fan pin for proper operation.  Devices with flexible pin
-//! muxing also require a GPIOPinConfigure() function call.
-//!
-//! \return None.
-//
-//*****************************************************************************
-void
-GPIOPinTypeFan(uint32_t ui32Port, uint8_t ui8Pins)
-{
-    //
-    // Check the arguments.
-    //
-    ASSERT(_GPIOBaseValid(ui32Port));
-
-    //
-    // Make the pin(s) be peripheral controlled.
-    //
-    GPIODirModeSet(ui32Port, ui8Pins, GPIO_DIR_MODE_HW);
-
-    //
-    // Set the pad(s) for standard push-pull operation.
-    //
-    GPIOPadConfigSet(ui32Port, ui8Pins, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD);
-}
-
-//*****************************************************************************
-//
 //! Configures pin(s) for use as GPIO inputs.
 //!
 //! \param ui32Port is the base address of the GPIO port.
@@ -1326,6 +1537,14 @@ GPIOPinTypeFan(uint32_t ui32Port, uint8_t ui8Pins)
 //! The pin(s) are specified using a bit-packed byte, where each bit that is
 //! set identifies the pin to be accessed, and where bit 0 of the byte
 //! represents GPIO port pin 0, bit 1 represents GPIO port pin 1, and so on.
+//!
+//! \note A subset of GPIO pins on Tiva devices, notably those used by the
+//! JTAG/SWD interface and any pin capable of acting as an NMI input, are
+//! locked against inadvertent reconfiguration.  These pins must be unlocked
+//! using direct register writes to the relevant GPIO_O_LOCK and GPIO_O_CR
+//! registers before this function can be called.  Please see the ``gpio_jtag''
+//! example application for the mechanism required and consult your part
+//! datasheet for information on affected pins.
 //!
 //! \return None.
 //
@@ -1364,6 +1583,14 @@ GPIOPinTypeGPIOInput(uint32_t ui32Port, uint8_t ui8Pins)
 //! set identifies the pin to be accessed, and where bit 0 of the byte
 //! represents GPIO port pin 0, bit 1 represents GPIO port pin 1, and so on.
 //!
+//! \note A subset of GPIO pins on Tiva devices, notably those used by the
+//! JTAG/SWD interface and any pin capable of acting as an NMI input, are
+//! locked against inadvertent reconfiguration.  These pins must be unlocked
+//! using direct register writes to the relevant GPIO_O_LOCK and GPIO_O_CR
+//! registers before this function can be called.  Please see the ``gpio_jtag''
+//! example application for the mechanism required and consult your part
+//! datasheet for information on affected pins.
+//!
 //! \return None.
 //
 //*****************************************************************************
@@ -1401,6 +1628,14 @@ GPIOPinTypeGPIOOutput(uint32_t ui32Port, uint8_t ui8Pins)
 //! set identifies the pin to be accessed, and where bit 0 of the byte
 //! represents GPIO port pin 0, bit 1 represents GPIO port pin 1, and so on.
 //!
+//! \note A subset of GPIO pins on Tiva devices, notably those used by the
+//! JTAG/SWD interface and any pin capable of acting as an NMI input, are
+//! locked against inadvertent reconfiguration.  These pins must be unlocked
+//! using direct register writes to the relevant GPIO_O_LOCK and GPIO_O_CR
+//! registers before this function can be called.  Please see the ``gpio_jtag''
+//! example application for the mechanism required and consult your part
+//! datasheet for information on affected pins.
+//!
 //! \return None.
 //
 //*****************************************************************************
@@ -1425,22 +1660,67 @@ GPIOPinTypeGPIOOutputOD(uint32_t ui32Port, uint8_t ui8Pins)
 
 //*****************************************************************************
 //
-//! Configures pin(s) for use by the I2C peripheral.
+//! Configures pin(s) for use as an Hibernate RTC Clock.
 //!
 //! \param ui32Port is the base address of the GPIO port.
 //! \param ui8Pins is the bit-packed representation of the pin(s).
 //!
-//! The I2C pins must be properly configured for the I2C peripheral to function
-//! correctly.  This function provides the proper configuration for those
-//! pin(s).
+//! The hibernate output pin must be properly configured for the RTCCLK to
+//! function correctly. This function provides the proper configuration for the
+//! RTC Clock to be output from the device.
 //!
 //! The pin(s) are specified using a bit-packed byte, where each bit that is
 //! set identifies the pin to be accessed, and where bit 0 of the byte
 //! represents GPIO port pin 0, bit 1 represents GPIO port pin 1, and so on.
 //!
-//! \note This function cannot be used to turn any pin into an I2C pin; it
-//! only configures an I2C pin for proper operation.  Devices with flexible pin
-//! muxing also require a GPIOPinConfigure() function call.
+//! \return None.
+//
+//*****************************************************************************
+void GPIOPinTypeHibernateRTCCLK(uint32_t ui32Port, uint8_t ui8Pins)
+{
+    //
+    // Check the arguments.
+    //
+    ASSERT(_GPIOBaseValid(ui32Port));
+
+    //
+    // Make the pin(s) be inputs.
+    //
+    GPIODirModeSet(ui32Port, ui8Pins, GPIO_DIR_MODE_HW);
+
+    //
+    // Set the pad(s) for standard push-pull operation.
+    //
+    GPIOPadConfigSet(ui32Port, ui8Pins, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD);
+}
+
+//*****************************************************************************
+//
+//! Configures pin for use as SDA by the I2C peripheral.
+//!
+//! \param ui32Port is the base address of the GPIO port.
+//! \param ui8Pins is the bit-packed representation of the pin.
+//!
+//! The I2C pins must be properly configured for the I2C peripheral to function
+//! correctly.  This function provides the proper configuration for the SDA
+//! pin.
+//!
+//! The pin is specified using a bit-packed byte, where each bit that is
+//! set identifies the pin to be accessed, and where bit 0 of the byte
+//! represents GPIO port pin 0, bit 1 represents GPIO port pin 1, and so on.
+//!
+//! \note This function cannot be used to turn any pin into an I2C SDA pin; it
+//! only configures an I2C SDA pin for proper operation.  Note that a
+//! GPIOPinConfigure() function call is also required to properly configure a
+//! pin for the I2C SDA function.
+//!
+//! \note A subset of GPIO pins on Tiva devices, notably those used by the
+//! JTAG/SWD interface and any pin capable of acting as an NMI input, are
+//! locked against inadvertent reconfiguration.  These pins must be unlocked
+//! using direct register writes to the relevant GPIO_O_LOCK and GPIO_O_CR
+//! registers before this function can be called.  Please see the ``gpio_jtag''
+//! example application for the mechanism required and consult your part
+//! datasheet for information on affected pins.
 //!
 //! \return None.
 //
@@ -1466,23 +1746,31 @@ GPIOPinTypeI2C(uint32_t ui32Port, uint8_t ui8Pins)
 
 //*****************************************************************************
 //
-//! Configures pin(s) for use as SCL by the I2C peripheral.
+//! Configures pin for use as SCL by the I2C peripheral.
 //!
 //! \param ui32Port is the base address of the GPIO port.
-//! \param ui8Pins is the bit-packed representation of the pin(s).
+//! \param ui8Pins is the bit-packed representation of the pin.
 //!
 //! The I2C pins must be properly configured for the I2C peripheral to function
 //! correctly.  This function provides the proper configuration for the SCL
-//! pin(s).
+//! pin.
 //!
-//! The pin(s) are specified using a bit-packed byte, where each bit that is
+//! The pin is specified using a bit-packed byte, where each bit that is
 //! set identifies the pin to be accessed, and where bit 0 of the byte
 //! represents GPIO port pin 0, bit 1 represents GPIO port pin 1, and so on.
 //!
-//! \note This function should only be used for Blizzard-class devices.  It
-//! cannot be used to turn any pin into an I2C SCL pin; it only configures an
-//! I2C SCL pin for proper operation.  Devices with flexible pin muxing also
-//! require a GPIOPinConfigure() function call.
+//! \note This function cannot be used to turn any pin into an I2C SCL pin; it
+//! only configures an I2C SCL pin for proper operation.  Note that a
+//! GPIOPinConfigure() function call is also required to properly configure a
+//! pin for the I2C SCL function.
+//!
+//! \note A subset of GPIO pins on Tiva devices, notably those used by the
+//! JTAG/SWD interface and any pin capable of acting as an NMI input, are
+//! locked against inadvertent reconfiguration.  These pins must be unlocked
+//! using direct register writes to the relevant GPIO_O_LOCK and GPIO_O_CR
+//! registers before this function can be called.  Please see the ``gpio_jtag''
+//! example application for the mechanism required and consult your part
+//! datasheet for information on affected pins.
 //!
 //! \return None.
 //
@@ -1523,8 +1811,17 @@ GPIOPinTypeI2CSCL(uint32_t ui32Port, uint8_t ui8Pins)
 //! represents GPIO port pin 0, bit 1 represents GPIO port pin 1, and so on.
 //!
 //! \note This function cannot be used to turn any pin into an LCD pin; it only
-//! configures an LCD pin for proper operation.  Devices with flexible pin
-//! muxing also require a GPIOPinConfigure() function call.
+//! configures an LCD pin for proper operation.  Note that a GPIOPinConfigure()
+//! function call is also required to properly configure a pin for the LCD
+//! controller function.
+//!
+//! \note A subset of GPIO pins on Tiva devices, notably those used by the
+//! JTAG/SWD interface and any pin capable of acting as an NMI input, are
+//! locked against inadvertent reconfiguration.  These pins must be unlocked
+//! using direct register writes to the relevant GPIO_O_LOCK and GPIO_O_CR
+//! registers before this function can be called.  Please see the ``gpio_jtag''
+//! example application for the mechanism required and consult your part
+//! datasheet for information on affected pins.
 //!
 //! \return None.
 //
@@ -1550,29 +1847,38 @@ GPIOPinTypeLCD(uint32_t ui32Port, uint8_t ui8Pins)
 
 //*****************************************************************************
 //
-//! Configures pin(s) for use by the LPC module.
+//! Configures pin(s) for use by the 1-Wire module.
 //!
 //! \param ui32Port is the base address of the GPIO port.
 //! \param ui8Pins is the bit-packed representation of the pin(s).
 //!
-//! The LPC pins must be properly configured for the LPC module to function
-//! correctly.  This function provides a typical configuration for those
-//! pin(s); other configurations may work as well depending upon the board
-//! setup (for example, using the on-chip pull-ups).
+//! The 1-Wire pin must be properly configured for the 1-Wire peripheral to
+//! function correctly.  This function provides a typical configuration for
+//! those pin(s); other configurations may work as well depending upon the
+//! board setup (for example, using the on-chip pull-ups).
 //!
 //! The pin(s) are specified using a bit-packed byte, where each bit that is
 //! set identifies the pin to be accessed, and where bit 0 of the byte
 //! represents GPIO port pin 0, bit 1 represents GPIO port pin 1, and so on.
 //!
-//! \note This function cannot be used to turn any pin into an LPC pin; it only
-//! configures an LPC pin for proper operation.  Devices with flexible pin
-//! muxing also require a GPIOPinConfigure() function call.
+//! \note This function cannot be used to turn any pin into a 1-Wire pin; it
+//! only configures a 1-Wire pin for proper operation.  Note that a
+//! GPIOPinConfigure() function call is also required to properly configure a
+//! pin for the 1-Wire function.
+//!
+//! \note A subset of GPIO pins on Tiva devices, notably those used by the
+//! JTAG/SWD interface and any pin capable of acting as an NMI input, are
+//! locked against inadvertent reconfiguration.  These pins must be unlocked
+//! using direct register writes to the relevant GPIO_O_LOCK and GPIO_O_CR
+//! registers before this function can be called.  Please see the ``gpio_jtag''
+//! example application for the mechanism required and consult your part
+//! datasheet for information on affected pins.
 //!
 //! \return None.
 //
 //*****************************************************************************
 void
-GPIOPinTypeLPC(uint32_t ui32Port, uint8_t ui8Pins)
+GPIOPinTypeOneWire(uint32_t ui32Port, uint8_t ui8Pins)
 {
     //
     // Check the arguments.
@@ -1586,89 +1892,6 @@ GPIOPinTypeLPC(uint32_t ui32Port, uint8_t ui8Pins)
 
     //
     // Set the pad(s) for standard push-pull operation.
-    //
-    GPIOPadConfigSet(ui32Port, ui8Pins, GPIO_STRENGTH_8MA, GPIO_PIN_TYPE_STD);
-}
-
-//*****************************************************************************
-//
-//! Configures a pin for receive use by the PECI module.
-//!
-//! \param ui32Port is the base address of the GPIO port.
-//! \param ui8Pins is the bit-packed representation of the pin(s).
-//!
-//! The PECI receive pin must be properly configured for the PECI module to
-//! function correctly.  This function provides a typical configuration for
-//! that pin.
-//!
-//! The pin is specified using a bit-packed byte, where each bit that is set
-//! identifies the pin to be accessed, and where bit 0 of the byte represents
-//! GPIO port pin 0, bit 1 represents GPIO port pin 1, and so on.
-//!
-//! \note This function cannot be used to turn any pin into a PECI receive pin;
-//! it only configures a PECI receive pin for proper operation.  Devices with
-//! flexible pin muxing also require a GPIOPinConfigure() function call.
-//!
-//! \return None.
-//
-//*****************************************************************************
-void
-GPIOPinTypePECIRx(uint32_t ui32Port, uint8_t ui8Pins)
-{
-    //
-    // Check the arguments.
-    //
-    ASSERT(_GPIOBaseValid(ui32Port));
-
-    //
-    // Make the pin(s) be inputs.
-    //
-    GPIODirModeSet(ui32Port, ui8Pins, GPIO_DIR_MODE_IN);
-
-    //
-    // Set the pad(s) for analog operation.
-    //
-    GPIOPadConfigSet(ui32Port, ui8Pins, GPIO_STRENGTH_2MA,
-                     GPIO_PIN_TYPE_ANALOG);
-}
-
-//*****************************************************************************
-//
-//! Configures a pin for transmit use by the PECI module.
-//!
-//! \param ui32Port is the base address of the GPIO port.
-//! \param ui8Pins is the bit-packed representation of the pin(s).
-//!
-//! The PECI transmit pin must be properly configured for the PECI module to
-//! function correctly.  This function provides a typical configuration for
-//! that pin.
-//!
-//! The pin is specified using a bit-packed byte, where each bit that is set
-//! identifies the pin to be accessed, and where bit 0 of the byte represents
-//! GPIO port pin 0, bit 1 represents GPIO port pin 1, and so on.
-//!
-//! \note This function cannot be used to turn any pin into a PECI transmit
-//! pin; it only configures a PECI transmit pin for proper operation.  Devices
-//! with flexible pin muxing also require a GPIOPinConfigure() function call.
-//!
-//! \return None.
-//
-//*****************************************************************************
-void
-GPIOPinTypePECITx(uint32_t ui32Port, uint8_t ui8Pins)
-{
-    //
-    // Check the arguments.
-    //
-    ASSERT(_GPIOBaseValid(ui32Port));
-
-    //
-    // Make the pin(s) be inputs.
-    //
-    GPIODirModeSet(ui32Port, ui8Pins, GPIO_DIR_MODE_HW);
-
-    //
-    // Set the pad(s) for analog operation.
     //
     GPIOPadConfigSet(ui32Port, ui8Pins, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD);
 }
@@ -1690,8 +1913,17 @@ GPIOPinTypePECITx(uint32_t ui32Port, uint8_t ui8Pins)
 //! represents GPIO port pin 0, bit 1 represents GPIO port pin 1, and so on.
 //!
 //! \note This function cannot be used to turn any pin into a PWM pin; it only
-//! configures a PWM pin for proper operation.  Devices wtih flexible pin
-//! muxing also require a GPIOPinConfigure() function call.
+//! configures a PWM pin for proper operation.  Note that a GPIOPinConfigure()
+//! function call is also required to properly configure a pin for the PWM
+//! function.
+//!
+//! \note A subset of GPIO pins on Tiva devices, notably those used by the
+//! JTAG/SWD interface and any pin capable of acting as an NMI input, are
+//! locked against inadvertent reconfiguration.  These pins must be unlocked
+//! using direct register writes to the relevant GPIO_O_LOCK and GPIO_O_CR
+//! registers before this function can be called.  Please see the ``gpio_jtag''
+//! example application for the mechanism required and consult your part
+//! datasheet for information on affected pins.
 //!
 //! \return None.
 //
@@ -1732,8 +1964,17 @@ GPIOPinTypePWM(uint32_t ui32Port, uint8_t ui8Pins)
 //! represents GPIO port pin 0, bit 1 represents GPIO port pin 1, and so on.
 //!
 //! \note This function cannot be used to turn any pin into a QEI pin; it only
-//! configures a QEI pin for proper operation.  Devices with flexible pin
-//! muxing also require a GPIOPinConfigure() function call.
+//! configures a QEI pin for proper operation.  Note that a GPIOPinConfigure()
+//! function call is also required to properly configure a pin for the QEI
+//! function.
+//!
+//! \note A subset of GPIO pins on Tiva devices, notably those used by the
+//! JTAG/SWD interface and any pin capable of acting as an NMI input, are
+//! locked against inadvertent reconfiguration.  These pins must be unlocked
+//! using direct register writes to the relevant GPIO_O_LOCK and GPIO_O_CR
+//! registers before this function can be called.  Please see the ``gpio_jtag''
+//! example application for the mechanism required and consult your part
+//! datasheet for information on affected pins.
 //!
 //! \return None.
 //
@@ -1775,8 +2016,17 @@ GPIOPinTypeQEI(uint32_t ui32Port, uint8_t ui8Pins)
 //! represents GPIO port pin 0, bit 1 represents GPIO port pin 1, and so on.
 //!
 //! \note This function cannot be used to turn any pin into a SSI pin; it only
-//! configures a SSI pin for proper operation.  Devices with flexible pin
-//! muxing also require a GPIOPinConfigure() function call.
+//! configures a SSI pin for proper operation.  Note that a GPIOPinConfigure()
+//! function call is also required to properly configure a pin for the SSI
+//! function.
+//!
+//! \note A subset of GPIO pins on Tiva devices, notably those used by the
+//! JTAG/SWD interface and any pin capable of acting as an NMI input, are
+//! locked against inadvertent reconfiguration.  These pins must be unlocked
+//! using direct register writes to the relevant GPIO_O_LOCK and GPIO_O_CR
+//! registers before this function can be called.  Please see the ``gpio_jtag''
+//! example application for the mechanism required and consult your part
+//! datasheet for information on affected pins.
 //!
 //! \return None.
 //
@@ -1817,14 +2067,73 @@ GPIOPinTypeSSI(uint32_t ui32Port, uint8_t ui8Pins)
 //! represents GPIO port pin 0, bit 1 represents GPIO port pin 1, and so on.
 //!
 //! \note This function cannot be used to turn any pin into a timer pin; it
-//! only configures a timer pin for proper operation.  Devices with flexible
-//! pin muxing also require a GPIOPinConfigure() function call.
+//! only configures a timer pin for proper operation.  Note that a
+//! GPIOPinConfigure() function call is also required to properly configure a
+//! pin for the CCP function.
+//!
+//! \note A subset of GPIO pins on Tiva devices, notably those used by the
+//! JTAG/SWD interface and any pin capable of acting as an NMI input, are
+//! locked against inadvertent reconfiguration.  These pins must be unlocked
+//! using direct register writes to the relevant GPIO_O_LOCK and GPIO_O_CR
+//! registers before this function can be called.  Please see the ``gpio_jtag''
+//! example application for the mechanism required and consult your part
+//! datasheet for information on affected pins.
 //!
 //! \return None.
 //
 //*****************************************************************************
 void
 GPIOPinTypeTimer(uint32_t ui32Port, uint8_t ui8Pins)
+{
+    //
+    // Check the arguments.
+    //
+    ASSERT(_GPIOBaseValid(ui32Port));
+
+    //
+    // Make the pin(s) be peripheral controlled.
+    //
+    GPIODirModeSet(ui32Port, ui8Pins, GPIO_DIR_MODE_HW);
+
+    //
+    // Set the pad(s) for standard push-pull operation.
+    //
+    GPIOPadConfigSet(ui32Port, ui8Pins, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD);
+}
+
+//*****************************************************************************
+//
+//! Configures pin(s) for use by the Trace peripheral.
+//!
+//! \param ui32Port is the base address of the GPIO port.
+//! \param ui8Pins is the bit-packed representation of the pin(s).
+//!
+//! The Trace pins must be properly configured for the Trace peripheral to
+//! function correctly.  This function provides a typical configuration for
+//! those pin(s).
+//!
+//! The pin(s) are specified using a bit-packed byte, where each bit that is
+//! set identifies the pin to be accessed, and where bit 0 of the byte
+//! represents GPIO port pin 0, bit 1 represents GPIO port pin 1, and so on.
+//!
+//! \note This function cannot be used to turn any pin into a trace pin; it
+//! only configures a trace pin for proper operation.  Note that a
+//! GPIOPinConfigure() function call is also required to properly configure a
+//! pin for the Trace function.
+//!
+//! \note A subset of GPIO pins on Tiva devices, notably those used by the
+//! JTAG/SWD interface and any pin capable of acting as an NMI input, are
+//! locked against inadvertent reconfiguration.  These pins must be unlocked
+//! using direct register writes to the relevant GPIO_O_LOCK and GPIO_O_CR
+//! registers before this function can be called.  Please see the ``gpio_jtag''
+//! example application for the mechanism required and consult your part
+//! datasheet for information on affected pins.
+//!
+//! \return None.
+//
+//*****************************************************************************
+void
+GPIOPinTypeTrace(uint32_t ui32Port, uint8_t ui8Pins)
 {
     //
     // Check the arguments.
@@ -1859,8 +2168,17 @@ GPIOPinTypeTimer(uint32_t ui32Port, uint8_t ui8Pins)
 //! represents GPIO port pin 0, bit 1 represents GPIO port pin 1, and so on.
 //!
 //! \note This function cannot be used to turn any pin into a UART pin; it
-//! only configures a UART pin for proper operation.  Devices with flexible
-//! pin muxing also require a GPIOPinConfigure() function call.
+//! only configures a UART pin for proper operation.  Note that a
+//! GPIOPinConfigure() function call is also required to properly configure a
+//!  pin for the UART function.
+//!
+//! \note A subset of GPIO pins on Tiva devices, notably those used by the
+//! JTAG/SWD interface and any pin capable of acting as an NMI input, are
+//! locked against inadvertent reconfiguration.  These pins must be unlocked
+//! using direct register writes to the relevant GPIO_O_LOCK and GPIO_O_CR
+//! registers before this function can be called.  Please see the ``gpio_jtag''
+//! example application for the mechanism required and consult your part
+//! datasheet for information on affected pins.
 //!
 //! \return None.
 //
@@ -1891,18 +2209,26 @@ GPIOPinTypeUART(uint32_t ui32Port, uint8_t ui8Pins)
 //! \param ui32Port is the base address of the GPIO port.
 //! \param ui8Pins is the bit-packed representation of the pin(s).
 //!
-//! Some USB analog pins must be properly configured for the USB peripheral to
+//! USB analog pins must be properly configured for the USB peripheral to
 //! function correctly.  This function provides the proper configuration for
-//! any USB pin(s).  This can also be used to configure the EPEN and PFAULT
-//! pins so that they are no longer used by the USB controller.
+//! any USB analog pin(s).
 //!
 //! The pin(s) are specified using a bit-packed byte, where each bit that is
 //! set identifies the pin to be accessed, and where bit 0 of the byte
 //! represents GPIO port pin 0, bit 1 represents GPIO port pin 1, and so on.
 //!
 //! \note This function cannot be used to turn any pin into a USB pin; it only
-//! configures a USB pin for proper operation.  Devices with flexible pin
-//! muxing also require a GPIOPinConfigure() function call.
+//! configures a USB pin for proper operation.  Note that a GPIOPinConfigure()
+//! function call is also required to properly configure a pin for the USB
+//! function.
+//!
+//! \note A subset of GPIO pins on Tiva devices, notably those used by the
+//! JTAG/SWD interface and any pin capable of acting as an NMI input, are
+//! locked against inadvertent reconfiguration.  These pins must be unlocked
+//! using direct register writes to the relevant GPIO_O_LOCK and GPIO_O_CR
+//! registers before this function can be called.  Please see the ``gpio_jtag''
+//! example application for the mechanism required and consult your part
+//! datasheet for information on affected pins.
 //!
 //! \return None.
 //
@@ -1934,7 +2260,7 @@ GPIOPinTypeUSBAnalog(uint32_t ui32Port, uint8_t ui8Pins)
 //! \param ui32Port is the base address of the GPIO port.
 //! \param ui8Pins is the bit-packed representation of the pin(s).
 //!
-//! Some USB digital pins must be properly configured for the USB peripheral to
+//! USB digital pins must be properly configured for the USB peripheral to
 //! function correctly.  This function provides a typical configuration for
 //! the digital USB pin(s); other configurations may work as well depending
 //! upon the board setup (for example, using the on-chip pull-ups).
@@ -1948,8 +2274,17 @@ GPIOPinTypeUSBAnalog(uint32_t ui32Port, uint8_t ui8Pins)
 //! represents GPIO port pin 0, bit 1 represents GPIO port pin 1, and so on.
 //!
 //! \note This function cannot be used to turn any pin into a USB pin; it only
-//! configures a USB pin for proper operation.  Devices with flexible pin
-//! muxing also require a GPIOPinConfigure() function call.
+//! configures a USB pin for proper operation.  Note that a GPIOPinConfigure()
+//! function call is also required to properly configure a pin for the USB
+//! function.
+//!
+//! \note A subset of GPIO pins on Tiva devices, notably those used by the
+//! JTAG/SWD interface and any pin capable of acting as an NMI input, are
+//! locked against inadvertent reconfiguration.  These pins must be unlocked
+//! using direct register writes to the relevant GPIO_O_LOCK and GPIO_O_CR
+//! registers before this function can be called.  Please see the ``gpio_jtag''
+//! example application for the mechanism required and consult your part
+//! datasheet for information on affected pins.
 //!
 //! \return None.
 //
@@ -1987,6 +2322,14 @@ GPIOPinTypeUSBDigital(uint32_t ui32Port, uint8_t ui8Pins)
 //! The pin(s) are specified using a bit-packed byte, where each bit that is
 //! set identifies the pin to be accessed, and where bit 0 of the byte
 //! represents GPIO port pin 0, bit 1 represents GPIO port pin 1, and so on.
+//!
+//! \note A subset of GPIO pins on Tiva devices, notably those used by the
+//! JTAG/SWD interface and any pin capable of acting as an NMI input, are
+//! locked against inadvertent reconfiguration.  These pins must be unlocked
+//! using direct register writes to the relevant GPIO_O_LOCK and GPIO_O_CR
+//! registers before this function can be called.  Please see the ``gpio_jtag''
+//! example application for the mechanism required and consult your part
+//! datasheet for information on affected pins.
 //!
 //! \return None.
 //
@@ -2026,6 +2369,14 @@ GPIOPinTypeWakeHigh(uint32_t ui32Port, uint8_t ui8Pins)
 //! set identifies the pin to be accessed, and where bit 0 of the byte
 //! represents GPIO port pin 0, bit 1 represents GPIO port pin 1, and so on.
 //!
+//! \note A subset of GPIO pins on Tiva devices, notably those used by the
+//! JTAG/SWD interface and any pin capable of acting as an NMI input, are
+//! locked against inadvertent reconfiguration.  These pins must be unlocked
+//! using direct register writes to the relevant GPIO_O_LOCK and GPIO_O_CR
+//! registers before this function can be called.  Please see the ``gpio_jtag''
+//! example application for the mechanism required and consult your part
+//! datasheet for information on affected pins.
+//!
 //! \return None.
 //
 //*****************************************************************************
@@ -2051,176 +2402,6 @@ GPIOPinTypeWakeLow(uint32_t ui32Port, uint8_t ui8Pins)
 
 //*****************************************************************************
 //
-//! Configures pin(s) for use as scan matrix keyboard rows (outputs).
-//!
-//! \param ui32Port is the base address of the GPIO port.
-//! \param ui8Pins is the bit-packed representation of the pin(s).
-//!
-//! The GPIO pins must be properly configured in order to function correctly as
-//! scan matrix keyboard outputs.  This function provides the proper
-//! configuration for those pin(s).
-//!
-//! The pin(s) are specified using a bit-packed byte, where each bit that is
-//! set identifies the pin to be accessed, and where bit 0 of the byte
-//! represents GPIO port pin 0, bit 1 represents GPIO port pin 1, and so on.
-//!
-//! \note This function cannot be used to turn any pin into a scan matrix
-//! keyboard row pin; it only configures a scan matrix keyboard row pin for
-//! proper operation.  Devices with flexible pin muxing also require a
-//! GPIOPinConfigure() function call.
-//!
-//! \return None.
-//
-//*****************************************************************************
-void
-GPIOPinTypeKBRow(uint32_t ui32Port, uint8_t ui8Pins)
-{
-    //
-    // Check the arguments.
-    //
-    ASSERT(_GPIOBaseValid(ui32Port));
-
-    //
-    // Make the pin(s) be peripheral controlled.
-    //
-    GPIODirModeSet(ui32Port, ui8Pins, GPIO_DIR_MODE_HW);
-
-    //
-    // Set the pad(s) for push/pull operation.
-    //
-    GPIOPadConfigSet(ui32Port, ui8Pins, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD);
-}
-
-//*****************************************************************************
-//
-//! Configures pin(s) for use as scan matrix keyboard columns (inputs).
-//!
-//! \param ui32Port is the base address of the GPIO port.
-//! \param ui8Pins is the bit-packed representation of the pin(s).
-//!
-//! The GPIO pins must be properly configured in order to function correctly as
-//! scan matrix keyboard inputs.  This function provides the proper
-//! configuration for those pin(s).
-//!
-//! The pin(s) are specified using a bit-packed byte, where each bit that is
-//! set identifies the pin to be accessed, and where bit 0 of the byte
-//! represents GPIO port pin 0, bit 1 represents GPIO port pin 1, and so on.
-//!
-//! \note This function cannot be used to turn any pin into a scan matrix
-//! keyboard column pin; it only configures a scan matrix keyboard column pin
-//! for proper operation.  Devices with flexible pin muxing also require a
-//! GPIOPinConfigure() function call.
-//!
-//! \return None.
-//
-//*****************************************************************************
-void
-GPIOPinTypeKBColumn(uint32_t ui32Port, uint8_t ui8Pins)
-{
-    //
-    // Check the arguments.
-    //
-    ASSERT(_GPIOBaseValid(ui32Port));
-
-    //
-    // Make the pin(s) be peripheral controlled.
-    //
-    GPIODirModeSet(ui32Port, ui8Pins, GPIO_DIR_MODE_HW);
-
-    //
-    // Set the pad(s) for standard push-pull operation.
-    //
-    GPIOPadConfigSet(ui32Port, ui8Pins, GPIO_STRENGTH_2MA,
-                     GPIO_PIN_TYPE_STD_WPU);
-}
-
-//*****************************************************************************
-//
-//! Configures pin(s) for use as an LED sequencer output.
-//!
-//! \param ui32Port is the base address of the GPIO port.
-//! \param ui8Pins is the bit-packed representation of the pin(s).
-//!
-//! The GPIO pins must be properly configured in order to function correctly as
-//! LED sequencers.  This function provides the proper configuration for those
-//! pin(s).
-//!
-//! The pin(s) are specified using a bit-packed byte, where each bit that is
-//! set identifies the pin to be accessed, and where bit 0 of the byte
-//! represents GPIO port pin 0, bit 1 represents GPIO port pin 1, and so on.
-//!
-//! \note This function cannot be used to turn any pin into an LED sequencer
-//! output pin; it only configures an LED sequencer output pin for proper
-//! operation.  Devices with flexible pin muxing also require a
-//! GPIOPinConfigure() function call.
-//!
-//! \return None.
-//
-//*****************************************************************************
-void
-GPIOPinTypeLEDSeq(uint32_t ui32Port, uint8_t ui8Pins)
-{
-    //
-    // Check the arguments.
-    //
-    ASSERT(_GPIOBaseValid(ui32Port));
-
-    //
-    // Make the pin(s) be peripheral controlled.
-    //
-    GPIODirModeSet(ui32Port, ui8Pins, GPIO_DIR_MODE_HW);
-
-    //
-    // Set the pad(s) for push/pull operation and 8mA strength.  The external
-    // hardware should be set up such that we sink current when the LED is
-    // turned on, hence the 8mA configuration choice.
-    //
-    GPIOPadConfigSet(ui32Port, ui8Pins, GPIO_STRENGTH_8MA, GPIO_PIN_TYPE_STD);
-}
-
-//*****************************************************************************
-//
-//! Configures pin(s) for use as Consumer Infrared inputs or outputs.
-//!
-//! \param ui32Port is the base address of the GPIO port.
-//! \param ui8Pins is the bit-packed representation of the pin(s).
-//!
-//! The GPIO pins must be properly configured in order to function correctly as
-//! Consumer Infrared pins.  This function provides the proper configuration
-//! for those pin(s).
-//!
-//! The pin(s) are specified using a bit-packed byte, where each bit that is
-//! set identifies the pin to be accessed, and where bit 0 of the byte
-//! represents GPIO port pin 0, bit 1 represents GPIO port pin 1, and so on.
-//!
-//! \note This function cannot be used to turn any pin into a CIR pin; it only
-//! configures a CIR pin for proper operation.  Devices with flexible pin
-//! muxing also require a GPIOPinConfigure() function call.
-//!
-//! \return None.
-//
-//*****************************************************************************
-void
-GPIOPinTypeCIR(uint32_t ui32Port, uint8_t ui8Pins)
-{
-    //
-    // Check the arguments.
-    //
-    ASSERT(_GPIOBaseValid(ui32Port));
-
-    //
-    // Make the pin(s) be peripheral controlled.
-    //
-    GPIODirModeSet(ui32Port, ui8Pins, GPIO_DIR_MODE_HW);
-
-    //
-    // Set the pad(s) for standard push-pull operation.
-    //
-    GPIOPadConfigSet(ui32Port, ui8Pins, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD);
-}
-
-//*****************************************************************************
-//
 //! Retrieves the wake pins status.
 //!
 //! \param ui32Port is the base address of the GPIO port.
@@ -2231,13 +2412,21 @@ GPIOPinTypeCIR(uint32_t ui32Port, uint8_t ui8Pins)
 //! \note This function is not available on all devices, consult the data sheet
 //! to ensure that the device you are using supports GPIO wake pins.
 //!
+//! \note A subset of GPIO pins on Tiva devices, notably those used by the
+//! JTAG/SWD interface and any pin capable of acting as an NMI input, are
+//! locked against inadvertent reconfiguration.  These pins must be unlocked
+//! using direct register writes to the relevant GPIO_O_LOCK and GPIO_O_CR
+//! registers before this function can be called.  Please see the ``gpio_jtag''
+//! example application for the mechanism required and consult your part
+//! datasheet for information on affected pins.
+//!
 //! \return Returns the wake pin status.
 //
 //*****************************************************************************
 uint32_t
 GPIOPinWakeStatus(uint32_t ui32Port)
 {
-    return(ui32Port + GPIO_O_WAKESTAT);
+    return(HWREG(ui32Port + GPIO_O_WAKESTAT));
 }
 
 //*****************************************************************************
@@ -2255,8 +2444,10 @@ GPIOPinWakeStatus(uint32_t ui32Port)
 //! configure a pin, a GPIOPinType*() function should also be called.
 //!
 //! The available mappings are supplied on a per-device basis in
-//! <tt>pin_map.h</tt>.  The \b PART_IS_<partno> define enables the
-//! appropriate set of defines for the device that is being used.
+//! <tt>pin_map.h</tt>.  The \b PART_<partno> defines controls which set of
+//! defines are included so that they match the device that is being used.
+//! For example, \b PART_TM4C129XNCZAD must be defined in order to get the
+//! correct pin mappings for the TM4C129XNCZAD device.
 //!
 //! \note If the same signal is assigned to two different GPIO port
 //! pins, the signal is assigned to the port with the lowest letter and the
@@ -2273,7 +2464,7 @@ GPIOPinConfigure(uint32_t ui32PinConfig)
     //
     // Check the argument.
     //
-    ASSERT(((ui32PinConfig >> 16) & 0xff) < 15);
+    ASSERT(((ui32PinConfig >> 16) & 0xff) < 18);
     ASSERT(((ui32PinConfig >> 8) & 0xe3) == 0);
 
     //
@@ -2319,9 +2510,6 @@ GPIOPinConfigure(uint32_t ui32PinConfig)
 //! the uDMA.  The GPIO pin still generates interrupts if the interrupt is
 //! enabled for the selected pin.
 //!
-//! \note This function is not available on all devices, consult the data sheet
-//! to ensure that the device you are using supports GPIO DMA Control.
-//!
 //! \return None.
 //
 //*****************************************************************************
@@ -2349,9 +2537,6 @@ GPIODMATriggerEnable(uint32_t ui32Port, uint8_t ui8Pins)
 //! This function disables a GPIO pin from being used as a trigger to start a
 //! uDMA transaction.  This function can be used to disable this feature if it
 //! was enabled via a call to GPIODMATriggerEnable().
-//!
-//! \note This function is not available on all devices, consult the data sheet
-//! to ensure that the device you are using supports GPIO DMA Control.
 //!
 //! \return None.
 //
@@ -2384,9 +2569,6 @@ GPIODMATriggerDisable(uint32_t ui32Port, uint8_t ui8Pins)
 //! the ADC module, the ADCSequenceConfigure() function must be called with the
 //! \b ADC_TRIGGER_EXTERNAL parameter.
 //!
-//! \note This function is not available on all devices, consult the data sheet
-//! to ensure that the device you are using supports GPIO ADC Control.
-//!
 //! \return None.
 //
 //*****************************************************************************
@@ -2414,9 +2596,6 @@ GPIOADCTriggerEnable(uint32_t ui32Port, uint8_t ui8Pins)
 //! This function disables a GPIO pin to be used as a trigger to start an ADC
 //! sequence.  This function can be used to disable this feature if it was
 //! enabled via a call to GPIOADCTriggerEnable().
-//!
-//! \note This function is not available on all devices, consult the data sheet
-//! to ensure that the device you are using supports GPIO ADC Control.
 //!
 //! \return None.
 //

@@ -2,7 +2,7 @@
 //
 // udma.h - Prototypes and macros for the uDMA controller.
 //
-// Copyright (c) 2007-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2007-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Peripheral Driver Library.
+// This is part of revision 2.1.4.178 of the Tiva Peripheral Driver Library.
 //
 //*****************************************************************************
 
@@ -292,15 +292,6 @@ tDMAControlTable;
 
 //*****************************************************************************
 //
-// uDMA interrupt sources, to be passed to uDMAIntRegister() and
-// uDMAIntUnregister().
-//
-//*****************************************************************************
-#define UDMA_INT_SW             62
-#define UDMA_INT_ERR            63
-
-//*****************************************************************************
-//
 // Channel numbers to be passed to API functions that require a channel number
 // ID.  These are for secondary peripheral assignments.
 //
@@ -342,73 +333,6 @@ tDMAControlTable;
 #define UDMA_SEC_CHANNEL_ADC12  26
 #define UDMA_SEC_CHANNEL_ADC13  27
 #define UDMA_SEC_CHANNEL_SW     30
-
-//*****************************************************************************
-//
-// uDMA default/secondary peripheral selections, to be passed to
-// uDMAChannelSelectSecondary() and uDMAChannelSelectDefault().
-//
-//*****************************************************************************
-#define UDMA_DEF_USBEP1RX_SEC_UART2RX                                         \
-                                0x00000001
-#define UDMA_DEF_USBEP1TX_SEC_UART2TX                                         \
-                                0x00000002
-#define UDMA_DEF_USBEP2RX_SEC_TMR3A                                           \
-                                0x00000004
-#define UDMA_DEF_USBEP2TX_SEC_TMR3B                                           \
-                                0x00000008
-#define UDMA_DEF_USBEP3RX_SEC_TMR2A                                           \
-                                0x00000010
-#define UDMA_DEF_USBEP3TX_SEC_TMR2B                                           \
-                                0x00000020
-#define UDMA_DEF_ETH0RX_SEC_TMR2A                                             \
-                                0x00000040
-#define UDMA_DEF_ETH0TX_SEC_TMR2B                                             \
-                                0x00000080
-#define UDMA_DEF_UART0RX_SEC_UART1RX                                          \
-                                0x00000100
-#define UDMA_DEF_UART0TX_SEC_UART1TX                                          \
-                                0x00000200
-#define UDMA_DEF_SSI0RX_SEC_SSI1RX                                            \
-                                0x00000400
-#define UDMA_DEF_SSI0TX_SEC_SSI1TX                                            \
-                                0x00000800
-#define UDMA_DEF_RESERVED_SEC_UART2RX                                         \
-                                0x00001000
-#define UDMA_DEF_RESERVED_SEC_UART2TX                                         \
-                                0x00002000
-#define UDMA_DEF_ADC00_SEC_TMR2A                                              \
-                                0x00004000
-#define UDMA_DEF_ADC01_SEC_TMR2B                                              \
-                                0x00008000
-#define UDMA_DEF_ADC02_SEC_RESERVED                                           \
-                                0x00010000
-#define UDMA_DEF_ADC03_SEC_RESERVED                                           \
-                                0x00020000
-#define UDMA_DEF_TMR0A_SEC_TMR1A                                              \
-                                0x00040000
-#define UDMA_DEF_TMR0B_SEC_TMR1B                                              \
-                                0x00080000
-#define UDMA_DEF_TMR1A_SEC_EPI0RX                                             \
-                                0x00100000
-#define UDMA_DEF_TMR1B_SEC_EPI0TX                                             \
-                                0x00200000
-#define UDMA_DEF_UART1RX_SEC_RESERVED                                         \
-                                0x00400000
-#define UDMA_DEF_UART1TX_SEC_RESERVED                                         \
-                                0x00800000
-#define UDMA_DEF_SSI1RX_SEC_ADC10                                             \
-                                0x01000000
-#define UDMA_DEF_SSI1TX_SEC_ADC11                                             \
-                                0x02000000
-#define UDMA_DEF_RESERVED_SEC_ADC12                                           \
-                                0x04000000
-#define UDMA_DEF_RESERVED_SEC_ADC13                                           \
-                                0x08000000
-#define UDMA_DEF_I2S0RX_SEC_RESERVED                                          \
-                                0x10000000
-#define UDMA_DEF_I2S0TX_SEC_RESERVED                                          \
-                                0x20000000
 
 //*****************************************************************************
 //
@@ -871,12 +795,89 @@ extern uint32_t uDMAChannelSizeGet(uint32_t ui32ChannelStructIndex);
 extern uint32_t uDMAChannelModeGet(uint32_t ui32ChannelStructIndex);
 extern void uDMAIntRegister(uint32_t ui32IntChannel, void (*pfnHandler)(void));
 extern void uDMAIntUnregister(uint32_t ui32IntChannel);
-extern void uDMAChannelSelectDefault(uint32_t ui32DefPeriphs);
-extern void uDMAChannelSelectSecondary(uint32_t ui32SecPeriphs);
 extern uint32_t uDMAIntStatus(void);
 extern void uDMAIntClear(uint32_t ui32ChanMask);
 extern void uDMAChannelAssign(uint32_t ui32Mapping);
 
+//*****************************************************************************
+//
+// The following functions and definitions are deprecated and will be removed
+// from the API in the future.  Use uDMAChannelAssign() instead to accomplish
+// the same end.
+//
+//*****************************************************************************
+#ifndef DEPRECATED
+//*****************************************************************************
+//
+// uDMA default/secondary peripheral selections, to be passed to
+// uDMAChannelSelectSecondary() and uDMAChannelSelectDefault().
+//
+//*****************************************************************************
+#define UDMA_DEF_USBEP1RX_SEC_UART2RX                                         \
+                                0x00000001
+#define UDMA_DEF_USBEP1TX_SEC_UART2TX                                         \
+                                0x00000002
+#define UDMA_DEF_USBEP2RX_SEC_TMR3A                                           \
+                                0x00000004
+#define UDMA_DEF_USBEP2TX_SEC_TMR3B                                           \
+                                0x00000008
+#define UDMA_DEF_USBEP3RX_SEC_TMR2A                                           \
+                                0x00000010
+#define UDMA_DEF_USBEP3TX_SEC_TMR2B                                           \
+                                0x00000020
+#define UDMA_DEF_ETH0RX_SEC_TMR2A                                             \
+                                0x00000040
+#define UDMA_DEF_ETH0TX_SEC_TMR2B                                             \
+                                0x00000080
+#define UDMA_DEF_UART0RX_SEC_UART1RX                                          \
+                                0x00000100
+#define UDMA_DEF_UART0TX_SEC_UART1TX                                          \
+                                0x00000200
+#define UDMA_DEF_SSI0RX_SEC_SSI1RX                                            \
+                                0x00000400
+#define UDMA_DEF_SSI0TX_SEC_SSI1TX                                            \
+                                0x00000800
+#define UDMA_DEF_RESERVED_SEC_UART2RX                                         \
+                                0x00001000
+#define UDMA_DEF_RESERVED_SEC_UART2TX                                         \
+                                0x00002000
+#define UDMA_DEF_ADC00_SEC_TMR2A                                              \
+                                0x00004000
+#define UDMA_DEF_ADC01_SEC_TMR2B                                              \
+                                0x00008000
+#define UDMA_DEF_ADC02_SEC_RESERVED                                           \
+                                0x00010000
+#define UDMA_DEF_ADC03_SEC_RESERVED                                           \
+                                0x00020000
+#define UDMA_DEF_TMR0A_SEC_TMR1A                                              \
+                                0x00040000
+#define UDMA_DEF_TMR0B_SEC_TMR1B                                              \
+                                0x00080000
+#define UDMA_DEF_TMR1A_SEC_EPI0RX                                             \
+                                0x00100000
+#define UDMA_DEF_TMR1B_SEC_EPI0TX                                             \
+                                0x00200000
+#define UDMA_DEF_UART1RX_SEC_RESERVED                                         \
+                                0x00400000
+#define UDMA_DEF_UART1TX_SEC_RESERVED                                         \
+                                0x00800000
+#define UDMA_DEF_SSI1RX_SEC_ADC10                                             \
+                                0x01000000
+#define UDMA_DEF_SSI1TX_SEC_ADC11                                             \
+                                0x02000000
+#define UDMA_DEF_RESERVED_SEC_ADC12                                           \
+                                0x04000000
+#define UDMA_DEF_RESERVED_SEC_ADC13                                           \
+                                0x08000000
+#define UDMA_DEF_I2S0RX_SEC_RESERVED                                          \
+                                0x10000000
+#define UDMA_DEF_I2S0TX_SEC_RESERVED                                          \
+                                0x20000000
+
+extern void uDMAChannelSelectDefault(uint32_t ui32DefPeriphs);
+extern void uDMAChannelSelectSecondary(uint32_t ui32SecPeriphs);
+
+#endif
 //*****************************************************************************
 //
 // Mark the end of the C bindings section for C++ compilers.

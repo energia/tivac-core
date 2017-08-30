@@ -2,7 +2,7 @@
 //
 // interrupt.c - Driver for the NVIC Interrupt Controller.
 //
-// Copyright (c) 2005-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2005-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Peripheral Driver Library.
+// This is part of revision 2.1.4.178 of the Tiva Peripheral Driver Library.
 //
 //*****************************************************************************
 
@@ -193,11 +193,15 @@ void (*g_pfnRAMVectors[NUM_INTERRUPTS])(void) __attribute__((aligned(1024)));
 //! does not affect the set of interrupts enabled in the interrupt controller;
 //! it just gates the single interrupt from the controller to the processor.
 //!
-//! \note Previously, this function had no return value.  As such, it was
-//! possible to include <tt>interrupt.h</tt> and call this function without
-//! having included <tt>hw_types.h</tt>.  Now that the return is a
-//! <tt>bool</tt>, a compiler error occurs in this case.  The solution
-//! is to include <tt>hw_types.h</tt> before including <tt>interrupt.h</tt>.
+//! \b Example: Enable interrupts to the processor.
+//!
+//! \verbatim
+//! //
+//! // Enable interrupts to the processor.
+//! //
+//! IntMasterEnable();
+//!
+//! \endverbatim
 //!
 //! \return Returns \b true if interrupts were disabled when the function was
 //! called or \b false if they were initially enabled.
@@ -227,6 +231,16 @@ IntMasterEnable(void)
 //! <tt>bool</tt>, a compiler error occurs in this case.  The solution
 //! is to include <tt>hw_types.h</tt> before including <tt>interrupt.h</tt>.
 //!
+//! \b Example: Disable interrupts to the processor.
+//!
+//! \verbatim
+//! //
+//! // Disable interrupts to the processor.
+//! //
+//! IntMasterDisable();
+//!
+//! \endverbatim
+//!
 //! \return Returns \b true if interrupts were already disabled when the
 //! function was called or \b false if they were initially enabled.
 //
@@ -248,11 +262,13 @@ IntMasterDisable(void)
 //! \param pfnHandler is a pointer to the function to be called.
 //!
 //! This function is used to specify the handler function to be called when the
-//! given interrupt is asserted to the processor.  When the interrupt occurs,
-//! if it is enabled (via IntEnable()), the handler function is called in
-//! interrupt context.  Because the handler function can preempt other code,
-//! care must be taken to protect memory or peripherals that are accessed by
-//! the handler and other non-handler code.
+//! given interrupt is asserted to the processor.  The \e ui32Interrupt
+//! parameter must be one of the valid \b INT_* values listed in Peripheral
+//! Driver Library User's Guide and defined in the inc/hw_ints.h header file.
+//! When the interrupt occurs, if it is enabled (via IntEnable()), the handler
+//! function is called in interrupt context.  Because the handler function can
+//! preempt other code, care must be taken to protect memory or peripherals
+//! that are accessed by the handler and other non-handler code.
 //!
 //! \note The use of this function (directly or indirectly via a peripheral
 //! driver interrupt register function) moves the interrupt vector table from
@@ -263,6 +279,28 @@ IntMasterDisable(void)
 //! Normally, the SRAM vector table is so placed via the use of linker scripts.
 //! See the discussion of compile-time versus run-time interrupt handler
 //! registration in the introduction to this chapter.
+//!
+//! \b Example: Set the UART 0 interrupt handler.
+//!
+//! \verbatim
+//!
+//! //
+//! // UART 0 interrupt handler.
+//! //
+//! void
+//! UART0Handler(void)
+//! {
+//!     //
+//!     // Handle interrupt.
+//!     //
+//! }
+//!
+//! //
+//! // Set the UART 0 interrupt handler.
+//! //
+//! IntRegister(INT_UART0, UART0Handler);
+//!
+//! \endverbatim
 //!
 //! \return None.
 //
@@ -317,11 +355,24 @@ IntRegister(uint32_t ui32Interrupt, void (*pfnHandler)(void))
 //! \param ui32Interrupt specifies the interrupt in question.
 //!
 //! This function is used to indicate that no handler is called when the
-//! given interrupt is asserted to the processor.  The interrupt source is
-//! automatically disabled (via IntDisable()) if necessary.
+//! given interrupt is asserted to the processor.  The \e ui32Interrupt
+//! parameter must be one of the valid \b INT_* values listed in Peripheral
+//! Driver Library User's Guide and defined in the inc/hw_ints.h header file.
+//! The interrupt source is automatically disabled (via IntDisable()) if
+//! necessary.
 //!
 //! \sa IntRegister() for important information about registering interrupt
 //! handlers.
+//!
+//! \b Example: Reset the UART 0 interrupt handler to the default handler.
+//!
+//! \verbatim
+//! //
+//! // Reset the UART 0 interrupt handler to the default handler.
+//! //
+//! IntUnregister(INT_UART0);
+//!
+//! \endverbatim
 //!
 //! \return None.
 //
@@ -353,6 +404,16 @@ IntUnregister(uint32_t ui32Interrupt)
 //! interrupt prioritization and therefore priority grouping values of three
 //! through seven have the same effect.
 //!
+//! \b Example: Set the priority grouping for the interrupt controller.
+//!
+//! \verbatim
+//! //
+//! // Set the priority grouping for the interrupt controller to 2 bits.
+//! //
+//! IntPriorityGroupingSet(2);
+//!
+//! \endverbatim
+//!
 //! \return None.
 //
 //*****************************************************************************
@@ -376,6 +437,16 @@ IntPriorityGroupingSet(uint32_t ui32Bits)
 //!
 //! This function returns the split between preemptable priority levels and
 //! sub-priority levels in the interrupt priority specification.
+//!
+//! \b Example: Get the priority grouping for the interrupt controller.
+//!
+//! \verbatim
+//! //
+//! // Get the priority grouping for the interrupt controller.
+//! //
+//! IntPriorityGroupingGet();
+//!
+//! \endverbatim
 //!
 //! \return The number of bits of preemptable priority.
 //
@@ -417,19 +488,37 @@ IntPriorityGroupingGet(void)
 //! \param ui32Interrupt specifies the interrupt in question.
 //! \param ui8Priority specifies the priority of the interrupt.
 //!
-//! This function is used to set the priority of an interrupt.  When multiple
-//! interrupts are asserted simultaneously, the ones with the highest priority
-//! are processed before the lower priority interrupts.  Smaller numbers
-//! correspond to higher interrupt priorities; priority 0 is the highest
-//! interrupt priority.
+//! This function is used to set the priority of an interrupt.  The
+//! \e ui32Interrupt parameter must be one of the valid \b INT_* values listed
+//! in Peripheral Driver Library User's Guide and defined in the inc/hw_ints.h
+//! header file.  The \e ui8Priority parameter specifies the interrupts
+//! hardware priority level of the interrupt in the interrupt controller.
+//! When multiple interrupts are asserted simultaneously, the ones with the
+//! highest priority are processed before the lower priority interrupts.
+//! Smaller numbers correspond to higher interrupt priorities; priority 0 is
+//! the highest interrupt priority.
 //!
-//! The hardware priority mechanism only looks at the upper N bits of the
-//! priority level (where N is 3 for the Tiva C and E Series family), so any
-//! prioritization must be performed in those bits.  The remaining bits can be
-//! used to sub-prioritize the interrupt sources, and may be used by the
-//! hardware priority mechanism on a future part.  This arrangement allows
-//! priorities to migrate to different NVIC implementations without changing
-//! the gross prioritization of the interrupts.
+//! \note The hardware priority mechanism only looks at the upper 3 bits of the
+//! priority level, so any prioritization must be performed in those bits.  The
+//! remaining bits can be used to sub-prioritize the interrupt sources, and may
+//! be used by the hardware priority mechanism on a future part.  This
+//! arrangement allows priorities to migrate to different NVIC implementations
+//! without changing the gross prioritization of the interrupts.
+//!
+//! \b Example: Set priorities for UART 0 and USB interrupts.
+//!
+//! \verbatim
+//! //
+//! // Set the UART 0 interrupt priority to the lowest priority.
+//! //
+//! IntPrioritySet(INT_UART0, 0xE0);
+//!
+//! //
+//! // Set the USB 0 interrupt priority to the highest priority.
+//! //
+//! IntPrioritySet(INT_USB0, 0);
+//!
+//! \endverbatim
 //!
 //! \return None.
 //
@@ -459,11 +548,22 @@ IntPrioritySet(uint32_t ui32Interrupt, uint8_t ui8Priority)
 //!
 //! \param ui32Interrupt specifies the interrupt in question.
 //!
-//! This function gets the priority of an interrupt.  See IntPrioritySet() for
-//! a definition of the priority value.
+//! This function gets the priority of an interrupt.  The \e ui32Interrupt
+//! parameter must be one of the valid \b INT_* values listed in Peripheral
+//! Driver Library User's Guide and defined in the inc/hw_ints.h header file.
+//! See IntPrioritySet() for a full definition of the priority value.
 //!
-//! \return Returns the interrupt priority, or -1 if an invalid interrupt was
-//! specified.
+//! \b Example: Get the current UART 0 interrupt priority.
+//!
+//! \verbatim
+//! //
+//! // Get the current UART 0 interrupt priority.
+//! //
+//! IntPriorityGet(INT_UART0);
+//!
+//! \endverbatim
+//!
+//! \return Returns the interrupt priority for the given interrupt.
 //
 //*****************************************************************************
 int32_t
@@ -487,9 +587,21 @@ IntPriorityGet(uint32_t ui32Interrupt)
 //!
 //! \param ui32Interrupt specifies the interrupt to be enabled.
 //!
-//! The specified interrupt is enabled in the interrupt controller.  Other
-//! enables for the interrupt (such as at the peripheral level) are unaffected
-//! by this function.
+//! The specified interrupt is enabled in the interrupt controller.  The
+//! \e ui32Interrupt parameter must be one of the valid \b INT_* values listed
+//! in Peripheral Driver Library User's Guide and defined in the inc/hw_ints.h
+//! header file. Other enables for the interrupt (such as at the peripheral
+//! level) are unaffected by this function.
+//!
+//! \b Example: Enable the UART 0 interrupt.
+//!
+//! \verbatim
+//! //
+//! // Enable the UART 0 interrupt in the interrupt controller.
+//! //
+//! IntEnable(INT_UART0);
+//!
+//! \endverbatim
 //!
 //! \return None.
 //
@@ -549,9 +661,21 @@ IntEnable(uint32_t ui32Interrupt)
 //!
 //! \param ui32Interrupt specifies the interrupt to be disabled.
 //!
-//! The specified interrupt is disabled in the interrupt controller.  Other
-//! enables for the interrupt (such as at the peripheral level) are unaffected
-//! by this function.
+//! The specified interrupt is disabled in the interrupt controller.  The
+//! \e ui32Interrupt parameter must be one of the valid \b INT_* values listed
+//! in Peripheral Driver Library User's Guide and defined in the inc/hw_ints.h
+//! header file.  Other enables for the interrupt (such as at the peripheral
+//! level) are unaffected by this function.
+//!
+//! \b Example: Disable the UART 0 interrupt.
+//!
+//! \verbatim
+//! //
+//! // Disable the UART 0 interrupt in the interrupt controller.
+//! //
+//! IntDisable(INT_UART0);
+//!
+//! \endverbatim
 //!
 //! \return None.
 //
@@ -612,7 +736,21 @@ IntDisable(uint32_t ui32Interrupt)
 //! \param ui32Interrupt specifies the interrupt to check.
 //!
 //! This function checks if the specified interrupt is enabled in the interrupt
-//! controller.
+//! controller.  The \e ui32Interrupt parameter must be one of the valid
+//! \b INT_* values listed in Peripheral Driver Library User's Guide and
+//! defined in the inc/hw_ints.h header file.
+//!
+//! \b Example: Disable the UART 0 interrupt if it is enabled.
+//!
+//! \verbatim
+//! //
+//! // Disable the UART 0 interrupt if it is enabled.
+//! //
+//! if(IntIsEnabled(INT_UART0))
+//! {
+//!     IntDisable(INT_UART0);
+//! }
+//! \endverbatim
 //!
 //! \return A non-zero value if the interrupt is enabled.
 //
@@ -680,13 +818,24 @@ IntIsEnabled(uint32_t ui32Interrupt)
 //!
 //! \param ui32Interrupt specifies the interrupt to be pended.
 //!
-//! The specified interrupt is pended in the interrupt controller.  Pending an
-//! interrupt causes the interrupt controller to execute the corresponding
-//! interrupt handler at the next available time, based on the current
-//! interrupt state priorities.  For example, if called by a higher priority
-//! interrupt handler, the specified interrupt handler is not called until
-//! after the current interrupt handler has completed execution.  The interrupt
-//! must have been enabled for it to be called.
+//! The specified interrupt is pended in the interrupt controller.  The
+//! \e ui32Interrupt parameter must be one of the valid \b INT_* values listed
+//! in Peripheral Driver Library User's Guide and defined in the inc/hw_ints.h
+//! header file.  Pending an interrupt causes the interrupt controller to
+//! execute the corresponding interrupt handler at the next available time,
+//! based on the current interrupt state priorities.  For example, if called by
+//! a higher priority interrupt handler, the specified interrupt handler is not
+//! called until after the current interrupt handler has completed execution.
+//! The interrupt must have been enabled for it to be called.
+//!
+//! \b Example: Pend a UART 0 interrupt.
+//!
+//! \verbatim
+//! //
+//! // Pend a UART 0 interrupt.
+//! //
+//! IntPendSet(INT_UART0);
+//! \endverbatim
 //!
 //! \return None.
 //
@@ -737,12 +886,24 @@ IntPendSet(uint32_t ui32Interrupt)
 //
 //! Un-pends an interrupt.
 //!
-//! \param ui32Interrupt specifies the interrupt to be un-pended.
+//! \param ui32Interrupt specifies the interrupt to be un-pended.  The
+//! \e ui32Interrupt parameter must be one of the valid \b INT_* values listed
+//! in Peripheral Driver Library User's Guide and defined in the inc/hw_ints.h
+//! header file.
 //!
 //! The specified interrupt is un-pended in the interrupt controller.  This
 //! causes any previously generated interrupts that have not been handled
 //! yet (due to higher priority interrupts or the interrupt not having been
 //! enabled yet) to be discarded.
+//!
+//! \b Example: Un-pend a UART 0 interrupt.
+//!
+//! \verbatim
+//! //
+//! // Un-pend a UART 0 interrupt.
+//! //
+//! IntPendClear(INT_UART0);
+//! \endverbatim
 //!
 //! \return None.
 //
@@ -798,9 +959,17 @@ IntPendClear(uint32_t ui32Interrupt)
 //! a priority level mask of 4 allows interrupts of priority level 0-3,
 //! and interrupts with a numerical priority of 4 and greater are blocked.
 //!
-//! The hardware priority mechanism only looks at the upper N bits of the
-//! priority level (where N is 3 for the Tiva C and E Series family), so any
-//! prioritization must be performed in those bits.
+//! \note The hardware priority mechanism only looks at the upper 3 bits of the
+//! priority level, so any prioritization must be performed in those bits.
+//!
+//! \b Example: Mask of interrupt priorities greater than or equal to 0x80.
+//!
+//! \verbatim
+//! //
+//! // Mask of interrupt priorities greater than or equal to 0x80.
+//! //
+//! IntPriorityMaskSet(0x80);
+//! \endverbatim
 //!
 //! \return None.
 //
@@ -827,9 +996,17 @@ IntPriorityMaskSet(uint32_t ui32PriorityMask)
 //! a priority level mask of 4 allows interrupts of priority level 0-3,
 //! and interrupts with a numerical priority of 4 and greater are blocked.
 //!
-//! The hardware priority mechanism only looks at the upper N bits of the
-//! priority level (where N is 3 for the Tiva C and E Series family), so any
-//! prioritization must be performed in those bits.
+//! The hardware priority mechanism only looks at the upper 3 bits of the
+//! priority level, so any prioritization must be performed in those bits.
+//!
+//! \b Example: Get the current interrupt priority mask.
+//!
+//! \verbatim
+//! //
+//! // Get the current interrupt priority mask.
+//! //
+//! IntPriorityMaskGet();
+//! \endverbatim
 //!
 //! \return Returns the value of the interrupt priority level mask.
 //
@@ -849,11 +1026,14 @@ IntPriorityMaskGet(void)
 //!
 //! \param ui32Interrupt specifies the interrupt to be triggered.
 //!
-//! This function performs a software trigger of an interrupt.  The interrupt
-//! controller behaves as if the corresponding interrupt line was asserted, and
-//! the interrupt is handled in the same manner (meaning that it must be
-//! enabled in order to be processed, and the processing is based on its
-//! priority with respect to other unhandled interrupts).
+//! This function performs a software trigger of an interrupt.  The
+//! \e ui32Interrupt parameter must be one of the valid \b INT_* values listed
+//! in Peripheral Driver Library User's Guide and defined in the inc/hw_ints.h
+//! header file.  The interrupt controller behaves as if the corresponding
+//! interrupt line was asserted, and the interrupt is handled in the same
+//! manner (meaning that it must be enabled in order to be processed, and the
+//! processing is based on its priority with respect to other unhandled
+//! interrupts).
 //!
 //! \return None.
 //

@@ -2,7 +2,7 @@
 //
 // hw_emac.h - Macros used when accessing the EMAC hardware.
 //
-// Copyright (c) 2012-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2012-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Firmware Development Package.
+// This is part of revision 2.1.4.178 of the Tiva Firmware Development Package.
 //
 //*****************************************************************************
 
@@ -58,6 +58,10 @@
                                             // Frame Filter
 #define EMAC_O_PMTCTLSTAT       0x0000002C  // Ethernet MAC PMT Control and
                                             // Status Register
+#define EMAC_O_LPICTLSTAT       0x00000030  // Ethernet MAC Low Power Idle
+                                            // Control and Status Register
+#define EMAC_O_LPITIMERCTL      0x00000034  // Ethernet MAC Low Power Idle
+                                            // Timer Control Register
 #define EMAC_O_RIS              0x00000038  // Ethernet MAC Raw Interrupt
                                             // Status
 #define EMAC_O_IM               0x0000003C  // Ethernet MAC Interrupt Mask
@@ -112,13 +116,13 @@
                                             // Seconds Update
 #define EMAC_O_TIMNANOU         0x00000714  // Ethernet MAC System Time -
                                             // Nanoseconds Update
-#define EMAC_O_TIMADD           0x00000718  // Ethernet MAC Time Stamp Addend
+#define EMAC_O_TIMADD           0x00000718  // Ethernet MAC Timestamp Addend
 #define EMAC_O_TARGSEC          0x0000071C  // Ethernet MAC Target Time Seconds
 #define EMAC_O_TARGNANO         0x00000720  // Ethernet MAC Target Time
                                             // Nanoseconds
 #define EMAC_O_HWORDSEC         0x00000724  // Ethernet MAC System Time-Higher
                                             // Word Seconds
-#define EMAC_O_TIMSTAT          0x00000728  // Ethernet MAC Time Stamp Status
+#define EMAC_O_TIMSTAT          0x00000728  // Ethernet MAC Timestamp Status
 #define EMAC_O_PPSCTRL          0x0000072C  // Ethernet MAC PPS Control
 #define EMAC_O_PPS0INTVL        0x00000760  // Ethernet MAC PPS0 Interval
 #define EMAC_O_PPS0WIDTH        0x00000764  // Ethernet MAC PPS0 Width
@@ -260,19 +264,21 @@
 //*****************************************************************************
 #define EMAC_MIIADDR_PLA_M      0x0000F800  // Physical Layer Address
 #define EMAC_MIIADDR_MII_M      0x000007C0  // MII Register
-#define EMAC_MIIADDR_CR_M       0x0000003C  // CSR Clock Range
-#define EMAC_MIIADDR_CR_60_100  0x00000000  // The frequency of the CSR clock
-                                            // is 60-100 MHz and the MDC clock
-                                            // is CSR clock/42
-#define EMAC_MIIADDR_CR_100_150 0x00000004  // The frequency of the CSR clock
-                                            // is 100-150 MHz and the MDC clock
-                                            // is CSR clock/62
-#define EMAC_MIIADDR_CR_20_35   0x00000008  // The frequency of the CSR clock
-                                            // is 20-35 MHz and the MDC clock
-                                            // is CSR clock/16
-#define EMAC_MIIADDR_CR_35_60   0x0000000C  // The frequency of the CSR clock
-                                            // is 35-60 MHz and the MDC clock
-                                            // is CSR clock/26
+#define EMAC_MIIADDR_CR_M       0x0000003C  // Clock Reference Frequency
+                                            // Selection
+#define EMAC_MIIADDR_CR_60_100  0x00000000  // The frequency of the System
+                                            // Clock is 60 to 100 MHz providing
+                                            // a MDIO clock of SYSCLK/42
+#define EMAC_MIIADDR_CR_100_150 0x00000004  // The frequency of the System
+                                            // Clock is 100 to 150 MHz
+                                            // providing a MDIO clock of
+                                            // SYSCLK/62
+#define EMAC_MIIADDR_CR_20_35   0x00000008  // The frequency of the System
+                                            // Clock is 20-35 MHz providing a
+                                            // MDIO clock of System Clock/16
+#define EMAC_MIIADDR_CR_35_60   0x0000000C  // The frequency of the System
+                                            // Clock is 35 to 60 MHz providing
+                                            // a MDIO clock of System Clock/26
 #define EMAC_MIIADDR_MIIW       0x00000002  // MII Write
 #define EMAC_MIIADDR_MIIB       0x00000001  // MII Busy
 #define EMAC_MIIADDR_PLA_S      11
@@ -293,19 +299,6 @@
 //*****************************************************************************
 #define EMAC_FLOWCTL_PT_M       0xFFFF0000  // Pause Time
 #define EMAC_FLOWCTL_DZQP       0x00000080  // Disable Zero-Quanta Pause
-#define EMAC_FLOWCTL_PLT_M      0x00000030  // Pause Low Threshold
-#define EMAC_FLOWCTL_PLT_4      0x00000000  // The threshold is Pause time
-                                            // minus 4 slot times (PT - 4 slot
-                                            // times)
-#define EMAC_FLOWCTL_PLT_28     0x00000010  // The threshold is Pause time
-                                            // minus 28 slot times (PT - 28
-                                            // slot times)
-#define EMAC_FLOWCTL_PLT_144    0x00000020  // The threshold is Pause time
-                                            // minus 144 slot times (PT - 144
-                                            // slot times)
-#define EMAC_FLOWCTL_PLT_156    0x00000030  // The threshold is Pause time
-                                            // minus 256 slot times (PT - 256
-                                            // slot times)
 #define EMAC_FLOWCTL_UP         0x00000008  // Unicast Pause Frame Detect
 #define EMAC_FLOWCTL_RFE        0x00000004  // Receive Flow Control Enable
 #define EMAC_FLOWCTL_TFE        0x00000002  // Transmit Flow Control Enable
@@ -418,9 +411,38 @@
 
 //*****************************************************************************
 //
+// The following are defines for the bit fields in the EMAC_O_LPICTLSTAT
+// register.
+//
+//*****************************************************************************
+#define EMAC_LPICTLSTAT_LPITXA  0x00080000  // LPI TX Automate
+#define EMAC_LPICTLSTAT_PLSEN   0x00040000  // PHY Link Status Enable
+#define EMAC_LPICTLSTAT_PLS     0x00020000  // PHY Link Status
+#define EMAC_LPICTLSTAT_LPIEN   0x00010000  // LPI Enable
+#define EMAC_LPICTLSTAT_RLPIST  0x00000200  // Receive LPI State
+#define EMAC_LPICTLSTAT_TLPIST  0x00000100  // Transmit LPI State
+#define EMAC_LPICTLSTAT_RLPIEX  0x00000008  // Receive LPI Exit
+#define EMAC_LPICTLSTAT_RLPIEN  0x00000004  // Receive LPI Entry
+#define EMAC_LPICTLSTAT_TLPIEX  0x00000002  // Transmit LPI Exit
+#define EMAC_LPICTLSTAT_TLPIEN  0x00000001  // Transmit LPI Entry
+
+//*****************************************************************************
+//
+// The following are defines for the bit fields in the EMAC_O_LPITIMERCTL
+// register.
+//
+//*****************************************************************************
+#define EMAC_LPITIMERCTL_LST_M  0x03FF0000  // Low Power Idle LS Timer
+#define EMAC_LPITIMERCTL_LST_S  16
+#define EMAC_LPITIMERCTL_TWT_M  0x0000FFFF  // Low Power Idle TW Timer
+#define EMAC_LPITIMERCTL_TWT_S  0
+
+//*****************************************************************************
+//
 // The following are defines for the bit fields in the EMAC_O_RIS register.
 //
 //*****************************************************************************
+#define EMAC_RIS_LPI            0x00000400  // LPI Interrupt Status
 #define EMAC_RIS_TS             0x00000200  // Timestamp Interrupt Status
 #define EMAC_RIS_MMCTX          0x00000040  // MMC Transmit Interrupt Status
 #define EMAC_RIS_MMCRX          0x00000020  // MMC Receive Interrupt Status
@@ -432,6 +454,7 @@
 // The following are defines for the bit fields in the EMAC_O_IM register.
 //
 //*****************************************************************************
+#define EMAC_IM_LPI             0x00000400  // LPI Interrupt Mask
 #define EMAC_IM_TSI             0x00000200  // Timestamp Interrupt Mask
 #define EMAC_IM_PMT             0x00000008  // PMT Interrupt Mask
 
@@ -741,14 +764,14 @@
                                             // Sent over IPv4-UDP
 #define EMAC_TIMSTCTRL_PTPIPV6  0x00001000  // Enable Processing of PTP Frames
                                             // Sent Over IPv6-UDP
-#define EMAC_TIMSTCTRL_PTPETH   0x00000800  // Enable Processing of PTP over
+#define EMAC_TIMSTCTRL_PTPETH   0x00000800  // Enable Processing of PTP Over
                                             // Ethernet Frames
-#define EMAC_TIMSTCTRL_PTPVER2  0x00000400  // Enable PTP packet Processing for
+#define EMAC_TIMSTCTRL_PTPVER2  0x00000400  // Enable PTP Packet Processing For
                                             // Version 2 Format
 #define EMAC_TIMSTCTRL_DGTLBIN  0x00000200  // Timestamp Digital or Binary
                                             // Rollover Control
-#define EMAC_TIMSTCTRL_ALLF     0x00000100  // Enable Timestamp for All Frames
-#define EMAC_TIMSTCTRL_ADDREGUP 0x00000020  // Addend Reg Update
+#define EMAC_TIMSTCTRL_ALLF     0x00000100  // Enable Timestamp For All Frames
+#define EMAC_TIMSTCTRL_ADDREGUP 0x00000020  // Addend Register Update
 #define EMAC_TIMSTCTRL_INTTRIG  0x00000010  // Timestamp Interrupt Trigger
                                             // Enable
 #define EMAC_TIMSTCTRL_TSUPDT   0x00000008  // Timestamp Update
@@ -871,77 +894,8 @@
                                             // signal. No interrupt is asserted
 #define EMAC_PPSCTRL_PPSEN0     0x00000010  // Flexible PPS Output Mode Enable
 #define EMAC_PPSCTRL_PPSCTRL_M  0x0000000F  // EN0PPS Output Frequency Control
-                                            // (PPSCTRL) or PPSCMD
-#define EMAC_PPSCTRL_PPSCTRL_1HZ                                              \
-                                0x00000000  // When the PPSEN0 bit = 0x0, the
-                                            // EN0PPS signal is 1 pulse (of
-                                            // width clk_ptp_i) every second
-#define EMAC_PPSCTRL_PPSCTRL_2HZ                                              \
-                                0x00000001  // When the PPSEN0 bit = 0x0, the
-                                            // binary rollover is 2 Hz, and the
-                                            // digital rollover is 1 Hz
-#define EMAC_PPSCTRL_PPSCTRL_4HZ                                              \
-                                0x00000002  // When the PPSEN0 bit = 0x0, the
-                                            // binary rollover is 4 Hz, and the
-                                            // digital rollover is 2 Hz
-#define EMAC_PPSCTRL_PPSCTRL_8HZ                                              \
-                                0x00000003  // When thePPSEN0 bit = 0x0, the
-                                            // binary rollover is 8 Hz, and the
-                                            // digital rollover is 4 Hz,
-#define EMAC_PPSCTRL_PPSCTRL_16HZ                                             \
-                                0x00000004  // When thePPSEN0 bit = 0x0, the
-                                            // binary rollover is 16 Hz, and
-                                            // the digital rollover is 8 Hz
-#define EMAC_PPSCTRL_PPSCTRL_32HZ                                             \
-                                0x00000005  // When thePPSEN0 bit = 0x0, the
-                                            // binary rollover is 32 Hz, and
-                                            // the digital rollover is 16 Hz
-#define EMAC_PPSCTRL_PPSCTRL_64HZ                                             \
-                                0x00000006  // When thePPSEN0 bit = 0x0, the
-                                            // binary rollover is 64 Hz, and
-                                            // the digital rollover is 32 Hz
-#define EMAC_PPSCTRL_PPSCTRL_128HZ                                            \
-                                0x00000007  // When thePPSEN0 bit = 0x0, the
-                                            // binary rollover is 128 Hz, and
-                                            // the digital rollover is 64 Hz
-#define EMAC_PPSCTRL_PPSCTRL_256HZ                                            \
-                                0x00000008  // When thePPSEN0 bit = 0x0, the
-                                            // binary rollover is 256 Hz, and
-                                            // the digital rollover is 128 Hz
-#define EMAC_PPSCTRL_PPSCTRL_512HZ                                            \
-                                0x00000009  // When thePPSEN0 bit = 0x0, the
-                                            // binary rollover is 512 Hz, and
-                                            // the digital rollover is 256 Hz
-#define EMAC_PPSCTRL_PPSCTRL_1024HZ                                           \
-                                0x0000000A  // When the PPSEN0 bit = 0x0, the
-                                            // binary rollover is 1.024 kHz,
-                                            // and the digital rollover is 512
-                                            // Hz
-#define EMAC_PPSCTRL_PPSCTRL_2048HZ                                           \
-                                0x0000000B  // When thePPSEN0 bit = 0x0, the
-                                            // binary rollover is 2.048 kHz,
-                                            // and the digital rollover is
-                                            // 1.024 kHz
-#define EMAC_PPSCTRL_PPSCTRL_4096HZ                                           \
-                                0x0000000C  // When thePPSEN0 bit = 0x0, the
-                                            // binary rollover is 4.096 kHz,
-                                            // and the digital rollover is
-                                            // 2.048 kHz
-#define EMAC_PPSCTRL_PPSCTRL_8192HZ                                           \
-                                0x0000000D  // When thePPSEN0 bit = 0x0, the
-                                            // binary rollover is 8.192 kHz,
-                                            // and the digital rollover is
-                                            // 4.096 kHz
-#define EMAC_PPSCTRL_PPSCTRL_16384HZ                                          \
-                                0x0000000E  // When thePPSEN0 bit = 0x0, the
-                                            // binary rollover is 16.384 kHz,
-                                            // and the digital rollover is
-                                            // 8.092 kHz
-#define EMAC_PPSCTRL_PPSCTRL_32768HZ                                          \
-                                0x0000000F  // When thePPSEN0 bit = 0x0, the
-                                            // binary rollover is 32.768 KHz,
-                                            // and the digital rollover is
-                                            // 16.384 KHz
+                                            // (PPSCTRL) or Command Control
+                                            // (PPSCMD)
 
 //*****************************************************************************
 //
@@ -960,10 +914,8 @@
 // register.
 //
 //*****************************************************************************
-#define EMAC_PPS0WIDTH_PPS0INT_M                                              \
-                                0xFFFFFFFF  // EN0PPS Output Signal Interval
-#define EMAC_PPS0WIDTH_PPS0INT_S                                              \
-                                0
+#define EMAC_PPS0WIDTH_M        0xFFFFFFFF  // EN0PPS Output Signal Width
+#define EMAC_PPS0WIDTH_S        0
 
 //*****************************************************************************
 //
@@ -975,8 +927,8 @@
 #define EMAC_DMABUSMOD_TXPR     0x08000000  // Transmit Priority
 #define EMAC_DMABUSMOD_MB       0x04000000  // Mixed Burst
 #define EMAC_DMABUSMOD_AAL      0x02000000  // Address Aligned Beats
-#define EMAC_DMABUSMOD_8XPBL    0x01000000  // 8xProrammable Burst Length (PBL)
-                                            // Mode
+#define EMAC_DMABUSMOD_8XPBL    0x01000000  // 8 x Programmable Burst Length
+                                            // (PBL) Mode
 #define EMAC_DMABUSMOD_USP      0x00800000  // Use Separate Programmable Burst
                                             // Length (PBL)
 #define EMAC_DMABUSMOD_RPBL_M   0x007E0000  // RX DMA Programmable Burst Length
@@ -1037,8 +989,10 @@
 // The following are defines for the bit fields in the EMAC_O_DMARIS register.
 //
 //*****************************************************************************
+#define EMAC_DMARIS_LPI         0x40000000  // LPI Trigger Interrupt Status
 #define EMAC_DMARIS_TT          0x20000000  // Timestamp Trigger Interrupt
-#define EMAC_DMARIS_PMT         0x10000000  // MAC PMT Interrupt
+                                            // Status
+#define EMAC_DMARIS_PMT         0x10000000  // MAC PMT Interrupt Status
 #define EMAC_DMARIS_MMC         0x08000000  // MAC MMC Interrupt
 #define EMAC_DMARIS_AE_M        0x03800000  // Access Error
 #define EMAC_DMARIS_AE_RXDMAWD  0x00000000  // Error during RX DMA Write Data
@@ -1054,32 +1008,32 @@
 #define EMAC_DMARIS_AE_TXDMADR  0x03800000  // Error during TX DMA Descriptor
                                             // Read Access
 #define EMAC_DMARIS_TS_M        0x00700000  // Transmit Process State
-#define EMAC_DMARIS_TS_STOP     0x00000000  // Stopped; Reset or Stop Transmit
-                                            // Command issued
-#define EMAC_DMARIS_TS_RUNTXTD  0x00100000  // Running; Fetching Transmit
-                                            // Transfer Descriptor
+#define EMAC_DMARIS_TS_STOP     0x00000000  // Stopped; Reset or Stop transmit
+                                            // command processed
+#define EMAC_DMARIS_TS_RUNTXTD  0x00100000  // Running; Fetching transmit
+                                            // transfer descriptor
 #define EMAC_DMARIS_TS_STATUS   0x00200000  // Running; Waiting for status
-#define EMAC_DMARIS_TS_RUNTX    0x00300000  // Running; Reading Data from host
+#define EMAC_DMARIS_TS_RUNTX    0x00300000  // Running; Reading data from host
                                             // memory buffer and queuing it to
                                             // transmit buffer (TX FIFO)
-#define EMAC_DMARIS_TS_TSTAMP   0x00400000  // TIME_STAMP write state
-#define EMAC_DMARIS_TS_SUSPEND  0x00600000  // Suspended; Transmit Descriptor
-                                            // Unavailable or Transmit Buffer
-                                            // Underflow
-#define EMAC_DMARIS_TS_RUNCTD   0x00700000  // Running; Closing Transmit
-                                            // Descriptor
+#define EMAC_DMARIS_TS_TSTAMP   0x00400000  // Writing Timestamp
+#define EMAC_DMARIS_TS_SUSPEND  0x00600000  // Suspended; Transmit descriptor
+                                            // unavailable or transmit buffer
+                                            // underflow
+#define EMAC_DMARIS_TS_RUNCTD   0x00700000  // Running; Closing transmit
+                                            // descriptor
 #define EMAC_DMARIS_RS_M        0x000E0000  // Received Process State
-#define EMAC_DMARIS_RS_STOP     0x00000000  // Stopped: Reset or Stop Receive
-                                            // Command issued
-#define EMAC_DMARIS_RS_RUNRXTD  0x00020000  // Running: Fetching Receive
-                                            // Transfer Descriptor
+#define EMAC_DMARIS_RS_STOP     0x00000000  // Stopped: Reset or stop receive
+                                            // command issued
+#define EMAC_DMARIS_RS_RUNRXTD  0x00020000  // Running: Fetching receive
+                                            // transfer descriptor
 #define EMAC_DMARIS_RS_RUNRXD   0x00060000  // Running: Waiting for receive
                                             // packet
-#define EMAC_DMARIS_RS_SUSPEND  0x00080000  // Suspended: Receive Descriptor
-                                            // Unavailable
-#define EMAC_DMARIS_RS_RUNCRD   0x000A0000  // Running: Closing Receive
-                                            // Descriptor
-#define EMAC_DMARIS_RS_TSWS     0x000C0000  // TIME_STAMP write state
+#define EMAC_DMARIS_RS_SUSPEND  0x00080000  // Suspended: Receive descriptor
+                                            // unavailable
+#define EMAC_DMARIS_RS_RUNCRD   0x000A0000  // Running: Closing receive
+                                            // descriptor
+#define EMAC_DMARIS_RS_TSWS     0x000C0000  // Writing Timestamp
 #define EMAC_DMARIS_RS_RUNTXD   0x000E0000  // Running: Transferring the
                                             // receive packet data from receive
                                             // buffer to host memory
@@ -1178,7 +1132,8 @@
 // register.
 //
 //*****************************************************************************
-#define EMAC_RXINTWDT_RIWT_M    0x000000FF  // RI Watchdog Timer Count
+#define EMAC_RXINTWDT_RIWT_M    0x000000FF  // Receive Interrupt Watchdog Timer
+                                            // Count
 #define EMAC_RXINTWDT_RIWT_S    0
 
 //*****************************************************************************
@@ -1233,9 +1188,7 @@
 //
 //*****************************************************************************
 #define EMAC_PP_MACTYPE_M       0x00000700  // Ethernet MAC Type
-#define EMAC_PP_MACTYPE_1       0x00000100  // Tiva Snowflake-class MAC
-#define EMAC_PP_RCISA           0x00000010  // Ethernet Clock Internal Source
-                                            // Available
+#define EMAC_PP_MACTYPE_1       0x00000100  // Tiva TM4E129x-class MAC
 #define EMAC_PP_PHYTYPE_M       0x00000007  // Ethernet PHY Type
 #define EMAC_PP_PHYTYPE_NONE    0x00000000  // No PHY
 #define EMAC_PP_PHYTYPE_1       0x00000003  // Snowflake class PHY
@@ -1245,7 +1198,7 @@
 // The following are defines for the bit fields in the EMAC_O_PC register.
 //
 //*****************************************************************************
-#define EMAC_PC_PHYEXT          0x80000000  // ETHPHY External
+#define EMAC_PC_PHYEXT          0x80000000  // PHY Select
 #define EMAC_PC_PINTFS_M        0x70000000  // Ethernet Interface Select
 #define EMAC_PC_PINTFS_IMII     0x00000000  // MII (default) Used for internal
                                             // PHY or external PHY connected
@@ -1290,12 +1243,8 @@
 //
 //*****************************************************************************
 #define EMAC_CC_PTPCEN          0x00040000  // PTP Clock Reference Enable
-#define EMAC_CC_ECEXT           0x00020000  // EN0RREF_CLK Signal Source
+#define EMAC_CC_POL             0x00020000  // LED Polarity Control
 #define EMAC_CC_CLKEN           0x00010000  // EN0RREF_CLK Signal Enable
-#define EMAC_CC_CS_M            0x0000000F  // Ethernet PHY Clock Reference
-                                            // Source
-#define EMAC_CC_CS_MOSC         0x00000000  // MOSC
-#define EMAC_CC_CS_PA7          0x00000001  // GPIO (PA7)
 
 //*****************************************************************************
 //
@@ -1360,7 +1309,7 @@
 #define EPHY_LEDCR              0x00000018  // Ethernet PHY LED Control
 #define EPHY_CTL                0x00000019  // Ethernet PHY Control
 #define EPHY_10BTSC             0x0000001A  // Ethernet PHY 10Base-T
-                                            // Status/Control
+                                            // Status/Control - MR26
 #define EPHY_BICSR1             0x0000001B  // Ethernet PHY BIST Control and
                                             // Status 1
 #define EPHY_BICSR2             0x0000001C  // Ethernet PHY BIST Control and
@@ -1369,40 +1318,13 @@
                                             // Control
 #define EPHY_RCR                0x0000001F  // Ethernet PHY Reset Control
 #define EPHY_LEDCFG             0x00000025  // Ethernet PHY LED Configuration
-#define EPHY_ALCDCR             0x00000155  // Ethernet PHY ALCD Control and
-                                            // Results
-#define EPHY_CDSCR              0x00000170  // Ethernet PHY Cable Diagnostic
-                                            // Control
-#define EPHY_CDLR1              0x00000180  // Ethernet PHY Cable Diagnostic
-                                            // Location Result 1
-#define EPHY_CDLR2              0x00000181  // Ethernet PHY Cable Diagnostic
-                                            // Location Result 2
-#define EPHY_CDLR3              0x00000182  // Ethernet PHY Cable Diagnostic
-                                            // Location Result 3
-#define EPHY_CDLR4              0x00000183  // Ethernet PHY Cable Diagnostic
-                                            // Location Result 4
-#define EPHY_CDLR5              0x00000184  // Ethernet PHY Cable Diagnostic
-                                            // Location Result 5
-#define EPHY_CDLAR1             0x00000185  // Ethernet PHY Cable Diagnostic
-                                            // Amplitude Result 1
-#define EPHY_CDLAR2             0x00000186  // Ethernet PHY Cable Diagnostic
-                                            // Amplitude Result 2
-#define EPHY_CDLAR3             0x00000187  // Ethernet PHY Cable Diagnostic
-                                            // Amplitude Result 3
-#define EPHY_CDLAR4             0x00000188  // Ethernet PHY Cable Diagnostic
-                                            // Amplitude Result 4
-#define EPHY_CDLAR5             0x00000189  // Ethernet PHY Cable Diagnostic
-                                            // Amplitude Result 5
-#define EPHY_CDGRR              0x0000018A  // Ethernet PHY Cable Diagnostic
-                                            // General Result
-#define EPHY_ALCDR2             0x00000215  // Ethernet PHY ALCD Results 2
 
 //*****************************************************************************
 //
 // The following are defines for the bit fields in the EPHY_BMCR register.
 //
 //*****************************************************************************
-#define EPHY_BMCR_PHYRESET      0x00008000  // PHY Software Reset
+#define EPHY_BMCR_MIIRESET      0x00008000  // MII Register reset
 #define EPHY_BMCR_MIILOOPBK     0x00004000  // MII Loopback
 #define EPHY_BMCR_SPEED         0x00002000  // Speed Select
 #define EPHY_BMCR_ANEN          0x00001000  // Auto-Negotiate Enable
@@ -1536,9 +1458,9 @@
 #define EPHY_CFG1_FASTANEN      0x00000010  // Fast Auto Negotiation Enable
 #define EPHY_CFG1_FANSEL_M      0x0000000C  // Fast Auto-Negotiation Select
                                             // Configuration
-#define EPHY_CFG1_FANSEL_BLT80  0x00000000  // Break Link Timer: 80
-#define EPHY_CFG1_FANSEL_BLT120 0x00000004  // Break Link Timer: 120
-#define EPHY_CFG1_FANSEL_BLT240 0x00000008  // Break Link Timer: 240
+#define EPHY_CFG1_FANSEL_BLT80  0x00000000  // Break Link Timer: 80 ms
+#define EPHY_CFG1_FANSEL_BLT120 0x00000004  // Break Link Timer: 120 ms
+#define EPHY_CFG1_FANSEL_BLT240 0x00000008  // Break Link Timer: 240 ms
 #define EPHY_CFG1_FRXDVDET      0x00000002  // FAST RXDV Detection
 
 //*****************************************************************************
@@ -1618,8 +1540,8 @@
 //
 //*****************************************************************************
 #define EPHY_SCR_DISCLK         0x00008000  // Disable CLK
-#define EPHY_SCR_PSEN           0x00004000  // Power Save Modes Enable
-#define EPHY_SCR_PSMODE_M       0x00003000  // Power Save Modes
+#define EPHY_SCR_PSEN           0x00004000  // Power Saving Modes Enable
+#define EPHY_SCR_PSMODE_M       0x00003000  // Power Saving Modes
 #define EPHY_SCR_PSMODE_NORMAL  0x00000000  // Normal: Normal operation mode.
                                             // PHY is fully functional
 #define EPHY_SCR_PSMODE_LOWPWR  0x00001000  // IEEE Power Down
@@ -1651,8 +1573,8 @@
 #define EPHY_MISR1_RXHF         0x00000100  // Receive Error Counter Half-Full
                                             // Interrupt
 #define EPHY_MISR1_LINKSTATEN   0x00000020  // Link Status Interrupt Enable
-#define EPHY_MISR1_SPEEDEN      0x00000010  // Link Status Interrupt Enable
-#define EPHY_MISR1_DUPLEXMEN    0x00000008  // Link Status Interrupt Enable
+#define EPHY_MISR1_SPEEDEN      0x00000010  // Speed Change Interrupt Enable
+#define EPHY_MISR1_DUPLEXMEN    0x00000008  // Duplex Status Interrupt Enable
 #define EPHY_MISR1_ANCEN        0x00000004  // Auto-Negotiation Complete
                                             // Interrupt Enable
 #define EPHY_MISR1_FCHFEN       0x00000002  // False Carrier Counter Register
@@ -1677,9 +1599,8 @@
 #define EPHY_MISR2_ANERREN      0x00000040  // Auto-Negotiation Error Interrupt
                                             // Enable
 #define EPHY_MISR2_PAGERXEN     0x00000020  // Page Receive Interrupt Enable
-#define EPHY_MISR2_LBFIFOEN     0x00000010  // Loopbalck FIFO
-                                            // Overflow/Underflow Interrupt
-                                            // Enable
+#define EPHY_MISR2_LBFIFOEN     0x00000010  // Loopback FIFO Overflow/Underflow
+                                            // Interrupt Enable
 #define EPHY_MISR2_MDICOEN      0x00000008  // MDI/MDIX Crossover Status
                                             // Changed Interrupt Enable
 #define EPHY_MISR2_SLEEPEN      0x00000004  // Sleep Mode Event Interrupt
@@ -1718,8 +1639,8 @@
                                             // Indication
 #define EPHY_BISTCR_PKTGENSTAT  0x00000200  // Packet Generator Status
                                             // Indication
-#define EPHY_BISTCR_PWRMODE     0x00000100  // Sleep Mode Indication
-#define EPHY_BISTCR_TXMIILB     0x00000040  // Transmit Data in MII Loop-back
+#define EPHY_BISTCR_PWRMODE     0x00000100  // Power Mode Indication
+#define EPHY_BISTCR_TXMIILB     0x00000040  // Transmit Data in MII Loopback
                                             // Mode
 #define EPHY_BISTCR_LBMODE_M    0x0000001F  // Loopback Mode Select
 #define EPHY_BISTCR_LBMODE_NPCSIN                                             \
@@ -1771,7 +1692,8 @@
 //*****************************************************************************
 #define EPHY_10BTSC_RXTHEN      0x00002000  // Lower Receiver Threshold Enable
 #define EPHY_10BTSC_SQUELCH_M   0x00001E00  // Squelch Configuration
-#define EPHY_10BTSC_NLPDIS      0x00000080  // NLP Transmission Control
+#define EPHY_10BTSC_NLPDIS      0x00000080  // Normal Link Pulse (NLP)
+                                            // Transmission Control
 #define EPHY_10BTSC_POLSTAT     0x00000010  // 10 Mb Polarity Status
 #define EPHY_10BTSC_JABBERD     0x00000001  // Jabber Disable
 #define EPHY_10BTSC_SQUELCH_S   9
@@ -1802,7 +1724,7 @@
 #define EPHY_CDCR_START         0x00008000  // Cable Diagnostic Process Start
 #define EPHY_CDCR_LINKQUAL_M    0x00000300  // Link Quality Indication
 #define EPHY_CDCR_LINKQUAL_GOOD 0x00000100  // Good Quality Link Indication
-#define EPHY_CDCR_LINKQUAL_MILD 0x00000200  // Mild Quality Link Indication
+#define EPHY_CDCR_LINKQUAL_MILD 0x00000200  // Mid- Quality Link Indication
 #define EPHY_CDCR_LINKQUAL_POOR 0x00000300  // Poor Quality Link Indication
 #define EPHY_CDCR_DONE          0x00000002  // Cable Diagnostic Process Done
 #define EPHY_CDCR_FAIL          0x00000001  // Cable Diagnostic Process Fail
@@ -1856,165 +1778,97 @@
 
 //*****************************************************************************
 //
-// The following are defines for the bit fields in the EPHY_ALCDCR register.
+// The following definitions are deprecated.
 //
 //*****************************************************************************
-#define EPHY_ALCDCR_ALCDSTART   0x00008000  // Start ALCD
-#define EPHY_ALCDCR_ALCDDONE    0x00001000  // TPTD Diagnostic Bypass
-#define EPHY_ALCDCR_ALCDOUT1_M  0x00000FF0  // ALCD Output 1
-#define EPHY_ALCDCR_ALCDCTRL_M  0x00000007  // ALCD Control
-#define EPHY_ALCDCR_ALCDOUT1_S  4
-#define EPHY_ALCDCR_ALCDCTRL_S  0
+#ifndef DEPRECATED
 
 //*****************************************************************************
 //
-// The following are defines for the bit fields in the EPHY_CDSCR register.
+// The following are deprecated defines for the bit fields in the
+// EMAC_O_PPSCTRL register.
 //
 //*****************************************************************************
-#define EPHY_CDSCR_CROSSTDR     0x00004000  // Cross TDR Diagnostic Mode
-#define EPHY_CDSCR_TPTDBYP      0x00002000  // TPTD Diagnostic Bypass
-#define EPHY_CDSCR_TPRDBYP      0x00001000  // TPRD Diagnostic Bypass
-#define EPHY_CDSCR_AVGCYC_M     0x00000700  // Number of TDR Cycles to Average
-#define EPHY_CDSCR_AVGCYC_1     0x00000000  // 1 TDR cycle
-#define EPHY_CDSCR_AVGCYC_2     0x00000100  // 2 TDR cycle
-#define EPHY_CDSCR_AVGCYC_4     0x00000200  // 4 TDR cycle
-#define EPHY_CDSCR_AVGCYC_8     0x00000300  // 8 TDR cycle
-#define EPHY_CDSCR_AVGCYC_16    0x00000400  // 16 TDR cycle
-#define EPHY_CDSCR_AVGCYC_32    0x00000500  // 32 TDR cycle
-#define EPHY_CDSCR_AVGCYC_64    0x00000600  // 64 TDR cycle
+#define EMAC_PPSCTRL_PPSCTRL_1HZ                                              \
+                                0x00000000  // When the PPSEN0 bit = 0x0, the
+                                            // EN0PPS signal is 1 pulse of the
+                                            // PTP reference clock.(of width
+                                            // clk_ptp_i) every second
+#define EMAC_PPSCTRL_PPSCTRL_2HZ                                              \
+                                0x00000001  // When the PPSEN0 bit = 0x0, the
+                                            // binary rollover is 2 Hz, and the
+                                            // digital rollover is 1 Hz
+#define EMAC_PPSCTRL_PPSCTRL_4HZ                                              \
+                                0x00000002  // When the PPSEN0 bit = 0x0, the
+                                            // binary rollover is 4 Hz, and the
+                                            // digital rollover is 2 Hz
+#define EMAC_PPSCTRL_PPSCTRL_8HZ                                              \
+                                0x00000003  // When thePPSEN0 bit = 0x0, the
+                                            // binary rollover is 8 Hz, and the
+                                            // digital rollover is 4 Hz,
+#define EMAC_PPSCTRL_PPSCTRL_16HZ                                             \
+                                0x00000004  // When thePPSEN0 bit = 0x0, the
+                                            // binary rollover is 16 Hz, and
+                                            // the digital rollover is 8 Hz
+#define EMAC_PPSCTRL_PPSCTRL_32HZ                                             \
+                                0x00000005  // When thePPSEN0 bit = 0x0, the
+                                            // binary rollover is 32 Hz, and
+                                            // the digital rollover is 16 Hz
+#define EMAC_PPSCTRL_PPSCTRL_64HZ                                             \
+                                0x00000006  // When thePPSEN0 bit = 0x0, the
+                                            // binary rollover is 64 Hz, and
+                                            // the digital rollover is 32 Hz
+#define EMAC_PPSCTRL_PPSCTRL_128HZ                                            \
+                                0x00000007  // When thePPSEN0 bit = 0x0, the
+                                            // binary rollover is 128 Hz, and
+                                            // the digital rollover is 64 Hz
+#define EMAC_PPSCTRL_PPSCTRL_256HZ                                            \
+                                0x00000008  // When thePPSEN0 bit = 0x0, the
+                                            // binary rollover is 256 Hz, and
+                                            // the digital rollover is 128 Hz
+#define EMAC_PPSCTRL_PPSCTRL_512HZ                                            \
+                                0x00000009  // When thePPSEN0 bit = 0x0, the
+                                            // binary rollover is 512 Hz, and
+                                            // the digital rollover is 256 Hz
+#define EMAC_PPSCTRL_PPSCTRL_1024HZ                                           \
+                                0x0000000A  // When the PPSEN0 bit = 0x0, the
+                                            // binary rollover is 1.024 kHz,
+                                            // and the digital rollover is 512
+                                            // Hz
+#define EMAC_PPSCTRL_PPSCTRL_2048HZ                                           \
+                                0x0000000B  // When thePPSEN0 bit = 0x0, the
+                                            // binary rollover is 2.048 kHz,
+                                            // and the digital rollover is
+                                            // 1.024 kHz
+#define EMAC_PPSCTRL_PPSCTRL_4096HZ                                           \
+                                0x0000000C  // When thePPSEN0 bit = 0x0, the
+                                            // binary rollover is 4.096 kHz,
+                                            // and the digital rollover is
+                                            // 2.048 kHz
+#define EMAC_PPSCTRL_PPSCTRL_8192HZ                                           \
+                                0x0000000D  // When thePPSEN0 bit = 0x0, the
+                                            // binary rollover is 8.192 kHz,
+                                            // and the digital rollover is
+                                            // 4.096 kHz
+#define EMAC_PPSCTRL_PPSCTRL_16384HZ                                          \
+                                0x0000000E  // When thePPSEN0 bit = 0x0, the
+                                            // binary rollover is 16.384 kHz,
+                                            // and the digital rollover is
+                                            // 8.092 kHz
+#define EMAC_PPSCTRL_PPSCTRL_32768HZ                                          \
+                                0x0000000F  // When thePPSEN0 bit = 0x0, the
+                                            // binary rollover is 32.768 KHz,
+                                            // and the digital rollover is
+                                            // 16.384 KHz
 
 //*****************************************************************************
 //
-// The following are defines for the bit fields in the EPHY_CDLR1 register.
+// The following are deprecated defines for the bit fields in the EMAC_O_CC
+// register.
 //
 //*****************************************************************************
-#define EPHY_CDLR1_TPTDPL2_M    0x0000FF00  // TPTD Peak Location 2
-#define EPHY_CDLR1_TPTDPL1_M    0x000000FF  // TPTD Peak Location 1
-#define EPHY_CDLR1_TPTDPL2_S    8
-#define EPHY_CDLR1_TPTDPL1_S    0
+#define EMAC_CC_CS_PA7          0x00000001  // GPIO
 
-//*****************************************************************************
-//
-// The following are defines for the bit fields in the EPHY_CDLR2 register.
-//
-//*****************************************************************************
-#define EPHY_CDLR2_TPTDPL4_M    0x0000FF00  // TPTD Peak Location 4
-#define EPHY_CDLR2_TPTDPL3_M    0x000000FF  // TPTD Peak Location 3
-#define EPHY_CDLR2_TPTDPL4_S    8
-#define EPHY_CDLR2_TPTDPL3_S    0
-
-//*****************************************************************************
-//
-// The following are defines for the bit fields in the EPHY_CDLR3 register.
-//
-//*****************************************************************************
-#define EPHY_CDLR3_TPRDPL1_M    0x0000FF00  // TPRD Peak Location 1
-#define EPHY_CDLR3_TPTDPL5_M    0x000000FF  // TPTD Peak Location 5
-#define EPHY_CDLR3_TPRDPL1_S    8
-#define EPHY_CDLR3_TPTDPL5_S    0
-
-//*****************************************************************************
-//
-// The following are defines for the bit fields in the EPHY_CDLR4 register.
-//
-//*****************************************************************************
-#define EPHY_CDLR4_TPRDPL3_M    0x0000FF00  // TPRD Peak Location 3
-#define EPHY_CDLR4_TPRDPL2_M    0x000000FF  // TPRD Peak Location 2
-#define EPHY_CDLR4_TPRDPL3_S    8
-#define EPHY_CDLR4_TPRDPL2_S    0
-
-//*****************************************************************************
-//
-// The following are defines for the bit fields in the EPHY_CDLR5 register.
-//
-//*****************************************************************************
-#define EPHY_CDLR5_TPRDPL5_M    0x0000FF00  // TPRD Peak Location 5
-#define EPHY_CDLR5_TPRDPL4_M    0x000000FF  // TPRD Peak Location 4
-#define EPHY_CDLR5_TPRDPL5_S    8
-#define EPHY_CDLR5_TPRDPL4_S    0
-
-//*****************************************************************************
-//
-// The following are defines for the bit fields in the EPHY_CDLAR1 register.
-//
-//*****************************************************************************
-#define EPHY_CDLAR1_TPTDPA2_M   0x00007F00  // TPTD Peak Amplitude 2
-#define EPHY_CDLAR1_TPTDPA1_M   0x0000007F  // TPTD Peak Amplitude 1
-#define EPHY_CDLAR1_TPTDPA2_S   8
-#define EPHY_CDLAR1_TPTDPA1_S   0
-
-//*****************************************************************************
-//
-// The following are defines for the bit fields in the EPHY_CDLAR2 register.
-//
-//*****************************************************************************
-#define EPHY_CDLAR2_TPTDPA4_M   0x00007F00  // TPTD Peak Amplitude 4
-#define EPHY_CDLAR2_TPTDPA3_M   0x0000007F  // TPTD Peak Amplitude 3
-#define EPHY_CDLAR2_TPTDPA4_S   8
-#define EPHY_CDLAR2_TPTDPA3_S   0
-
-//*****************************************************************************
-//
-// The following are defines for the bit fields in the EPHY_CDLAR3 register.
-//
-//*****************************************************************************
-#define EPHY_CDLAR3_TPRDPA1_M   0x00007F00  // TPTD Peak Amplitude 1
-#define EPHY_CDLAR3_TPTDPA5_M   0x0000007F  // TPTD Peak Amplitude 5
-#define EPHY_CDLAR3_TPRDPA1_S   8
-#define EPHY_CDLAR3_TPTDPA5_S   0
-
-//*****************************************************************************
-//
-// The following are defines for the bit fields in the EPHY_CDLAR4 register.
-//
-//*****************************************************************************
-#define EPHY_CDLAR4_TPRDPA3_M   0x00007F00  // TPRD Peak Amplitude 3
-#define EPHY_CDLAR4_TPRDPA2_M   0x0000007F  // TPRD Peak Amplitude 2
-#define EPHY_CDLAR4_TPRDPA3_S   8
-#define EPHY_CDLAR4_TPRDPA2_S   0
-
-//*****************************************************************************
-//
-// The following are defines for the bit fields in the EPHY_CDLAR5 register.
-//
-//*****************************************************************************
-#define EPHY_CDLAR5_TPRDPA5_M   0x00007F00  // TPRD Peak Amplitude 5
-#define EPHY_CDLAR5_TPRDPA4_M   0x0000007F  // TPRD Peak Amplitude 4
-#define EPHY_CDLAR5_TPRDPA5_S   8
-#define EPHY_CDLAR5_TPRDPA4_S   0
-
-//*****************************************************************************
-//
-// The following are defines for the bit fields in the EPHY_CDGRR register.
-//
-//*****************************************************************************
-#define EPHY_CDGRR_TPTDPP5      0x00008000  // TPTD Peak Polarity 5
-#define EPHY_CDGRR_TPTDPP4      0x00004000  // TPTD Peak Polarity 4
-#define EPHY_CDGRR_TPTDPP3      0x00002000  // TPTD Peak Polarity 3
-#define EPHY_CDGRR_TPTDPP2      0x00001000  // TPTD Peak Polarity 2
-#define EPHY_CDGRR_TPTDPP1      0x00000800  // TPTD Peak Polarity 1
-#define EPHY_CDGRR_TPRDPP5      0x00000400  // TPRD Peak Polarity 5
-#define EPHY_CDGRR_TPRDPP4      0x00000200  // TPRD Peak Polarity 4
-#define EPHY_CDGRR_TPRDPP3      0x00000100  // TPRD Peak Polarity 3
-#define EPHY_CDGRR_TPRDPP2      0x00000080  // TPRD Peak Polarity 2
-#define EPHY_CDGRR_TPRDPP1      0x00000040  // TPRD Peak Polarity 1
-#define EPHY_CDGRR_CDTPTD       0x00000020  // Cross Reflection were detected
-                                            // on TPTD
-#define EPHY_CDGRR_CDTPRD       0x00000010  // Cross Reflection were detected
-                                            // on TPRD
-#define EPHY_CDGRR_AB5TPTDP     0x00000008  // More than 5 reflections were
-                                            // detected on TPTD
-#define EPHY_CDGRR_AB5TPRDP     0x00000004  // More than 5 reflections were
-                                            // detected on TPRD
-
-//*****************************************************************************
-//
-// The following are defines for the bit fields in the EPHY_ALCDR2 register.
-//
-//*****************************************************************************
-#define EPHY_ALCDR2_ALCDOUT2_M  0x0000F000  // ALCD Output 2
-#define EPHY_ALCDR2_ALCDOUT3_M  0x00000FFF  // ALCD Output 2
-#define EPHY_ALCDR2_ALCDOUT2_S  12
-#define EPHY_ALCDR2_ALCDOUT3_S  0
+#endif
 
 #endif // __HW_EMAC_H__

@@ -2,7 +2,7 @@
 //
 // hw_eeprom.h - Macros used when accessing the EEPROM controller.
 //
-// Copyright (c) 2011-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2011-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Firmware Development Package.
+// This is part of revision 2.1.4.178 of the Tiva Firmware Development Package.
 //
 //*****************************************************************************
 
@@ -59,7 +59,7 @@
 #define EEPROM_EEPASS1          0x400AF038  // EEPROM Password
 #define EEPROM_EEPASS2          0x400AF03C  // EEPROM Password
 #define EEPROM_EEINT            0x400AF040  // EEPROM Interrupt
-#define EEPROM_EEHIDE0          0x400AF050  // EEPROM Block 0 Hide
+#define EEPROM_EEHIDE0          0x400AF050  // EEPROM Block Hide 0
 #define EEPROM_EEHIDE           0x400AF050  // EEPROM Block Hide
 #define EEPROM_EEHIDE1          0x400AF054  // EEPROM Block Hide 1
 #define EEPROM_EEHIDE2          0x400AF058  // EEPROM Block Hide 2
@@ -125,15 +125,12 @@
 #define EEPROM_EEDONE_WKCOPY    0x00000008  // Working on a Copy
 #define EEPROM_EEDONE_NOPERM    0x00000010  // Write Without Permission
 #define EEPROM_EEDONE_WRBUSY    0x00000020  // Write Busy
-#define EEPROM_EEDONE_INVPL     0x00000100  // Invalid Program Voltage Level
 
 //*****************************************************************************
 //
 // The following are defines for the bit fields in the EEPROM_EESUPP register.
 //
 //*****************************************************************************
-#define EEPROM_EESUPP_START     0x00000001  // Start Erase
-#define EEPROM_EESUPP_EREQ      0x00000002  // Erase Required
 #define EEPROM_EESUPP_ERETRY    0x00000004  // Erase Must Be Retried
 #define EEPROM_EESUPP_PRETRY    0x00000008  // Programming Must Be Retried
 

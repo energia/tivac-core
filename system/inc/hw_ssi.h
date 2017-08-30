@@ -2,7 +2,7 @@
 //
 // hw_ssi.h - Macros used when accessing the SSI hardware.
 //
-// Copyright (c) 2005-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2005-2017 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 //   Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // 
-// This is part of revision 2.0.1.11577 of the Tiva Firmware Development Package.
+// This is part of revision 2.1.4.178 of the Tiva Firmware Development Package.
 //
 //*****************************************************************************
 
@@ -68,8 +68,7 @@
 #define SSI_CR0_SPO             0x00000040  // SSI Serial Clock Polarity
 #define SSI_CR0_FRF_M           0x00000030  // SSI Frame Format Select
 #define SSI_CR0_FRF_MOTO        0x00000000  // Freescale SPI Frame Format
-#define SSI_CR0_FRF_TI          0x00000010  // Texas Instruments Synchronous
-                                            // Serial Frame Format
+#define SSI_CR0_FRF_TI          0x00000010  // Synchronous Serial Frame Format
 #define SSI_CR0_FRF_NMW         0x00000020  // MICROWIRE Frame Format
 #define SSI_CR0_DSS_M           0x0000000F  // SSI Data Size Select
 #define SSI_CR0_DSS_4           0x00000003  // 4-bit data
@@ -100,9 +99,9 @@
 #define SSI_CR1_MODE_LEGACY     0x00000000  // Legacy SSI mode
 #define SSI_CR1_MODE_BI         0x00000040  // Bi-SSI mode
 #define SSI_CR1_MODE_QUAD       0x00000080  // Quad-SSI Mode
-#define SSI_CR1_MODE_ADVANCED   0x000000C0  // Advanced SSI Mode
+#define SSI_CR1_MODE_ADVANCED   0x000000C0  // Advanced SSI Mode with 8-bit
+                                            // packet size
 #define SSI_CR1_EOT             0x00000010  // End of Transmission
-#define SSI_CR1_SOD             0x00000008  // SSI Slave Mode Output Disable
 #define SSI_CR1_MS              0x00000004  // SSI Master/Slave Select
 #define SSI_CR1_SSE             0x00000002  // SSI Synchronous Serial Port
                                             // Enable
@@ -219,8 +218,10 @@
 #define SSI_PP_FSSHLDFRM        0x00000008  // FSS Hold Frame Capability
 #define SSI_PP_MODE_M           0x00000006  // Mode of Operation
 #define SSI_PP_MODE_LEGACY      0x00000000  // Legacy SSI mode
-#define SSI_PP_MODE_ADVBI       0x00000002  // Advanced SSI and Bi-SSI
-#define SSI_PP_MODE_ADVBIQUAD   0x00000004  // Advanced, Bi- and Quad-SSI
+#define SSI_PP_MODE_ADVBI       0x00000002  // Legacy mode, Advanced SSI mode
+                                            // and Bi-SSI mode enabled
+#define SSI_PP_MODE_ADVBIQUAD   0x00000004  // Legacy mode, Advanced mode,
+                                            // Bi-SSI and Quad-SSI mode enabled
 #define SSI_PP_HSCLK            0x00000001  // High Speed Capability
 
 //*****************************************************************************
@@ -229,9 +230,8 @@
 //
 //*****************************************************************************
 #define SSI_CC_CS_M             0x0000000F  // SSI Baud Clock Source
-#define SSI_CC_CS_SYSPLL        0x00000000  // Either the system clock (if the
-                                            // PLL bypass is in effect) or the
-                                            // PLL output (default)
+#define SSI_CC_CS_SYSPLL        0x00000000  // System clock (based on clock
+                                            // source and divisor factor)
 #define SSI_CC_CS_PIOSC         0x00000005  // PIOSC
 
 #endif // __HW_SSI_H__
