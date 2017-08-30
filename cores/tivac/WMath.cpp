@@ -25,10 +25,12 @@
 
 extern "C" {
 #include "stdlib.h"
-/* Using interal random and srandom in file random.c
- * until msp430-libc adds supports for random and srandom */
+/*
+ * Using internal random and srandom in file random.c
+ * until msp430-libc adds supports for random and srandom
+ */
 extern long random(void);
-extern void srandom(unsigned long __seed);
+extern void srandom(unsigned __seed);
 }
 
 void randomSeed(unsigned int seed)
@@ -41,24 +43,24 @@ void randomSeed(unsigned int seed)
 long random(long howbig)
 {
     if (howbig == 0) {
-        return 0;
+        return (0);
     }
-    return random() % howbig;
+    return (random() % howbig);
 }
 
 long random(long howsmall, long howbig)
 {
     if (howsmall >= howbig) {
-        return howsmall;
+        return (howsmall);
     }
     long diff = howbig - howsmall;
-    return random(diff) + howsmall;
+    return (random(diff) + howsmall);
 }
 
 
 long map(long x, long in_min, long in_max, long out_min, long out_max)
 {
-    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+    return ((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min);
 }
 
 unsigned int makeWord(unsigned int w) { return w; }
