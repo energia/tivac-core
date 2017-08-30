@@ -17,10 +17,14 @@
 #elif defined(__TM4C1294NCPDT__)
 #define TARGET_IS_SNOWFLAKE_RA0
 #define PART_TM4C1294NCPDT
-#elif defined(__LM4F120H5QR__) || defined(__TM4C123GH6PM__)
+#elif defined(__LM4F120H5QR__) || defined(__TM4C123GH6PM__) || defined(__TM4C123GH6ZRB__)
 #define TARGET_IS_BLIZZARD_RB1
-#define PART_TM4C1233H6PM
+#if defined(__LM4F120H5QR__) || defined(__TM4C123GH6PM__)
+#define PART_TM4C123GH6PM
 #define PART_LM4F120H5QR
+#else
+#define PART_TM4C123GH6ZRB
+#endif
 #else
 #error "**** No PART defined or unsupported PART ****"
 #endif
