@@ -1,6 +1,6 @@
 /*-
  * Copyright (c) 1990, 1993
- *	The Regents of the University of California.  All rights reserved.
+ *  The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -33,7 +33,7 @@
 
 /*
  * From:
-static char sccsid[] = "@(#)rand.c	8.1 (Berkeley) 6/14/93";
+static char sccsid[] = "@(#)rand.c  8.1 (Berkeley) 6/14/93";
  */
 #ifndef RANDOM_MAX
 #define RANDOM_MAX 0x7FFFFFFF
@@ -41,8 +41,7 @@ static char sccsid[] = "@(#)rand.c	8.1 (Berkeley) 6/14/93";
 
 #include <stdlib.h>
 
-static long
-do_random(unsigned long *ctx)
+static long do_random(unsigned long *ctx)
 {
     /*
      * Compute x = (7^5 * x) mod (2^31 - 1)
@@ -56,34 +55,32 @@ do_random(unsigned long *ctx)
 
     x = *ctx;
     /* Can't be initialized with 0, so use another value. */
-    if (x == 0)
+    if (x == 0) {
         x = 123459876L;
+    }
     hi = x / 127773L;
     lo = x % 127773L;
     x = 16807L * lo - 2836L * hi;
-    if (x < 0)
+    if (x < 0) {
         x += 0x7fffffffL;
+    }
     return ((*ctx = x) % ((unsigned long)RANDOM_MAX + 1));
 }
 
 
-long
-random_r(unsigned long *ctx)
+long random_r(unsigned long *ctx)
 {
-    return do_random(ctx);
+    return (do_random(ctx));
 }
-
 
 static unsigned long next = 1;
 
-long
-random(void)
+long random(void)
 {
-    return do_random(&next);
+    return (do_random(&next));
 }
 
-void
-srandom(unsigned long seed)
+void srandom(unsigned seed)
 {
     next = seed;
 }
