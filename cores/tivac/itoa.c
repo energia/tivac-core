@@ -121,10 +121,12 @@ extern char* ltoa( long value, char *string, int radix )
   return string;
 }
 
+#if 0
 extern char* utoa( unsigned long value, char *string, int radix )
 {
   return ultoa( value, string, radix ) ;
 }
+#endif
 
 extern char* ultoa( unsigned long value, char *string, int radix )
 {
