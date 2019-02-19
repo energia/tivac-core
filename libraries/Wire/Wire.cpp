@@ -27,6 +27,7 @@
 
   Modified 23 November 2006 by David A. Mellis
   Modified 28 September 2010 by Mark Sproul
+  Modified 2019 by Victor Vasquez ......................... work in progress
  */
 
 #include <stdlib.h>
@@ -237,13 +238,15 @@ uint8_t TwoWire::getRxData(unsigned long cmd) {
 
 	if (currentState == IDLE) while(ROM_I2CMasterBusBusy(MASTER_BASE));
 	HWREG(MASTER_BASE + I2C_O_MCS) = cmd;
-	while(ROM_I2CMasterBusy(MASTER_BASE));
-	uint8_t error = ROM_I2CMasterErr(MASTER_BASE);
+	//while(ROM_I2CMasterBusy(MASTER_BASE));//PROB SIIIIIII
+        while(!(HWREG(MASTER_BASE + I2C_O_MRIS) & I2C_MRIS_RIS));//----
+        HWREG(MASTER_BASE + I2C_O_MICR) |= I2C_MICR_IC;//-----
+	uint8_t error = ROM_I2CMasterErr(MASTER_BASE);//checkear!!!!
 	if (error != I2C_MASTER_ERR_NONE) {
         ROM_I2CMasterControl(MASTER_BASE, I2C_MASTER_CMD_BURST_RECEIVE_ERROR_STOP);
 	}
 	else {
-		while(ROM_I2CMasterBusy(MASTER_BASE));
+		//while(ROM_I2CMasterBusy(MASTER_BASE));PROB NOOOOO
 		rxBuffer[rxWriteIndex] = ROM_I2CMasterDataGet(MASTER_BASE);
 		rxWriteIndex = (rxWriteIndex + 1) % BUFFER_LENGTH;
 	}
@@ -252,12 +255,14 @@ uint8_t TwoWire::getRxData(unsigned long cmd) {
 }
 
 uint8_t TwoWire::sendTxData(unsigned long cmd, uint8_t data) {
-    while(ROM_I2CMasterBusy(MASTER_BASE));
+    //while(ROM_I2CMasterBusy(MASTER_BASE));NOOOOOOOOOOOOO
     ROM_I2CMasterDataPut(MASTER_BASE, data);
 
     HWREG(MASTER_BASE + I2C_O_MCS) = cmd;
-    while(ROM_I2CMasterBusy(MASTER_BASE));
-    uint8_t error = ROM_I2CMasterErr(MASTER_BASE);
+    //while(ROM_I2CMasterBusy(MASTER_BASE));SIIIIIIIIIII
+    while(!(HWREG(MASTER_BASE + I2C_O_MRIS) & I2C_MRIS_RIS));//----
+    HWREG(MASTER_BASE + I2C_O_MICR) |= I2C_MICR_IC;//-----
+    uint8_t error = ROM_I2CMasterErr(MASTER_BASE);//checkear!!!!
     if (error != I2C_MASTER_ERR_NONE)
 		  ROM_I2CMasterControl(MASTER_BASE, I2C_MASTER_CMD_BURST_SEND_ERROR_STOP);
     return(getError(error));
@@ -308,7 +313,7 @@ void TwoWire::begin(void)
 	  forceStop();
 
   //Handle any startup issues by pulsing SCL
-  if(ROM_I2CMasterBusBusy(MASTER_BASE) || ROM_I2CMasterErr(MASTER_BASE) 
+  if(ROM_I2CMasterBusBusy(MASTER_BASE) || ROM_I2CMasterErr(MASTER_BASE) //--MasterErr uses Busy.....
 	|| !ROM_GPIOPinRead(g_uli2cBase[i2cModule], g_uli2cSCLPins[i2cModule])){
 	  uint8_t doI = 0;
   	  ROM_GPIOPinTypeGPIOOutput(g_uli2cBase[i2cModule], g_uli2cSCLPins[i2cModule]);
@@ -405,12 +410,15 @@ uint8_t TwoWire::requestFrom(uint8_t address, uint8_t quantity, uint8_t sendStop
 
   if(sendStop) {
 	  HWREG(MASTER_BASE + I2C_O_MCS) = STOP_BIT;
-	  while(ROM_I2CMasterBusy(MASTER_BASE));
+	  //while(ROM_I2CMasterBusy(MASTER_BASE));PROBABLYYYYYYYYYYYYYYYYYYYYYY
+          while(!(HWREG(MASTER_BASE + I2C_O_MRIS) & I2C_MRIS_RIS));//----
+          HWREG(MASTER_BASE + I2C_O_MICR) |= I2C_MICR_IC;//-----
 	  currentState = IDLE;
   }
 
   uint8_t bytesWritten = (rxWriteIndex >= oldWriteIndex) ?
-		 BUFFER_LENGTH - (rxWriteIndex - oldWriteIndex) : (oldWriteIndex - rxWriteIndex);
+		 //-----BUFFER_LENGTH - (rxWriteIndex - oldWriteIndex) : (oldWriteIndex - rxWriteIndex);
+		 (rxWriteIndex - oldWriteIndex) : (oldWriteIndex - rxWriteIndex);
 
   return(bytesWritten);
 
@@ -448,28 +456,44 @@ uint8_t TwoWire::endTransmission(uint8_t sendStop)
   if(TX_BUFFER_EMPTY) return 0;
   //Wait for any previous transaction to complete
   while(ROM_I2CMasterBusBusy(MASTER_BASE));
-  while(ROM_I2CMasterBusy(MASTER_BASE));
+  //while(ROM_I2CMasterBusy(MASTER_BASE));NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
 
   //Select which slave we are requesting data from
   //false indicates we are writing to the slave
   ROM_I2CMasterSlaveAddrSet(MASTER_BASE, txAddress, false);
 
-  while(ROM_I2CMasterBusy(MASTER_BASE));
+  //while(ROM_I2CMasterBusy(MASTER_BASE));NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
   unsigned long cmd = RUN_BIT | START_BIT;
 
   error = sendTxData(cmd,txBuffer[txReadIndex]);
-  txReadIndex = (txReadIndex + 1) % BUFFER_LENGTH;
-  if(error) return error;
+  //txReadIndex = (txReadIndex + 1) % BUFFER_LENGTH;//invertidooooooooooooooooooAAA
+  if(error) {//----------------
+	  txReadIndex = 0;//-------
+	  txWriteIndex = 0;//-------
+	  currentState = IDLE;//----------------
+	  transmitting = 0;//----------------
+	  return error;
+	  }//----------------
+  txReadIndex = (txReadIndex + 1) % BUFFER_LENGTH;//invertidooooooooooooooooooooAAA
   while(!TX_BUFFER_EMPTY) {
 	  error = sendTxData(RUN_BIT,txBuffer[txReadIndex]);
-  	  txReadIndex = (txReadIndex + 1) % BUFFER_LENGTH;
-	  if(error) return getError(error);
+  	  //txReadIndex = (txReadIndex + 1) % BUFFER_LENGTH;//invertidoooooooooooooooBBB
+	  if(error) {//----------------
+		  txReadIndex = 0;//-------
+		  txWriteIndex = 0;//-------
+		  currentState = IDLE;//----------------
+		  transmitting = 0;//----------------
+          	  return getError(error);
+	  }//----------------
+	  txReadIndex = (txReadIndex + 1) % BUFFER_LENGTH;//invertidoooooooooooooooooBBB
   }
 
   if(sendStop) {
-	  while(ROM_I2CMasterBusy(MASTER_BASE));
+	  //while(ROM_I2CMasterBusy(MASTER_BASE));NOOOOOOOOOOOOOOOOOOOOOOOOOOO
 	  HWREG(MASTER_BASE + I2C_O_MCS) = STOP_BIT;
-	  while(ROM_I2CMasterBusy(MASTER_BASE));
+	  //while(ROM_I2CMasterBusy(MASTER_BASE));SIIIIIIIII
+          while(!(HWREG(MASTER_BASE + I2C_O_MRIS) & I2C_MRIS_RIS));//----
+          HWREG(MASTER_BASE + I2C_O_MICR) |= I2C_MICR_IC;//----
 	  currentState = IDLE;
   }
   else {
