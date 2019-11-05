@@ -47,12 +47,12 @@ class HardwareSerial : public Stream
 	private:
 		unsigned char *txBuffer;
 		unsigned long txBufferSize;
-		unsigned long txWriteIndex;
-		unsigned long txReadIndex;
+		volatile unsigned long txWriteIndex;
+		volatile unsigned long txReadIndex;
 		unsigned char *rxBuffer;
 		unsigned long rxBufferSize;
-		unsigned long rxWriteIndex;
-		unsigned long rxReadIndex;
+		volatile unsigned long rxWriteIndex;
+		volatile unsigned long rxReadIndex;
 		unsigned long uartModule;
 		unsigned long baudRate;
 		void flushAll(void);
