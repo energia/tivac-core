@@ -47,7 +47,7 @@ struct EERef{
         //int word = (address / BYTES_PER_WORD) % WORDS_PER_BLOCK;
         uint32_t wordVal = 0;
 
-        ROM_EEPROMRead(&wordVal, byteAddr, 4);
+        EEPROMRead(&wordVal, byteAddr, 4);
         wordVal = wordVal >> (8*(index % BYTES_PER_WORD));
 
         return (uint8_t) wordVal;
@@ -62,11 +62,11 @@ struct EERef{
         uint32_t byteAddr = index - (index % BYTES_PER_WORD);
 
         uint32_t wordVal = 0;
-        ROM_EEPROMRead(&wordVal, index, 4);
+        EEPROMRead(&wordVal, index, 4);
         wordVal &= ~(0xFF << (8*(index % BYTES_PER_WORD)));
         wordVal += in << (8*(index % BYTES_PER_WORD));
 
-        return ROM_EEPROMProgram(&wordVal, byteAddr, 4), *this;
+        return EEPROMProgram(&wordVal, byteAddr, 4), *this;
     }
     EERef &operator +=( uint8_t in )     { return *this = **this + in; }
     EERef &operator -=( uint8_t in )     { return *this = **this - in; }
