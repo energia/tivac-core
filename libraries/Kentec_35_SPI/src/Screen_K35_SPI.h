@@ -58,8 +58,12 @@
 /// @brief	Library release number
 ///
 #define Screen_K35_SPI_RELEASE 104
-
+#include "LCD_screen.h"
 #include "LCD_screen_font.h"
+#include "LCD_utilities.h"
+#include "Terminal12e.h"
+#include "Terminal6e.h"
+#include "Terminal8e.h"
 #include "SPI.h"
 
 //#if LCD_SCREEN_FONT_RELEASE < 117
