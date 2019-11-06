@@ -32,20 +32,50 @@
 #define MSBFIRST 1
 #define LSBFIRST 0
 
+class SPISettings {
+public:
+  uint8_t _SSIBitOrder;
+  uint8_t _SSIMode;
+  uint8_t _divider;
+  SPISettings(uint32_t clock, uint8_t bitOrder, uint8_t dataMode) {
+      init_AlwaysInline(clock, bitOrder, dataMode);
+  }
+  SPISettings() {
+    init_AlwaysInline(4000000, MSBFIRST, SPI_MODE0);
+  }
+private:
+
+  void init_AlwaysInline(uint32_t clock, uint8_t bitOrder, uint8_t dataMode)
+    __attribute__((__always_inline__)) {
+
+    // Pack into the SPISettings class
+    _SSIBitOrder = bitOrder;
+    _SSIMode     = dataMode ;
+    _divider     =  20000000/clock;
+  }
+  friend class SPIClass;  
+};
+
 class SPIClass {
 
 private:
-
 	uint8_t SSIModule;
 	uint8_t SSIBitOrder;
-
+  static uint8_t inTransactionFlag;
+  static uint8_t initialized;
+  static uint8_t interruptMode; // 0=none, 1=mask, 2=global
+  static uint8_t interruptMask[NUM_PORTS]; // which interrupts to mask
+  static uint8_t interruptSave[NUM_PORTS]; // temp storage, to restore state
 public:
 
   SPIClass(void);
   SPIClass(uint8_t);
   void begin(); // Default
   void end();
-
+  void usingInterrupt(uint8_t interruptNumber);
+  void notUsingInterrupt(uint8_t interruptNumber);
+  void endTransaction(void);
+  void beginTransaction(SPISettings settings);
   void setBitOrder(uint8_t);
   void setBitOrder(uint8_t, uint8_t);
 

@@ -12,6 +12,7 @@
 #include "inc/hw_memmap.h"
 #include "inc/hw_ssi.h"
 #include "inc/hw_types.h"
+#include "inc/hw_gpio.h"
 #include "driverlib/ssi.h"
 #include "driverlib/gpio.h"
 #include "driverlib/sysctl.h"
@@ -145,6 +146,11 @@ static const unsigned long g_ulSSIPins[] = {
 #endif
 };
 
+uint8_t SPIClass::initialized = 0;
+uint8_t SPIClass::interruptMode = 0;
+uint8_t SPIClass::interruptMask[] = {};
+uint8_t SPIClass::interruptSave[] = {};
+
 SPIClass::SPIClass(void) {
 	SSIModule = NOT_ACTIVE;
 	SSIBitOrder = MSBFIRST;
@@ -154,61 +160,154 @@ SPIClass::SPIClass(uint8_t module) {
 	SSIModule = module;
 	SSIBitOrder = MSBFIRST;
 }
-  
+
+void SPIClass::beginTransaction(SPISettings settings) {
+    if (interruptMode > 0) {
+        if (interruptMode == 1) {
+            uint8_t i;
+            for(i = 1; i < NUM_PORTS; i++) {
+                if(interruptMask[i]) {
+                    interruptSave[i] = HWREG((uint32_t) portBASERegister(i) + GPIO_O_IM);
+                    // disable the registered interrupts
+                    GPIOIntDisable((uint32_t) portBASERegister(i), interruptMask[i]);
+                }
+            }
+        } else {
+            noInterrupts();
+        }
+    }
+	setBitOrder(settings._SSIBitOrder);
+	setDataMode(settings._SSIMode);
+	setClockDivider(settings._divider);
+}
+
+void SPIClass::endTransaction(void) {
+    if (interruptMode > 0) {
+        noInterrupts();
+        if (interruptMode == 1) {
+            uint8_t i;
+            for(i = 1; i < NUM_PORTS; i++) {
+                if(interruptSave[i]) {
+                    // disable the registered interrupts
+                    GPIOIntEnable((uint32_t) portBASERegister(i), interruptSave[i]);
+                }
+            }
+            interrupts();
+        } else {
+            interrupts();
+        }
+    }
+}
+
 void SPIClass::begin() {
-	unsigned long initialData = 0;
+    if (!initialized) {
+        unsigned long initialData = 0;
 
-    if(SSIModule == NOT_ACTIVE) {
-        SSIModule = BOOST_PACK_SPI;
-    }
+        if(SSIModule == NOT_ACTIVE) {
+            SSIModule = BOOST_PACK_SPI;
+        }
 
-	ROM_SysCtlPeripheralEnable(g_ulSSIPeriph[SSIModule]);
-	ROM_SSIDisable(SSIBASE);
-	ROM_GPIOPinConfigure(g_ulSSIConfig[SSIModule][0]);
-	ROM_GPIOPinConfigure(g_ulSSIConfig[SSIModule][1]);
-	ROM_GPIOPinConfigure(g_ulSSIConfig[SSIModule][2]);
-	ROM_GPIOPinConfigure(g_ulSSIConfig[SSIModule][3]);
-#if defined(TARGET_IS_BLIZZARD_RB1)
-	ROM_GPIOPinTypeSSI(g_ulSSIPort[SSIModule], g_ulSSIPins[SSIModule]);
-#elif defined(__TM4C129XNCZAD__) || defined(__TM4C1294NCPDT__)
-    if (SSIModule == 1) { // 1 is a split port 
-	    ROM_GPIOPinTypeSSI(GPIO_PORTB_BASE, GPIO_PIN_5 | GPIO_PIN_4);
-	    ROM_GPIOPinTypeSSI(GPIO_PORTE_BASE, GPIO_PIN_4 | GPIO_PIN_5);
-    } else {
-	    ROM_GPIOPinTypeSSI(g_ulSSIPort[SSIModule], g_ulSSIPins[SSIModule]);
-    }
-#endif
+        ROM_SysCtlPeripheralEnable(g_ulSSIPeriph[SSIModule]);
+        ROM_SSIDisable(SSIBASE);
+        ROM_GPIOPinConfigure(g_ulSSIConfig[SSIModule][0]);
+        ROM_GPIOPinConfigure(g_ulSSIConfig[SSIModule][1]);
+        ROM_GPIOPinConfigure(g_ulSSIConfig[SSIModule][2]);
+        ROM_GPIOPinConfigure(g_ulSSIConfig[SSIModule][3]);
+    #if defined(TARGET_IS_BLIZZARD_RB1)
+        ROM_GPIOPinTypeSSI(g_ulSSIPort[SSIModule], g_ulSSIPins[SSIModule]);
+    #elif defined(__TM4C129XNCZAD__) || defined(__TM4C1294NCPDT__)
+        if (SSIModule == 1) { // 1 is a split port 
+            ROM_GPIOPinTypeSSI(GPIO_PORTB_BASE, GPIO_PIN_5 | GPIO_PIN_4);
+            ROM_GPIOPinTypeSSI(GPIO_PORTE_BASE, GPIO_PIN_4 | GPIO_PIN_5);
+        } else {
+            ROM_GPIOPinTypeSSI(g_ulSSIPort[SSIModule], g_ulSSIPins[SSIModule]);
+        }
+    #endif
 
 
-	/*
-	  Polarity Phase        Mode
-	     0 	   0   SSI_FRF_MOTO_MODE_0
-	     0     1   SSI_FRF_MOTO_MODE_1
-	     1     0   SSI_FRF_MOTO_MODE_2
-	     1     1   SSI_FRF_MOTO_MODE_3
-	*/
+        /*
+        Polarity Phase        Mode
+            0 	   0   SSI_FRF_MOTO_MODE_0
+            0     1   SSI_FRF_MOTO_MODE_1
+            1     0   SSI_FRF_MOTO_MODE_2
+            1     1   SSI_FRF_MOTO_MODE_3
+        */
 
-	/*
-	 * Default to
-	 * System Clock, SPI_MODE_0, MASTER,
-	 * 4MHz bit rate, and 8 bit data
-	*/
-	ROM_SSIClockSourceSet(SSIBASE, SSI_CLOCK_SYSTEM);
+        /*
+        * Default to
+        * System Clock, SPI_MODE_0, MASTER,
+        * 4MHz bit rate, and 8 bit data
+        */
+        ROM_SSIClockSourceSet(SSIBASE, SSI_CLOCK_SYSTEM);
 
-#if defined(TARGET_IS_BLIZZARD_RB1)
-	ROM_SSIConfigSetExpClk(SSIBASE, SysCtlClockGet(), SSI_FRF_MOTO_MODE_0, SSI_MODE_MASTER, 4000000, 8);
-#else
-	ROM_SSIConfigSetExpClk(SSIBASE, F_CPU, SSI_FRF_MOTO_MODE_0, SSI_MODE_MASTER, 4000000, 8);
-#endif
+    #if defined(TARGET_IS_BLIZZARD_RB1)
+        SSIConfigSetExpClk(SSIBASE, SysCtlClockGet(), SSI_FRF_MOTO_MODE_0, SSI_MODE_MASTER, 8000000, 8);
+    #else
+        SSIConfigSetExpClk(SSIBASE, F_CPU, SSI_FRF_MOTO_MODE_0, SSI_MODE_MASTER, 8000000, 8);
+    #endif
 
-	ROM_SSIEnable(SSIBASE);
+        ROM_SSIEnable(SSIBASE);
 
-	//clear out any initial data that might be present in the RX FIFO
-	while(ROM_SSIDataGetNonBlocking(SSIBASE, &initialData));
+        //clear out any initial data that might be present in the RX FIFO
+        while(ROM_SSIDataGetNonBlocking(SSIBASE, &initialData));
+        }
+    initialized++; // reference count
 }
 
 void SPIClass::end() {
-	ROM_SSIDisable(SSIBASE);
+    if (initialized)
+        initialized--;
+    if (!initialized) {
+    	ROM_SSIDisable(SSIBASE);
+        interruptMode = 0;
+    }
+}
+
+void SPIClass::usingInterrupt(uint8_t interruptNumber) {
+    noInterrupts();
+    // handle interruptMode
+    uint8_t bit = digitalPinToBitMask(interruptNumber);
+	uint8_t port = digitalPinToPort(interruptNumber);
+    
+    if(!port || !bit) {
+        interruptMode = 2;
+    }
+
+    if (!interruptMode) {
+        interruptMode = 1;
+    }
+
+    interruptMask[port] |= bit;
+
+    interrupts();
+}
+
+void SPIClass::notUsingInterrupt(uint8_t interruptNumber) {
+  if (interruptMode == 2) {
+    return;
+  }
+
+    uint8_t haveInterrupts = false;
+    uint8_t i;
+
+    noInterrupts();
+    // handle interruptMode
+
+    uint8_t bit = digitalPinToBitMask(interruptNumber);
+	uint8_t port = digitalPinToPort(interruptNumber);
+    interruptMask[port] &= ~bit;
+
+    for(i = 1; i < NUM_PORTS; i++) {
+        if(interruptMask[i]) {
+            haveInterrupts = true;
+            break;
+        }
+    }
+
+    if (!haveInterrupts)
+        interruptMode = 0;
+
+    interrupts();
 }
 
 void SPIClass::setBitOrder(uint8_t ssPin, uint8_t bitOrder) {
@@ -225,8 +324,31 @@ void SPIClass::setDataMode(uint8_t mode) {
 }
 
 void SPIClass::setClockDivider(uint8_t divider){
-  //value must be even
-  HWREG(SSIBASE + SSI_O_CPSR) = divider;
+
+    uint32_t ui32MaxBitRate;
+    uint32_t ui32BitRate;
+    uint32_t ui32RegVal;
+    uint32_t ui32PreDiv;
+    uint32_t ui32SCR;
+
+    ui32BitRate = 16000000 / divider;
+    //
+    // Set the clock predivider.
+    //
+    ui32MaxBitRate = F_CPU / ui32BitRate;
+    ui32PreDiv = 0;
+    do
+    {
+        ui32PreDiv += 2;
+        ui32SCR = (ui32MaxBitRate / ui32PreDiv) - 1; 
+    }
+    while(ui32SCR > 255);
+    HWREG(SSIBASE + SSI_O_CPSR) = ui32PreDiv;
+
+    ui32RegVal = HWREG(SSIBASE + SSI_O_CR0);
+    ui32RegVal &= ~(0xff << 8);
+    ui32RegVal |= (ui32SCR << 8) & (0xff) << 8;
+    HWREG(SSIBASE + SSI_O_CR0) = ui32RegVal;
 }
 
 uint8_t SPIClass::transfer(uint8_t data) {

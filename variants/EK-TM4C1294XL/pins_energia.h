@@ -435,8 +435,8 @@ static const uint8_t PB_1 = 95; // unrouted
 
 // end connector pin defines
 
+#define NUM_PORTS 16
 #ifdef ARDUINO_MAIN
-
 const uint32_t port_to_base[] = {
     NOT_A_PORT,
     (uint32_t) GPIO_PORTA_BASE, // 1
