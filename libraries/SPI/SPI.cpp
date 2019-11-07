@@ -241,9 +241,9 @@ void SPIClass::begin() {
         ROM_SSIClockSourceSet(SSIBASE, SSI_CLOCK_SYSTEM);
 
     #if defined(TARGET_IS_BLIZZARD_RB1)
-        SSIConfigSetExpClk(SSIBASE, SysCtlClockGet(), SSI_FRF_MOTO_MODE_0, SSI_MODE_MASTER, 8000000, 8);
+        SSIConfigSetExpClk(SSIBASE, SysCtlClockGet(), SSI_FRF_MOTO_MODE_0, SSI_MODE_MASTER, 4000000, 8);
     #else
-        SSIConfigSetExpClk(SSIBASE, F_CPU, SSI_FRF_MOTO_MODE_0, SSI_MODE_MASTER, 8000000, 8);
+        SSIConfigSetExpClk(SSIBASE, F_CPU, SSI_FRF_MOTO_MODE_0, SSI_MODE_MASTER, 4000000, 8);
     #endif
 
         ROM_SSIEnable(SSIBASE);
@@ -346,13 +346,13 @@ void SPIClass::setClockDivider(uint8_t divider){
     HWREG(SSIBASE + SSI_O_CPSR) = ui32PreDiv;
 
     ui32RegVal = HWREG(SSIBASE + SSI_O_CR0);
-    ui32RegVal &= ~(0xff << 8);
-    ui32RegVal |= (ui32SCR << 8) & (0xff) << 8;
+    ui32RegVal &= ~(SSI_CR0_SCR_M);
+    ui32RegVal |= (ui32SCR << SSI_CR0_SCR_S) & (SSI_CR0_SCR_M);
     HWREG(SSIBASE + SSI_O_CR0) = ui32RegVal;
 }
 
 uint8_t SPIClass::transfer(uint8_t data) {
-	unsigned long rxtxData;
+	uint32_t rxtxData;
 
 	rxtxData = data;
 	if(SSIBitOrder == LSBFIRST) {
@@ -370,6 +370,63 @@ uint8_t SPIClass::transfer(uint8_t data) {
 	}
 
 	return (uint8_t) rxtxData;
+}
+
+uint16_t SPIClass::transfer16(uint16_t data) {
+    uint32_t rxtxData;
+    uint32_t ui32RegVal;
+
+    // Set datawidth to 16 bit
+    ui32RegVal = HWREG(SSIBASE + SSI_O_CR0);
+    ui32RegVal &= ~(SSI_CR0_DSS_M);
+    ui32RegVal |= (SSI_CR0_DSS_16);
+
+    HWREG(SSIBASE + SSI_O_CR0) = ui32RegVal;
+
+	rxtxData = data;
+	if(SSIBitOrder == LSBFIRST) {
+		asm("rbit %0, %1" : "=r" (rxtxData) : "r" (rxtxData));	// reverse order of 32 bits 
+		asm("rev %0, %1" : "=r" (rxtxData) : "r" (rxtxData));	// reverse order of bytes to get original bits into lowest byte 
+	}
+	ROM_SSIDataPut(SSIBASE, (uint16_t) rxtxData);
+
+	while(ROM_SSIBusy(SSIBASE));
+
+	ROM_SSIDataGet(SSIBASE, &rxtxData);
+	if(SSIBitOrder == LSBFIRST) {
+		asm("rbit %0, %1" : "=r" (rxtxData) : "r" (rxtxData));	// reverse order of 32 bits 
+		asm("rev %0, %1" : "=r" (rxtxData) : "r" (rxtxData));	// reverse order of bytes to get original bits into lowest byte 
+	}
+
+    // Set datawidth to 8 bit
+    ui32RegVal = HWREG(SSIBASE + SSI_O_CR0);
+    ui32RegVal &= ~(SSI_CR0_DSS_M);
+    ui32RegVal |= (SSI_CR0_DSS_8);
+
+    HWREG(SSIBASE + SSI_O_CR0) = ui32RegVal;
+
+	return (uint16_t) rxtxData;
+}
+
+void SPIClass::transfer(void *buf, size_t count) { 
+    uint32_t ui32RegVal;
+    uint32_t txData;
+    uint8_t *_buf = (uint8_t *) buf;
+    size_t i;
+    
+    if(count == 1) {
+        transfer(_buf[0]);
+    }
+
+    // Transfer 16 bytes at the time
+    for(i = 0; i < count; i = i+ 2) {
+        if(count - i == 1) {
+            transfer(_buf[i]);
+            break;
+        }
+        txData = ((uint8_t)_buf[i]) << 8 | ((uint8_t)_buf[i + 1]);
+        transfer16(txData);
+    }
 }
 
 void SPIClass::setModule(uint8_t module) {

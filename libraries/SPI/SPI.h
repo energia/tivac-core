@@ -84,6 +84,8 @@ public:
   void setClockDivider(uint8_t);
 
   uint8_t transfer(uint8_t);
+  uint16_t transfer16(uint16_t data);
+  void transfer(void *buf, size_t count);
 
   //Stellarpad-specific functions
   void setModule(uint8_t);
