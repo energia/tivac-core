@@ -434,4 +434,17 @@ void SPIClass::setModule(uint8_t module) {
 	begin();
 }
 
-SPIClass SPI;
+SPIClass SPI0(2);
+
+#if SPI_INTERFACES_COUNT > 0
+  SPIClass SPI0(0);
+#endif
+#if SPI_INTERFACES_COUNT > 1
+  SPIClass SPI1(1);
+#endif
+#if SPI_INTERFACES_COUNT > 2
+  SPIClass SPI2(2);
+#endif
+#if SPI_INTERFACES_COUNT > 3
+  SPIClass SPI3(3);
+#endif

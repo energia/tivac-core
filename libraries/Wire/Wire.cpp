@@ -196,27 +196,28 @@ static const unsigned long g_uli2cSCLPins[4] =
 
 // Initialize Class Variables //////////////////////////////////////////////////
 
-uint8_t TwoWire::rxBuffer[BUFFER_LENGTH];
-uint8_t TwoWire::rxReadIndex = 0;
-uint8_t TwoWire::rxWriteIndex = 0;
-uint8_t TwoWire::txAddress = 0;
+// uint8_t TwoWire::rxBuffer[BUFFER_LENGTH];
+// uint8_t TwoWire::rxReadIndex = 0;
+// uint8_t TwoWire::rxWriteIndex = 0;
+// uint8_t TwoWire::txAddress = 0;
 
-uint8_t TwoWire::txBuffer[BUFFER_LENGTH];
-uint8_t TwoWire::txReadIndex = 0;
-uint8_t TwoWire::txWriteIndex = 0;
+// uint8_t TwoWire::txBuffer[BUFFER_LENGTH];
+// uint8_t TwoWire::txReadIndex = 0;
+// uint8_t TwoWire::txWriteIndex = 0;
 
-uint8_t TwoWire::transmitting = 0;
-uint8_t TwoWire::currentState = IDLE;
+// uint8_t TwoWire::transmitting = 0;
+// uint8_t TwoWire::currentState = IDLE;
 
-void (*TwoWire::user_onRequest)(void);
-void (*TwoWire::user_onReceive)(int);
+// void (*TwoWire::user_onRequest)(void);
+// void (*TwoWire::user_onReceive)(int);
 
-uint8_t TwoWire::i2cModule = NOT_ACTIVE;
-uint8_t TwoWire::slaveAddress = 0;
+// uint8_t TwoWire::i2cModule = NOT_ACTIVE;
+// uint8_t TwoWire::slaveAddress = 0;
 // Constructors ////////////////////////////////////////////////////////////////
 
 TwoWire::TwoWire()
 {
+  i2cModule = NOT_ACTIVE;
 }
 
 TwoWire::TwoWire(unsigned long module)
@@ -652,12 +653,6 @@ void TwoWire::I2CIntHandler(void) {
 
 }
 
-void
-I2CIntHandler(void)
-{
-    Wire.I2CIntHandler();
-}
-
 void TwoWire::setModule(unsigned long _i2cModule)
 {
     i2cModule = _i2cModule;
@@ -665,5 +660,38 @@ void TwoWire::setModule(unsigned long _i2cModule)
     else begin();
 }
 
-//Preinstantiate Object
-TwoWire Wire;
+//Preinstantiate Objects
+TwoWire Wire(1);
+
+#if WIRE_INTERFACES_COUNT > 0
+TwoWire Wire0(0);
+
+void I2CIntHandler0(void)
+{
+    Wire0.I2CIntHandler();
+}
+#endif
+#if WIRE_INTERFACES_COUNT > 1
+TwoWire Wire1(1);
+
+void I2CIntHandler1(void)
+{
+    Wire1.I2CIntHandler();
+}
+#endif
+#if WIRE_INTERFACES_COUNT > 2
+TwoWire Wire2(2);
+
+void I2CIntHandler2(void)
+{
+    Wire2.I2CIntHandler();
+}
+#endif
+#if WIRE_INTERFACES_COUNT > 3
+TwoWire Wire3(3);
+
+void I2CIntHandler3(void)
+{
+    Wire3.I2CIntHandler();
+}
+#endif

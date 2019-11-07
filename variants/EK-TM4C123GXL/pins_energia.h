@@ -103,7 +103,8 @@ static const uint8_t BLUE_LED = 40;
 static const uint8_t PUSH1 = 31;
 static const uint8_t PUSH2 = 17;
 static const uint8_t TEMPSENSOR = 0;
-
+#define SPI_INTERFACES_COUNT 4
+#define WIRE_INTERFACES_COUNT 4
 #define NUM_PORTS 7
 #ifdef ARDUINO_MAIN
 const uint32_t port_to_base[] = {
