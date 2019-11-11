@@ -80,14 +80,18 @@ class TwoWire : public Stream
 extern TwoWire Wire;
 #if WIRE_INTERFACES_COUNT > 0
   extern TwoWire Wire0;
+  extern "C" void I2CIntHandler0(void);
 #endif
 #if WIRE_INTERFACES_COUNT > 1
   extern TwoWire Wire1;
+  extern "C" void I2CIntHandler1(void);
 #endif
 #if WIRE_INTERFACES_COUNT > 2
   extern TwoWire Wire2;
+  extern "C" void I2CIntHandler2(void);
 #endif
 #if WIRE_INTERFACES_COUNT > 3
   extern TwoWire Wire3;
+  extern "C" void I2CIntHandler3(void);
 #endif
 #endif
