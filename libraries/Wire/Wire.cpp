@@ -238,13 +238,18 @@ uint8_t TwoWire::getRxData(unsigned long cmd) {
 
 	if (currentState == IDLE) while(ROM_I2CMasterBusBusy(MASTER_BASE));
 	HWREG(MASTER_BASE + I2C_O_MCS) = cmd;
-	while(ROM_I2CMasterBusy(MASTER_BASE));
+	/*
+	 * Work-around of I2C MasterBUSY Status bit does not get set Immediately
+	 * See ERRATA I2C#08 in http://www.ti.com/lit/er/spmz850g/spmz850g.pdf
+	 */
+	
+    while(!(HWREG(MASTER_BASE + I2C_O_MRIS) & I2C_MRIS_RIS));
+    HWREG(MASTER_BASE + I2C_O_MICR) |= I2C_MICR_IC;
 	uint8_t error = ROM_I2CMasterErr(MASTER_BASE);
 	if (error != I2C_MASTER_ERR_NONE) {
         ROM_I2CMasterControl(MASTER_BASE, I2C_MASTER_CMD_BURST_RECEIVE_ERROR_STOP);
 	}
 	else {
-		while(ROM_I2CMasterBusy(MASTER_BASE));
 		rxBuffer[rxWriteIndex] = ROM_I2CMasterDataGet(MASTER_BASE);
 		rxWriteIndex = (rxWriteIndex + 1) % BUFFER_LENGTH;
 	}
@@ -257,8 +262,13 @@ uint8_t TwoWire::sendTxData(unsigned long cmd, uint8_t data) {
     ROM_I2CMasterDataPut(MASTER_BASE, data);
 
     HWREG(MASTER_BASE + I2C_O_MCS) = cmd;
-    while(ROM_I2CMasterBusy(MASTER_BASE));
-    uint8_t error = ROM_I2CMasterErr(MASTER_BASE);
+	/*
+	 * Work-around of I2C MasterBUSY Status bit does not get set Immediately
+	 * See ERRATA I2C#08 in http://www.ti.com/lit/er/spmz850g/spmz850g.pdf
+	 */
+    while(!(HWREG(MASTER_BASE + I2C_O_MRIS) & I2C_MRIS_RIS));//----
+    HWREG(MASTER_BASE + I2C_O_MICR) |= I2C_MICR_IC;//-----
+    uint8_t error = ROM_I2CMasterErr(MASTER_BASE);//checkear!!!!
     if (error != I2C_MASTER_ERR_NONE)
 		  ROM_I2CMasterControl(MASTER_BASE, I2C_MASTER_CMD_BURST_SEND_ERROR_STOP);
     return(getError(error));
@@ -406,12 +416,13 @@ uint8_t TwoWire::requestFrom(uint8_t address, uint8_t quantity, uint8_t sendStop
 
   if(sendStop) {
 	  HWREG(MASTER_BASE + I2C_O_MCS) = STOP_BIT;
-	  while(ROM_I2CMasterBusy(MASTER_BASE));
+      while(!(HWREG(MASTER_BASE + I2C_O_MRIS) & I2C_MRIS_RIS));
+      HWREG(MASTER_BASE + I2C_O_MICR) |= I2C_MICR_IC;
 	  currentState = IDLE;
   }
 
   uint8_t bytesWritten = (rxWriteIndex >= oldWriteIndex) ?
-		 BUFFER_LENGTH - (rxWriteIndex - oldWriteIndex) : (oldWriteIndex - rxWriteIndex);
+		 (rxWriteIndex - oldWriteIndex) : (oldWriteIndex - rxWriteIndex);
 
   return(bytesWritten);
 
