@@ -58,6 +58,8 @@
 #define START_BIT 	0x2
 #define STOP_BIT	0x4
 #define ACK_BIT 	0x8
+#define HS_PREAMBLE 0x07
+
 
 #define NOT_ACTIVE  0xA
 
@@ -71,7 +73,7 @@ static const unsigned long g_uli2cMasterBase[4] =
 	I2C2_BASE, I2C3_BASE
 #elif defined(__TM4C1294NCPDT__)
     I2C0_BASE, I2C2_BASE, 
-	I2C8_BASE, I2C7_BASE
+	I2C4_BASE, I2C3_BASE
 #endif
 };
 static const unsigned long g_uli2cSlaveBase[4] =
@@ -84,15 +86,15 @@ static const unsigned long g_uli2cSlaveBase[4] =
 	I2C2_BASE, I2C3_BASE
 #elif defined(__TM4C1294NCPDT__)
     I2C0_BASE, I2C2_BASE, 
-	I2C8_BASE, I2C7_BASE
+	I2C4_BASE, I2C3_BASE
 #endif
 };
 
-//*****************************************************************************
-//
-// The list of possible interrupts for the console i2c.
-//
-//*****************************************************************************
+/******************************************************************************
+ *
+ * The list of possible interrupts for the console i2c.
+ *
+ ******************************************************************************/
 static const unsigned long g_uli2cInt[4] =
 {
 #if defined(TARGET_IS_BLIZZARD_RB1)
@@ -100,16 +102,15 @@ static const unsigned long g_uli2cInt[4] =
 #elif defined(__TM4C129XNCZAD__)
     INT_I2C0, INT_I2C1, INT_I2C2, INT_I2C3
 #elif defined(__TM4C1294NCPDT__)
-    INT_I2C0, INT_I2C2, INT_I2C8, INT_I2C7
+    INT_I2C0, INT_I2C2, INT_I2C4, INT_I2C3
 #endif
 
 };
 
-//*****************************************************************************
-//
-// The list of i2c peripherals.
-//
-//*****************************************************************************
+/******************************************************************************
+ * The list of i2c peripherals.
+ *
+ ******************************************************************************/
 static const unsigned long g_uli2cPeriph[4] =
 {
 #if defined(TARGET_IS_BLIZZARD_RB1)
@@ -120,15 +121,15 @@ static const unsigned long g_uli2cPeriph[4] =
     SYSCTL_PERIPH_I2C2, SYSCTL_PERIPH_I2C3
 #elif defined(__TM4C1294NCPDT__)
     SYSCTL_PERIPH_I2C0, SYSCTL_PERIPH_I2C2, 
-    SYSCTL_PERIPH_I2C8, SYSCTL_PERIPH_I2C7
+    SYSCTL_PERIPH_I2C4, SYSCTL_PERIPH_I2C3
 #endif
 };
 
-//*****************************************************************************
-//
-// The list of i2c gpio configurations (GPIO Port/Pin+Function assignments).
-//
-//*****************************************************************************
+/******************************************************************************
+ *
+ * The list of i2c gpio configurations (GPIO Port/Pin+Function assignments).
+ *
+ ******************************************************************************/
 static const unsigned long g_uli2cConfig[4][2] =
 {
 #if defined(TARGET_IS_BLIZZARD_RB1)
@@ -144,16 +145,16 @@ static const unsigned long g_uli2cConfig[4][2] =
 #elif defined(__TM4C1294NCPDT__)
     {GPIO_PB2_I2C0SCL, GPIO_PB3_I2C0SDA},
     {GPIO_PN5_I2C2SCL, GPIO_PN4_I2C2SDA},
-    {GPIO_PA2_I2C8SCL, GPIO_PA3_I2C8SDA},
-    {GPIO_PD0_I2C7SCL, GPIO_PD1_I2C7SDA}
+    {GPIO_PK6_I2C4SCL, GPIO_PK7_I2C4SDA},
+    {GPIO_PK4_I2C3SCL, GPIO_PK5_I2C3SDA}
 #endif
 };
 
-//*****************************************************************************
-//
-// The list of i2c gpio configurations (GPIO Base registers).
-//
-//*****************************************************************************
+/******************************************************************************
+ *
+ * The list of i2c gpio configurations (GPIO Base registers).
+ *
+ ******************************************************************************/
 static const unsigned long g_uli2cBase[4] =
 {
 #if defined(TARGET_IS_BLIZZARD_RB1)
@@ -161,15 +162,15 @@ static const unsigned long g_uli2cBase[4] =
 #elif defined(__TM4C129XNCZAD__)
     GPIO_PORTB_BASE, GPIO_PORTG_BASE, GPIO_PORTL_BASE, GPIO_PORTG_BASE
 #elif defined(__TM4C1294NCPDT__)
-    GPIO_PORTB_BASE, GPIO_PORTN_BASE, GPIO_PORTA_BASE, GPIO_PORTD_BASE
+    GPIO_PORTB_BASE, GPIO_PORTN_BASE, GPIO_PORTK_BASE, GPIO_PORTK_BASE
 #endif
 };
 
-//*****************************************************************************
-//
-// The list of i2c gpio configurations (SDA, SCL pins).
-//
-//*****************************************************************************
+/*****************************************************************************
+ *
+ * The list of i2c gpio configurations (SDA, SCL pins).
+ *
+ ******************************************************************************/
 static const unsigned long g_uli2cSDAPins[4] =
 {
 #if defined(TARGET_IS_BLIZZARD_RB1)
@@ -177,7 +178,7 @@ static const unsigned long g_uli2cSDAPins[4] =
 #elif defined(__TM4C129XNCZAD__)
     GPIO_PIN_3, GPIO_PIN_1, GPIO_PIN_0, GPIO_PIN_5
 #elif defined(__TM4C1294NCPDT__)
-    GPIO_PIN_3, GPIO_PIN_4, GPIO_PIN_3, GPIO_PIN_1
+    GPIO_PIN_3, GPIO_PIN_4, GPIO_PIN_7, GPIO_PIN_5
 #endif
 };
 static const unsigned long g_uli2cSCLPins[4] =
@@ -187,7 +188,7 @@ static const unsigned long g_uli2cSCLPins[4] =
 #elif defined(__TM4C129XNCZAD__)
     GPIO_PIN_2, GPIO_PIN_0, GPIO_PIN_1, GPIO_PIN_4
 #elif defined(__TM4C1294NCPDT__)
-    GPIO_PIN_2, GPIO_PIN_5, GPIO_PIN_2, GPIO_PIN_0
+    GPIO_PIN_2, GPIO_PIN_5, GPIO_PIN_6, GPIO_PIN_4
 #endif
 };
 
@@ -196,28 +197,29 @@ static const unsigned long g_uli2cSCLPins[4] =
 
 // Initialize Class Variables //////////////////////////////////////////////////
 
-// uint8_t TwoWire::rxBuffer[BUFFER_LENGTH];
-// uint8_t TwoWire::rxReadIndex = 0;
-// uint8_t TwoWire::rxWriteIndex = 0;
-// uint8_t TwoWire::txAddress = 0;
+//uint8_t TwoWire::rxBuffer[BUFFER_LENGTH];
+//uint8_t TwoWire::rxReadIndex = 0;
+//uint8_t TwoWire::rxWriteIndex = 0;
+//uint8_t TwoWire::txAddress = 0;
+//
+//uint8_t TwoWire::txBuffer[BUFFER_LENGTH];
+//uint8_t TwoWire::txReadIndex = 0;
+//uint8_t TwoWire::txWriteIndex = 0;
+//
+//uint8_t TwoWire::transmitting = 0;
+//uint8_t TwoWire::currentState = IDLE;
 
-// uint8_t TwoWire::txBuffer[BUFFER_LENGTH];
-// uint8_t TwoWire::txReadIndex = 0;
-// uint8_t TwoWire::txWriteIndex = 0;
+//void (*TwoWire::user_onRequest)(void);
+//void (*TwoWire::user_onReceive)(int);
 
-// uint8_t TwoWire::transmitting = 0;
-// uint8_t TwoWire::currentState = IDLE;
+//uint8_t TwoWire::i2cModule = NOT_ACTIVE;
+//uint8_t TwoWire::slaveAddress = 0;
+//uint32_t TwoWire::highSpeed = 0;
 
-// void (*TwoWire::user_onRequest)(void);
-// void (*TwoWire::user_onReceive)(int);
-
-// uint8_t TwoWire::i2cModule = NOT_ACTIVE;
-// uint8_t TwoWire::slaveAddress = 0;
 // Constructors ////////////////////////////////////////////////////////////////
 
 TwoWire::TwoWire()
 {
-  i2cModule = NOT_ACTIVE;
 }
 
 TwoWire::TwoWire(unsigned long module)
@@ -236,7 +238,9 @@ uint8_t getError(uint8_t thrownError) {
 
 uint8_t TwoWire::getRxData(unsigned long cmd) {
 
-	if (currentState == IDLE) while(ROM_I2CMasterBusBusy(MASTER_BASE));
+	if (currentState == IDLE)
+	    while(ROM_I2CMasterBusBusy(MASTER_BASE));
+
 	HWREG(MASTER_BASE + I2C_O_MCS) = cmd;
 	/*
 	 * Work-around of I2C MasterBUSY Status bit does not get set Immediately
@@ -258,7 +262,6 @@ uint8_t TwoWire::getRxData(unsigned long cmd) {
 }
 
 uint8_t TwoWire::sendTxData(unsigned long cmd, uint8_t data) {
-    while(ROM_I2CMasterBusy(MASTER_BASE));
     ROM_I2CMasterDataPut(MASTER_BASE, data);
 
     HWREG(MASTER_BASE + I2C_O_MCS) = cmd;
@@ -266,9 +269,9 @@ uint8_t TwoWire::sendTxData(unsigned long cmd, uint8_t data) {
 	 * Work-around of I2C MasterBUSY Status bit does not get set Immediately
 	 * See ERRATA I2C#08 in http://www.ti.com/lit/er/spmz850g/spmz850g.pdf
 	 */
-    while(!(HWREG(MASTER_BASE + I2C_O_MRIS) & I2C_MRIS_RIS));//----
-    HWREG(MASTER_BASE + I2C_O_MICR) |= I2C_MICR_IC;//-----
-    uint8_t error = ROM_I2CMasterErr(MASTER_BASE);//checkear!!!!
+    while(!(HWREG(MASTER_BASE + I2C_O_MRIS) & I2C_MRIS_RIS));
+    HWREG(MASTER_BASE + I2C_O_MICR) |= I2C_MICR_IC;
+    uint8_t error = ROM_I2CMasterErr(MASTER_BASE);
     if (error != I2C_MASTER_ERR_NONE)
 		  ROM_I2CMasterControl(MASTER_BASE, I2C_MASTER_CMD_BURST_SEND_ERROR_STOP);
     return(getError(error));
@@ -276,7 +279,7 @@ uint8_t TwoWire::sendTxData(unsigned long cmd, uint8_t data) {
 
 void TwoWire::forceStop(void) {
 
-	//force a stop to release the bus
+	// Force a stop to release the bus
 	ROM_GPIOPinTypeGPIOOutput(g_uli2cBase[i2cModule],
 		  g_uli2cSCLPins[i2cModule] | g_uli2cSDAPins[i2cModule]);
     ROM_GPIOPinWrite(g_uli2cBase[i2cModule], g_uli2cSDAPins[i2cModule], 0);
@@ -287,9 +290,11 @@ void TwoWire::forceStop(void) {
 
     ROM_GPIOPinTypeI2C(g_uli2cBase[i2cModule], g_uli2cSDAPins[i2cModule]);
     ROM_GPIOPinTypeI2CSCL(g_uli2cBase[i2cModule], g_uli2cSCLPins[i2cModule]);
-    //reset I2C controller
-    //without resetting the I2C controller, the I2C module will
-    //bring the bus back to it's erroneous state
+    /*
+     * Reset I2C controller
+     * without resetting the I2C controller, the I2C module will
+     * bring the bus back to it's erroneous state
+     */
     ROM_SysCtlPeripheralReset(g_uli2cPeriph[i2cModule]);
     while(!ROM_SysCtlPeripheralReady(g_uli2cPeriph[i2cModule]));
     ROM_I2CMasterInitExpClk(MASTER_BASE, F_CPU, false);
@@ -297,7 +302,9 @@ void TwoWire::forceStop(void) {
 
 // Public Methods //////////////////////////////////////////////////////////////
 
-//Initialize as a master
+/*
+ * Initialize as a master
+ */
 void TwoWire::begin(void)
 {
 
@@ -307,18 +314,18 @@ void TwoWire::begin(void)
 
   ROM_SysCtlPeripheralEnable(g_uli2cPeriph[i2cModule]);
 
-  //Configure GPIO pins for I2C operation
+  // Configure GPIO pins for I2C operation
   ROM_GPIOPinConfigure(g_uli2cConfig[i2cModule][0]);
   ROM_GPIOPinConfigure(g_uli2cConfig[i2cModule][1]);
   ROM_GPIOPinTypeI2C(g_uli2cBase[i2cModule], g_uli2cSDAPins[i2cModule]);
   ROM_GPIOPinTypeI2CSCL(g_uli2cBase[i2cModule], g_uli2cSCLPins[i2cModule]);
   ROM_I2CMasterInitExpClk(MASTER_BASE, F_CPU, false);//max bus speed=400kHz for gyroscope
 
-  //force a stop condition
+  // Force a stop condition
   if(!ROM_GPIOPinRead(g_uli2cBase[i2cModule], g_uli2cSCLPins[i2cModule]))
 	  forceStop();
 
-  //Handle any startup issues by pulsing SCL
+  // Handle any startup issues by pulsing SCL
   if(ROM_I2CMasterBusBusy(MASTER_BASE) || ROM_I2CMasterErr(MASTER_BASE) 
 	|| !ROM_GPIOPinRead(g_uli2cBase[i2cModule], g_uli2cSCLPins[i2cModule])){
 	  uint8_t doI = 0;
@@ -326,7 +333,8 @@ void TwoWire::begin(void)
   	  unsigned long mask = 0;
   	  do{
   		  for(unsigned long i = 0; i < 10 ; i++) {
-  			  ROM_SysCtlDelay(F_CPU/100000/3);//100Hz=desired frequency, delay iteration=3 cycles
+  		      // 100Hz=desired frequency, delay iteration=3 cycles
+  			  ROM_SysCtlDelay(F_CPU/100000/3);
   			  mask = (i%2) ? g_uli2cSCLPins[i2cModule] : 0;
   			  ROM_GPIOPinWrite(g_uli2cBase[i2cModule], g_uli2cSCLPins[i2cModule], mask);
   		  }
@@ -341,7 +349,9 @@ void TwoWire::begin(void)
 
 }
 
-//Initialize as a slave
+/*
+ * Initialize as a slave
+ */
 void TwoWire::begin(uint8_t address)
 {
 
@@ -356,13 +366,13 @@ void TwoWire::begin(uint8_t address)
   ROM_GPIOPinTypeI2CSCL(g_uli2cBase[i2cModule], g_uli2cSCLPins[i2cModule]);
   slaveAddress = address;
 
-  //Enable slave interrupts
+  // Enable slave interrupts
   ROM_IntEnable(g_uli2cInt[i2cModule]);
   I2CSlaveIntEnableEx(SLAVE_BASE, I2C_SLAVE_INT_DATA | I2C_SLAVE_INT_STOP);
   HWREG(SLAVE_BASE + I2C_O_SICR) =
 		  I2C_SICR_DATAIC | I2C_SICR_STARTIC | I2C_SICR_STOPIC;
 
-  //Setup as a slave device
+  // Setup as a slave device
   ROM_I2CMasterDisable(MASTER_BASE);
   I2CSlaveEnable(SLAVE_BASE);
   I2CSlaveInit(SLAVE_BASE, address); 
@@ -387,8 +397,10 @@ uint8_t TwoWire::requestFrom(uint8_t address, uint8_t quantity, uint8_t sendStop
 	  quantity = spaceAvailable;
   if (!quantity) return 0;
 
-  //Select which slave we are requesting data from
-  //true indicates we are reading from the slave
+  /*
+   * Select which slave we are requesting data from
+   * true indicates we are reading from the slave.
+   */
   ROM_I2CMasterSlaveAddrSet(MASTER_BASE, address, true);
 
   unsigned long cmd = 0;
@@ -403,8 +415,10 @@ uint8_t TwoWire::requestFrom(uint8_t address, uint8_t quantity, uint8_t sendStop
   currentState = MASTER_RX;
 
   for (int i = 1; i < quantity; i++) {
-	  //since NACK is being sent on last byte, a consecutive burst read will
-	  //need to send a start condition
+	  /*
+	   * Since NACK is being sent on last byte, a consecutive burst read will
+	   * need to send a start condition.
+	   */
 	  if(i == (quantity - 1))
 		cmd = RUN_BIT;
 	  else
@@ -444,7 +458,7 @@ uint8_t TwoWire::requestFrom(int address, int quantity, int sendStop)
 void TwoWire::beginTransmission(uint8_t address)
 {
   transmitting = 1;
-  // set address of targeted slave
+  // Set address of targeted slave
   txAddress = address;
 }
 
@@ -457,16 +471,21 @@ uint8_t TwoWire::endTransmission(uint8_t sendStop)
 {
   uint8_t error = I2C_MASTER_ERR_NONE;
 
+  if(highSpeed == I2C_MTPR_HS) {
+      I2CMasterSlaveAddrSet(MASTER_BASE, HS_PREAMBLE, true);
+      I2CMasterControl(MASTER_BASE, I2C_MASTER_CMD_HS_MASTER_CODE_SEND);
+      /*
+       * Work-around of I2C MasterBUSY Status bit does not get set Immediately
+       * See ERRATA I2C#08 in http://www.ti.com/lit/er/spmz850g/spmz850g.pdf
+       */
+      while(!(HWREG(MASTER_BASE + I2C_O_MRIS) & I2C_MRIS_RIS));
+      HWREG(MASTER_BASE + I2C_O_MICR) |= I2C_MICR_IC;
+  }
+
   if(TX_BUFFER_EMPTY) return 0;
-  //Wait for any previous transaction to complete
-  while(ROM_I2CMasterBusBusy(MASTER_BASE));
-  while(ROM_I2CMasterBusy(MASTER_BASE));
 
-  //Select which slave we are requesting data from
-  //false indicates we are writing to the slave
-  ROM_I2CMasterSlaveAddrSet(MASTER_BASE, txAddress, false);
+  I2CMasterSlaveAddrSet(MASTER_BASE, txAddress, false);
 
-  while(ROM_I2CMasterBusy(MASTER_BASE));
   unsigned long cmd = RUN_BIT | START_BIT;
 
   error = sendTxData(cmd,txBuffer[txReadIndex]);
@@ -479,48 +498,48 @@ uint8_t TwoWire::endTransmission(uint8_t sendStop)
   }
 
   if(sendStop) {
-	  while(ROM_I2CMasterBusy(MASTER_BASE));
 	  HWREG(MASTER_BASE + I2C_O_MCS) = STOP_BIT;
-	  while(ROM_I2CMasterBusy(MASTER_BASE));
+
+	  while(!(HWREG(MASTER_BASE + I2C_O_MRIS) & I2C_MRIS_RIS));
+	          HWREG(MASTER_BASE + I2C_O_MICR) |= I2C_MICR_IC;
 	  currentState = IDLE;
   }
   else {
 	  currentState = MASTER_TX;
   }
 
-  // indicate that we are done transmitting
+  // Indicate that we are done transmitting.
   transmitting = 0;
   return error;
 
 }
 
-//	This provides backwards compatibility with the original
-//	definition, and expected behaviour, of endTransmission
-//
+/*
+ * This provides backwards compatibility with the original
+ * definition, and expected behavior, of endTransmission
+ */
 uint8_t TwoWire::endTransmission(void)
 {
   return endTransmission(true);
 }
 
-// must be called in:
-// slave tx event callback
-// or after beginTransmission(address)
+/*
+ * Must be called in slave tx event callback or after beginTransmission(address)
+ */
 size_t TwoWire::write(uint8_t data)
 {
   if(transmitting){
-  // in master transmitter mode
-    // don't bother if buffer is full
+  // in master transmitter mode don't bother if buffer is full.
     if(TX_BUFFER_FULL){
       setWriteError();
       return 0;
     }
-    // put byte in tx buffer
+    // Put byte in tx buffer.
     txBuffer[txWriteIndex] = data;
     txWriteIndex = (txWriteIndex + 1) % BUFFER_LENGTH;
 
   }else{
-  // in slave send mode
-    // reply to master
+    // In slave send mode reply to master
 	if(TX_BUFFER_FULL) {
 		I2CSlaveDataPut(SLAVE_BASE, txBuffer[txReadIndex]);
 		txReadIndex = (txReadIndex + 1) % BUFFER_LENGTH;
@@ -531,9 +550,7 @@ size_t TwoWire::write(uint8_t data)
   return 1;
 }
 
-// must be called in:
-// slave tx event callback
-// or after beginTransmission(address)
+// Must be called in slave tx event callback or after beginTransmission(address)
 size_t TwoWire::write(const uint8_t *data, size_t quantity)
 {
   for(size_t i = 0; i < quantity; i++){
@@ -542,23 +559,19 @@ size_t TwoWire::write(const uint8_t *data, size_t quantity)
   return quantity;
 }
 
-// must be called in:
-// slave rx event callback
-// or after requestFrom(address, numBytes)
+// Must be called in slave rx event callback or after requestFrom(address, numBytes)
 int TwoWire::available(void)
 {
     return((rxWriteIndex >= rxReadIndex) ?
 		(rxWriteIndex - rxReadIndex) : BUFFER_LENGTH - (rxReadIndex - rxWriteIndex));
 }
 
-// must be called in:
-// slave rx event callback
-// or after requestFrom(address, numBytes)
+// Must be called in slave rx event callback or after requestFrom(address, numBytes)
 int TwoWire::read(void)
 {
   int value = -1;
   
-  // get each successive byte on each call
+  // Get each successive byte on each call
   if(!RX_BUFFER_FULL){
     value = rxBuffer[rxReadIndex];
     rxReadIndex = (rxReadIndex + 1) % BUFFER_LENGTH;
@@ -567,9 +580,7 @@ int TwoWire::read(void)
   return value;
 }
 
-// must be called in:
-// slave rx event callback
-// or after requestFrom(address, numBytes)
+// Must be called in slave rx event callback or after requestFrom(address, numBytes)
 int TwoWire::peek(void)
 {
   int value = -1;
@@ -585,27 +596,54 @@ void TwoWire::flush(void)
 	rxReadIndex = rxWriteIndex;
 }
 
-// sets function called on slave write
+// Sets function called on slave write
 void TwoWire::onReceive( void (*function)(int) )
 {
   user_onReceive = function;
 }
 
-// sets function called on slave read
+// Sets function called on slave read
 void TwoWire::onRequest( void (*function)(void) )
 {
   user_onRequest = function;
 }
 
+void TwoWire::setClock(uint32_t clock)
+{
+    uint32_t ui32SCLFreq = clock;
+    uint32_t ui32TPR;
+    uint32_t mul = 10;
+
+    /*
+     * Check for valid input. If no valid input set to 10 kHz.
+     * Slow mode (1kHz) not supported. Default to 10kHz
+     */
+	if(clock == 100000 || clock == 400000 || clock == 1000000 || clock == 3400000) {
+		uint32_t hs_enabled = HWREG(MASTER_BASE + I2C_O_PP && I2C_PP_HS);
+
+		if(hs_enabled && clock == 3400000) {
+			highSpeed = I2C_MTPR_HS;
+			mul =  3;
+			HWREG(MASTER_BASE + I2C_O_PC) |= I2C_PC_HS;
+		}
+	} else {
+	    ui32SCLFreq = 100000;
+	}
+
+	ui32TPR = ((F_CPU + (2 * mul * ui32SCLFreq) - 1) /
+	  	  (2 * mul * ui32SCLFreq)) - 1;
+	HWREG(MASTER_BASE + I2C_O_MTPR) = ui32TPR | highSpeed;
+}
+
 void TwoWire::I2CIntHandler(void) {
-	//clear data interrupt
+	// Clear data interrupt
 	HWREG(SLAVE_BASE + I2C_O_SICR) = I2C_SICR_DATAIC;
 	uint8_t startDetected = 0;
 	uint8_t stopDetected = 0;
 
 	if(HWREG(SLAVE_BASE + I2C_O_SRIS) & I2C_SLAVE_INT_START) {
 		startDetected = 1;
-	    //clear raw start interrupt
+	    // Clear raw start interrupt
 	    HWREG(SLAVE_BASE + I2C_O_SICR) = I2C_SICR_STARTIC;
 	}
 	else if(HWREG(SLAVE_BASE + I2C_O_SRIS) & I2C_SLAVE_INT_STOP) {
@@ -614,8 +652,8 @@ void TwoWire::I2CIntHandler(void) {
 	}
 
 	switch(I2CSlaveStatus(SLAVE_BASE) & (I2C_SCSR_TREQ | I2C_SCSR_RREQ)) {
-
-		case(I2C_SLAVE_ACT_RREQ)://data received
+	    // Data received
+		case(I2C_SLAVE_ACT_RREQ):
 			if(I2CSlaveStatus(SLAVE_BASE) & I2C_SCSR_FBR)
 				currentState = SLAVE_RX;
 			if(!RX_BUFFER_FULL) {
@@ -624,17 +662,14 @@ void TwoWire::I2CIntHandler(void) {
 			}
 
 			break;
-
-		case(I2C_SLAVE_ACT_TREQ)://data requested 
+		// Data requested
+		case(I2C_SLAVE_ACT_TREQ):
 
 		    if(startDetected) {
 		        uint8_t oldWriteIndex = txWriteIndex;
 		        user_onRequest();
 
-		        //
-		        // send data if onRequest() wrote data that has
-		        // yet to be sent
-		        //
+		        // Send data if onRequest() wrote data that has yet to be sent
 		    	if(oldWriteIndex != txWriteIndex) {
 			    	I2CSlaveDataPut(SLAVE_BASE, txBuffer[txReadIndex]);
 			    	txReadIndex = (txReadIndex + 1) % BUFFER_LENGTH;
@@ -664,6 +699,12 @@ void TwoWire::I2CIntHandler(void) {
 
 }
 
+void
+I2CIntHandler(void)
+{
+    Wire.I2CIntHandler();
+}
+
 void TwoWire::setModule(unsigned long _i2cModule)
 {
     i2cModule = _i2cModule;
@@ -671,8 +712,7 @@ void TwoWire::setModule(unsigned long _i2cModule)
     else begin();
 }
 
-//Preinstantiate Objects
-TwoWire Wire(1);
+// Preinstantiate Object
 
 #if WIRE_INTERFACES_COUNT > 0
 TwoWire Wire0(0);

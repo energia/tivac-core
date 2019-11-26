@@ -12,7 +12,15 @@
 #define MASTER_RX 2
 #define SLAVE_RX 3
 
+#if defined(ENERGIA_EK_TM4C1294XL)
+#define BOOST_PACK_WIRE 0
+#define Wire Wire0
+#elif defined(ENERGIA_EK_TM4C123GXL)
 #define BOOST_PACK_WIRE 1
+#define Wire Wire1
+#else
+#error "LauncPad not supported"
+#endif
 
 class TwoWire : public Stream
 {
@@ -32,6 +40,7 @@ class TwoWire : public Stream
 
 		uint8_t transmitting;
 		uint8_t currentState;
+		uint32_t highSpeed;
 		void (*user_onRequest)(void);
 		void (*user_onReceive)(int);
 		void onRequestService(void);
@@ -63,7 +72,7 @@ class TwoWire : public Stream
 		virtual void flush(void);
 		void onReceive( void (*)(int) );
 		void onRequest( void (*)(void) );
-
+		void setClock(uint32_t);
 
 		inline size_t write(unsigned long n) { return write((uint8_t)n); }
 		inline size_t write(long n) { return write((uint8_t)n); }
@@ -77,7 +86,7 @@ class TwoWire : public Stream
 
 };
 
-extern TwoWire Wire;
+
 #if WIRE_INTERFACES_COUNT > 0
   extern TwoWire Wire0;
   extern "C" void I2CIntHandler0(void);
