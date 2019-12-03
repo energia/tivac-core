@@ -27,7 +27,15 @@
 #define SPI_MODE2 0x40
 #define SPI_MODE3 0xC0
 
+#if defined(ENERGIA_EK_TM4C1294XL)
 #define BOOST_PACK_SPI 2
+#define SPI SPI2
+#elif defined(ENERGIA_EK_TM4C123GXL)
+#define BOOST_PACK_SPI 2
+#define SPI SPI2
+#else
+#error "LauncPad not supported"
+#endif
 
 #define MSBFIRST 1
 #define LSBFIRST 0
@@ -92,10 +100,8 @@ public:
 
 };
 
-extern SPIClass SPI;
-
 #if SPI_INTERFACES_COUNT > 0
-  extern SPIClass0 SPI;
+  extern SPIClass SPI0;
 #endif
 #if SPI_INTERFACES_COUNT > 1
   extern SPIClass SPI1;

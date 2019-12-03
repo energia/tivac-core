@@ -176,9 +176,9 @@ void SPIClass::beginTransaction(SPISettings settings) {
             noInterrupts();
         }
     }
-	setBitOrder(settings._SSIBitOrder);
-	setDataMode(settings._SSIMode);
-	setClockDivider(settings._divider);
+    setBitOrder(settings._SSIBitOrder);
+    setDataMode(settings._SSIMode);
+    setClockDivider(settings._divider);
 }
 
 void SPIClass::endTransaction(void) {
@@ -433,8 +433,6 @@ void SPIClass::setModule(uint8_t module) {
 	SSIModule = module;
 	begin();
 }
-
-SPIClass SPI0(2);
 
 #if SPI_INTERFACES_COUNT > 0
   SPIClass SPI0(0);
