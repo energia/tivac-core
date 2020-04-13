@@ -17,7 +17,7 @@ compiler.warning_flags.default=
 compiler.warning_flags.more=-Wall
 compiler.warning_flags.all=-Wall -Wextra
 
-compiler.path={runtime.tools.arm-none-eabi-gcc-6.3.1-20170620.path}/bin/
+compiler.path={runtime.tools.arm-none-eabi-gcc-8.3.1-20190703.path}/bin/
 compiler.c.cmd=arm-none-eabi-gcc
 compiler.c.flags=-c -g -Os {compiler.warning_flags} -std=gnu11 -ffunction-sections -fdata-sections -nostdlib --param max-inline-insns-single=500 -Dprintf=iprintf -MMD
 compiler.cpp.elf.cmd=arm-none-eabi-g++
@@ -91,7 +91,7 @@ recipe.size.regex.data=^(?:\.data|\.bss)\s+([0-9]+).*
 # TI's DSLite
 tools.dslite.upload.params.verbose=
 tools.dslite.upload.params.quiet=
-tools.dslite.path={runtime.tools.dslite-7.2.0.2096.path}
+tools.dslite.path={runtime.tools.dslite-9.3.0.1863.path}
 tools.dslite.config.path={path}
 tools.dslite.cmd.path={path}/DebugServer/bin/DSLite
 tools.dslite.upload.pattern={cmd.path} {upload.verbose} load -c "{config.path}/{build.variant}.ccxml" -f "{build.path}/{build.project_name}.elf"
