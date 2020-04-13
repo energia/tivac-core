@@ -186,6 +186,11 @@ void Servo::detach()
 	digitalWrite(servos[this->index].pin_number, LOW);
 }
 
+bool Servo::attached(){
+	return servos[this->index].enabled;
+}
+
+
 //! ISR for generating the pulse widths
 void ServoIntHandler(void)
 {
