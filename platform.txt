@@ -47,7 +47,7 @@ compiler.S.extra_flags=
 compiler.ar.extra_flags=
 compiler.elf2hex.extra_flags=
 
-compiler.driverlib.c.flags="-I{build.system.path}/driverlib" "-I{build.system.path}/inc" "-I{build.system.path}"
+compiler.driverlib.c.flags="-I{build.system.path}"
 
 # USB Flags
 # ---------
