@@ -27,6 +27,7 @@
 
   Modified 23 November 2006 by David A. Mellis
   Modified 28 September 2010 by Mark Sproul
+  Modified 19 February 2019 by Victor Vasquez
  */
 
 #include <stdlib.h>
@@ -313,6 +314,8 @@ void TwoWire::begin(void)
   }
 
   ROM_SysCtlPeripheralEnable(g_uli2cPeriph[i2cModule]);
+
+  while (!ROM_SysCtlPeripheralReady(g_uli2cPeriph[i2cModule])){}
 
   // Configure GPIO pins for I2C operation
   ROM_GPIOPinConfigure(g_uli2cConfig[i2cModule][0]);
