@@ -47,7 +47,7 @@ compiler.S.extra_flags=
 compiler.ar.extra_flags=
 compiler.elf2hex.extra_flags=
 
-compiler.driverlib.c.flags="-I{build.system.path}/driverlib" "-I{build.system.path}/inc" "-I{build.system.path}"
+compiler.driverlib.c.flags="-I{build.system.path}"
 
 # USB Flags
 # ---------
@@ -91,7 +91,7 @@ recipe.size.regex.data=^(?:\.data|\.bss)\s+([0-9]+).*
 # TI's DSLite
 tools.dslite.upload.params.verbose=
 tools.dslite.upload.params.quiet=
-tools.dslite.path={runtime.tools.dslite-7.2.0.2096.path}
+tools.dslite.path={runtime.tools.dslite-9.3.0.1863.path}
 tools.dslite.config.path={path}
 tools.dslite.cmd.path={path}/DebugServer/bin/DSLite
 tools.dslite.upload.pattern={cmd.path} {upload.verbose} load -c "{config.path}/{build.variant}.ccxml" -f "{build.path}/{build.project_name}.elf"
