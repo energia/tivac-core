@@ -76,6 +76,21 @@ int EthernetClass::maintain()
 	return 0;
 }
 
+int EthernetClass::setStaticIP(IPAddress local_ip, IPAddress gateway, IPAddress subnet)
+{
+   struct ip_addr ipaddr;
+   struct ip_addr net_mask;
+   struct ip_addr gw_addr;
+   
+   IP4_ADDR(&ipaddr, local_ip[0], local_ip[1], local_ip[2], local_ip[3]);
+   IP4_ADDR(&net_mask, subnet[0], subnet[1], subnet[2], subnet[3]);
+   IP4_ADDR(&gw_addr, gateway[0], gateway[1], gateway[2], gateway[3]);
+   
+   lwIPNetworkConfigChange(htonl(ipaddr.addr),htonl(net_mask.addr),htonl(gw_addr.addr),IPADDR_USE_STATIC);
+   
+	return 0;
+}
+
 IPAddress EthernetClass::localIP()
 {
 	return lwIPLocalIPAddrGet();
